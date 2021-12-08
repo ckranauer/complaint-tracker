@@ -1,5 +1,6 @@
 package com.compalinttracker.claimdb.userProfile;
 
+import com.compalinttracker.claimdb.analysis.Analysis;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
-    List<UserProfile> findAll();
+    //List<UserProfile> findAll();
 
     @Query(
             value = "SELECT * " +
@@ -40,7 +41,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     )
     List<Long> findAllUserProfileIdWhatHasThisRoleId(Long id);
 
-    /*
+
     @Query(
             value = "SELECT u FROM UserProfile u " +
                     "JOIN Analysis" +
@@ -49,7 +50,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             nativeQuery = true
     )
     List<Analysis> getUserAnalysisesById(long l);
-     */
+
 
     Optional<UserProfile> findUserByEmail(String email);
 }

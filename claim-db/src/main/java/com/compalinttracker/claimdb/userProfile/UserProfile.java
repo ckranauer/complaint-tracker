@@ -1,6 +1,8 @@
 package com.compalinttracker.claimdb.userProfile;
 
 
+import com.compalinttracker.claimdb.analysis.Analysis;
+import com.compalinttracker.claimdb.complaint.Complaint;
 import com.compalinttracker.claimdb.userRoleLink.UserRoleLink;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -82,7 +84,7 @@ public class UserProfile {
     )
     private List<UserRoleLink> userRoleLinks = new ArrayList<>();
 
-    /*
+
     @JsonBackReference(value="user-complaint")
     @OneToMany(
             mappedBy = "responsible",
@@ -101,6 +103,48 @@ public class UserProfile {
             fetch = FetchType.LAZY// In OneToMany and ManyToOne the default fetch type is LAZY, if we set it to eager it will returns with the card and with the books also
     )
     private List<Analysis> analysises = new ArrayList<>();
-    */
+
+    public void addUserRoleLink(UserRoleLink userRoleLink){
+        if(!userRoleLinks.contains(userRoleLink)){
+            userRoleLinks.add(userRoleLink);
+        }
+    }
+
+    public void addComplaint(Complaint complaint){
+        if(!this.complaints.contains(complaint)){
+            this.complaints.add(complaint);
+            complaint.setResponsible(this);   // it keeps both way sync
+        }
+    }
+
+    public void removeComplaint(Complaint complaint){
+        if(!this.complaints.contains(complaint)){
+            this.complaints.remove(complaint);
+            complaint.setResponsible(null);
+        }
+    }
+
+    public void addAnalysis(Analysis analysis){
+        System.out.println("Add analysis method");
+        if(!this.analysises.contains(analysis)){
+            System.out.println("inside the if");
+            this.analysises.add(analysis);
+            System.out.println("analysis added to analysises");
+            analysis.setAnalyzedBy(this);
+            System.out.println("analysis set analyzed by this");
+        }
+    }
+
+    public void removeAnalysis(Analysis analysis){
+        if(!this.analysises.contains(analysis)){
+            this.analysises.remove(analysis);
+            analysis.setAnalyzedBy(null);
+        }
+    }
+
+    public void removeUserRoleLink(UserRoleLink userRoleLink){
+        userRoleLinks.remove(userRoleLink);
+    }
+
 
 }

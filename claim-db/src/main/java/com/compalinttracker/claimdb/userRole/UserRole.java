@@ -59,4 +59,15 @@ public class UserRole {
         this.role = role;
         this.description = description;
     }
+
+    public void addUserRoleLink(UserRoleLink userRoleLink){
+        if(!userRoleLinks.contains(userRoleLink)){
+            userRoleLinks.add(userRoleLink);
+        }
+    }
+
+    public void removeUserRoleLink(UserRoleLink userRoleLink){
+        userRoleLinks.remove(userRoleLink);
+    }
+
 }
