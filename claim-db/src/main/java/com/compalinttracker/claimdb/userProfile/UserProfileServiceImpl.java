@@ -25,7 +25,6 @@ import java.util.List;
 public class UserProfileServiceImpl implements UserProfileService{
 
     private final UserProfileRepository userProfileRepository;
-    private final UserRoleLinkRepository userRoleLinkRepository;
     private final UserRoleServiceImpl userRoleService;
 
 

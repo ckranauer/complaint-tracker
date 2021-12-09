@@ -30,4 +30,14 @@ public interface UserRoleLinkRepository extends JpaRepository<UserRoleLink, Long
     )
     int deleteUserRoleLinkById(Long userId, Long longId);
 
+    @Transactional
+    @Modifying
+    @Query(
+            value = "DELETE " +
+                    " FROM user_role_link " +
+                    " WHERE user_role_link.user_role_id = ?1 ",
+            nativeQuery = true
+    )
+    int deleteUserRoleLinkById(Long roleId);
+
 }

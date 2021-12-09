@@ -1,5 +1,7 @@
 package com.compalinttracker.claimdb.userRole;
 
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkRepository;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.Collection;
 public class UserRoleServiceImpl implements  UserRoleService{
 
     private final UserRoleRepository userRoleRepository;
+    private final UserRoleLinkRepository userRoleLinkRepository;
+    private final UserRoleLinkServiceImpl userRoleLinkService;
 
     @Override
     public UserRole create(UserRole userRole) {
@@ -39,6 +43,12 @@ public class UserRoleServiceImpl implements  UserRoleService{
 
     @Override
     public Boolean delete(Long id) {
-        return null;
+        log.info("Deleting user role by id: {}", id);
+        // first must to delete user role link
+        // TODO: solve it with UserRoleLinkServiceImpl
+        userRoleLinkService.delete(id);
+        //userRoleLinkRepository.deleteUserRoleLinkById(id);
+        userRoleRepository.deleteUserRoleById(id);
+        return Boolean.TRUE;
     }
 }

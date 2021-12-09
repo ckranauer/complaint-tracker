@@ -44,4 +44,17 @@ public class UserRoleController {
                         .build()
         );
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response> deleteRole(@PathVariable("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("role", userRoleService.delete(id)))
+                        .message("Role deleted")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
 }
