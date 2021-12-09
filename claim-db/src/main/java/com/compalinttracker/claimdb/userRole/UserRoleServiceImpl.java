@@ -28,7 +28,8 @@ public class UserRoleServiceImpl implements  UserRoleService{
 
     @Override
     public UserRole get(Long id) {
-        return null;
+        log.info("Fetching user role by id: {}", id);
+        return userRoleRepository.findRoleById(id).get();
     }
 
     @Override

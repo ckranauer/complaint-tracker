@@ -1,5 +1,12 @@
 package com.compalinttracker.claimdb.userProfile;
 
+import com.compalinttracker.claimdb.userRole.UserRole;
+import com.compalinttracker.claimdb.userRole.UserRoleRepository;
+import com.compalinttracker.claimdb.userRole.UserRoleServiceImpl;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLink;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkDto;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkId;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
@@ -18,6 +25,8 @@ import java.util.List;
 public class UserProfileServiceImpl implements UserProfileService{
 
     private final UserProfileRepository userProfileRepository;
+    private final UserRoleLinkRepository userRoleLinkRepository;
+    private final UserRoleServiceImpl userRoleService;
 
 
     public UserProfile create(UserProfile userProfile) {
@@ -46,6 +55,21 @@ public class UserProfileServiceImpl implements UserProfileService{
     public Boolean delete(Long id) {
         log.info("Deleting user: {}", id);
         userProfileRepository.deleteById(id);
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean addUserRoleToUserProfile(UserRoleLinkDto userRoleLinkDto) {
+        UserProfile user = userProfileRepository.findUserProfileById(userRoleLinkDto.getUserId()).get();
+        UserRole role = userRoleService.get(userRoleLinkDto.getRoleId());
+        UserRoleLink userRoleLink = new UserRoleLink(
+                (new UserRoleLinkId(userRoleLinkDto.getRoleId(), userRoleLinkDto.getUserId())),
+                role,
+                user,
+                LocalDateTime.now()
+        );
+        user.addUserRoleLink(userRoleLink);
+        role.addUserRoleLink(userRoleLink);
         return Boolean.TRUE;
     }
 }

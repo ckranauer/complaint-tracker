@@ -1,6 +1,7 @@
 package com.compalinttracker.claimdb.userProfile;
 
 
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkDto;
 import org.apache.catalina.User;
 
 import java.util.Collection;
@@ -14,6 +15,9 @@ public interface UserProfileService {
     UserProfile get(Long id);
     UserProfile update(UserProfile userProfile);
     Boolean delete(Long id);
+
+    //Actually we add userRoleLink to User and to Role
+    Boolean addUserRoleToUserProfile(UserRoleLinkDto userRoleLinkDto);
 
 
 }

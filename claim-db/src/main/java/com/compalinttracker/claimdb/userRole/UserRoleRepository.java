@@ -15,7 +15,7 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
     List<UserRole> findAll();
 
-    UserRole findRoleById(Long id);
+    Optional<UserRole> findRoleById(Long id);
 
     @Query("Select u From UserRole u WHERE u.id = ?1")
     Optional<UserRole> findRoleByIdOpt(Long id);

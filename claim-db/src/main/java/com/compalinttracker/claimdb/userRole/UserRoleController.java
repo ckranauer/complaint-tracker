@@ -3,16 +3,14 @@ package com.compalinttracker.claimdb.userRole;
 import com.compalinttracker.claimdb.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/role")
@@ -30,6 +28,19 @@ public class UserRoleController {
                         .message("Role created")
                         .status(CREATED)
                         .statusCode(CREATED.value())
+                        .build()
+        );
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Response> getRole(@PathVariable("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("role", userRoleService.get(id)))
+                        .message("Role retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
                         .build()
         );
     }

@@ -1,6 +1,8 @@
 package com.compalinttracker.claimdb.userProfile;
 
 import com.compalinttracker.claimdb.response.Response;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLink;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +42,19 @@ public class UserProfileController {
                         .timeStamp(now())
                         .data(Map.of("user", userProfileService.create(userProfile)))
                         .message("User created")
+                        .status(CREATED)
+                        .statusCode(CREATED.value())
+                        .build()
+        );
+    }
+
+    @PostMapping("/add-role-to-user")
+    public ResponseEntity<Response> addRoleToUser(@RequestBody @Valid UserRoleLinkDto userRoleLinkDto){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("userRoleLink", userProfileService.addUserRoleToUserProfile(userRoleLinkDto)))
+                        .message("Role is added to user.")
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .build()
