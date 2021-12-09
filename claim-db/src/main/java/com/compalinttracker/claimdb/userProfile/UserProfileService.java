@@ -6,6 +6,7 @@ import org.apache.catalina.User;
 import java.util.Collection;
 import java.util.List;
 
+
 public interface UserProfileService {
 
     UserProfile create(UserProfile userProfile);

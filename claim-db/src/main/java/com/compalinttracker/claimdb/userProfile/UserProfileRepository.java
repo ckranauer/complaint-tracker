@@ -30,7 +30,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     )
     List<UserProfile> findAllUserProfileUseThisRole(Long roleId);
 
-    UserProfile findUserProfileById(Long id);
+    Optional<UserProfile> findUserProfileById(Long id);
 
     @Query(
             value = "SELECT user_profile.id " +

@@ -21,7 +21,6 @@ public class UserProfileController {
 
     @GetMapping("list")
     public ResponseEntity<Response> getUsers(){
-
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
@@ -43,6 +42,32 @@ public class UserProfileController {
                         .message("User created")
                         .status(CREATED)
                         .statusCode(CREATED.value())
+                        .build()
+        );
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Response> getUser(@PathVariable ("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("user", userProfileService.get(id)))
+                        .message("User retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response> deleteUser(@PathVariable ("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("user", userProfileService.delete(id)))
+                        .message("User deleted")
+                        .status(OK)
+                        .statusCode(OK.value())
                         .build()
         );
     }

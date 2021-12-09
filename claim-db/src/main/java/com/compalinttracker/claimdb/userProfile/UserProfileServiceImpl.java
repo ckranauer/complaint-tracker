@@ -33,7 +33,8 @@ public class UserProfileServiceImpl implements UserProfileService{
 
     @Override
     public UserProfile get(Long id) {
-        return null;
+        log.info("Fetching user by id: {}", id);
+        return userProfileRepository.findUserProfileById(id).get();
     }
 
     @Override
@@ -43,6 +44,8 @@ public class UserProfileServiceImpl implements UserProfileService{
 
     @Override
     public Boolean delete(Long id) {
-        return null;
+        log.info("Deleting user: {}", id);
+        userProfileRepository.deleteById(id);
+        return Boolean.TRUE;
     }
 }
