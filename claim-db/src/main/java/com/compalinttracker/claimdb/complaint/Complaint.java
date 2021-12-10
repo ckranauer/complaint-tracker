@@ -48,8 +48,7 @@ public class Complaint {
     private String qmsNumber;
 
     @Column(
-            name = "customer_ref_number",
-            unique = true
+            name = "customer_ref_number"
     )
     private String customerRefNumber;
 

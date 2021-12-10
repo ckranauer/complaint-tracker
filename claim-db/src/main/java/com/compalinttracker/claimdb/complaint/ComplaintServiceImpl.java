@@ -44,6 +44,8 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
     @Override
     public Boolean delete(Long id) {
-        return null;
+        log.info("Deleting complaint by id: {}", id);
+        complaintRepository.deleteById(id);
+        return Boolean.TRUE;
     }
 }

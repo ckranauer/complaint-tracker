@@ -4,10 +4,7 @@ import com.compalinttracker.claimdb.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -34,6 +31,46 @@ public class ComplaintController {
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .build()
+        );
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Response> getComplaint(@PathVariable("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("complaint", complaintService.get(id)))
+                        .message("Complaint retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<Response> getComplaints(){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("complaints", complaintService.list(50)))
+                        .message("Complaints retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response> deleteComplaint(@PathVariable("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("complaint", complaintService.delete(id)))
+                        .message("Complaint deleted")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+
         );
     }
 }
