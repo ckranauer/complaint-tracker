@@ -23,12 +23,13 @@ public class ComplaintController {
 
     private final ComplaintServiceImpl complaintService;
 
+    
     @PostMapping("/save")
-    public ResponseEntity<Response> saveComplaint(@RequestBody @Valid Complaint complaint){
+    public ResponseEntity<Response> saveComplaint(@RequestBody @Valid ComplaintDto complaintDto){
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("complaint", complaintService.create(complaint)))
+                        .data(Map.of("complaint", complaintService.create(complaintDto)))
                         .message("Complaint created")
                         .status(CREATED)
                         .statusCode(CREATED.value())

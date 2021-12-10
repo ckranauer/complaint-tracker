@@ -26,9 +26,19 @@ public class ComplaintServiceImpl implements  ComplaintService{
     private final UserProfileService userProfileService;
 
     @Override
-    public Complaint create(Complaint complaint) {
-        log.info("Saving new complaint: {}", complaint.getQmsNumber());
+    public Complaint create(ComplaintDto complaintDto) {
+        log.info("Saving new complaint: {}", complaintDto.getQmsNumber());
+        Complaint complaint = new Complaint();
         complaint.setCreatedAt(LocalDateTime.now());
+        complaint.setSerialNumber(complaintDto.getSerialNumber());
+        complaint.setQmsNumber(complaintDto.getQmsNumber());
+        complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
+        complaint.setClaimedFault(complaintDto.getClaimedFault());
+        complaint.setArrivedAt(complaintDto.getArrivedAt());
+        complaint.setPrio(complaintDto.getIsPrio());
+        UserProfile responsible = userProfileService.get(complaintDto.getResponsible());
+        responsible.addComplaint(complaint);
+        complaint.setResponsible(responsible);
         return complaintRepository.save(complaint);
     }
 
