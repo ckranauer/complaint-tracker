@@ -2,10 +2,12 @@ package com.compalinttracker.claimdb.analysis;
 
 import com.compalinttracker.claimdb.complaint.Complaint;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name = "Analysis")
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(
         name = "analysis"
 )
-public class Analysis {
+public class Analysis implements Serializable {
 
     @Id
     private Long id;
@@ -30,6 +32,7 @@ public class Analysis {
                     name = "complaint_id_fk"
             )
     )*/
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne
     @MapsId
     private Complaint complaint;

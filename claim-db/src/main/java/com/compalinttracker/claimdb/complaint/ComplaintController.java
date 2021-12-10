@@ -1,5 +1,7 @@
 package com.compalinttracker.claimdb.complaint;
 
+import com.compalinttracker.claimdb.analysis.Analysis;
+import com.compalinttracker.claimdb.analysis.AnalysisDto;
 import com.compalinttracker.claimdb.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,19 @@ public class ComplaintController {
                         .timeStamp(now())
                         .data(Map.of("complaint", complaintService.create(complaint)))
                         .message("Complaint created")
+                        .status(CREATED)
+                        .statusCode(CREATED.value())
+                        .build()
+        );
+    }
+
+    @PostMapping("/add-analysis")
+    public ResponseEntity<Response> addAnalysis(@RequestBody @Valid AnalysisDto analysisDto){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("analysis", complaintService.addAnalysis(analysisDto)))
+                        .message("Analysis added to complaint")
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .build()
