@@ -4,6 +4,8 @@ package com.compalinttracker.claimdb.complaint;
 import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.analysis.AnalysisDto;
 import com.compalinttracker.claimdb.analysis.AnalysisRepository;
+import com.compalinttracker.claimdb.userProfile.UserProfile;
+import com.compalinttracker.claimdb.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
     private final ComplaintRepository complaintRepository;
     private final AnalysisRepository analysisRepository;
+    private final UserProfileService userProfileService;
 
     @Override
     public Complaint create(Complaint complaint) {
@@ -59,27 +62,25 @@ public class ComplaintServiceImpl implements  ComplaintService{
         Analysis analysis = new Analysis();
         Complaint complaint = complaintRepository.getById(analysisDto.getComplaintId());
         analysis.setComplaint(complaint);
-        log.info("Complaint: " + analysis.getComplaint().getId());
         analysis.setBarcodes(analysisDto.getBarcodes());
-        log.info("Barcodes: " + analysis.getBarcodes());
         analysis.setLifecycleInfo(analysisDto.getLifecycleInfo());
-        log.info("Lifecycle: " + analysis.getLifecycleInfo());
         analysis.setVisualAnalysis(analysisDto.getVisualAnalysis());
-        log.info("Visual: " + analysis.getVisualAnalysis());
         analysis.setElectricalAnalysis(analysisDto.getElectricalAnalysis());
-        log.info("Electrical: " + analysis.getElectricalAnalysis());
         analysis.setConclusion(analysisDto.getConclusion());
-        log.info("Conclusion: " + analysis.getConclusion());
         analysis.setAnalysisEndedAt(analysisDto.getAnalysisEndedAt());
-        log.info("Ended at: " + analysis.getAnalysisEndedAt());
         analysis.setAnalysisStartedAt(analysisDto.getAnalysisStartedAt());
-        log.info("Started at: " + analysis.getAnalysisStartedAt());
-        log.info("Analyzed by: " + analysis.getAnalyzedBy());
+        UserProfile user = userProfileService.get(analysisDto.getAnalyzedBy());
+        user.addAnalysis(analysis);
+        analysis.setAnalyzedBy(user);
         complaint.setAnalysis(analysis);
-        //analysisRepository.save(analysis);
-        //log.info("does it  work ?");
-        //analysisRepository.get
-        //analysis.getComplaint();  // TODO: i need to write a query which fetch first the complaint then add the complain to the analysis
-        return analysisRepository.save(analysis);//analysisRepository.getById(analysis.getId());
+        return analysisRepository.save(analysis);
+    }
+
+    @Override
+    public Boolean deleteAnalysis(Long complaintId) {
+        log.info("Deleting analysis by id: {}", complaintId);
+        Complaint complaint = complaintRepository.getById(complaintId);
+        analysisRepository.deleteAnalysisByComplaintId(complaintId);
+        return Boolean.TRUE;
     }
 }

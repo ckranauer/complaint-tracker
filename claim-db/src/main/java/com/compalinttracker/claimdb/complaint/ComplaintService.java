@@ -16,4 +16,5 @@ public interface ComplaintService {
     Boolean delete(Long id);
 
     Analysis addAnalysis(AnalysisDto analysisDto);
+    Boolean deleteAnalysis(Long id);
 }

@@ -62,6 +62,19 @@ public class ComplaintController {
         );
     }
 
+    @GetMapping("/get-analysis/{id}")
+    public ResponseEntity<Response> getAnalysis(@PathVariable("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("analysis", complaintService.get(id).getAnalysis()))
+                        .message("Analysis retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
     @GetMapping("/list")
     public ResponseEntity<Response> getComplaints(){
         return ResponseEntity.ok(
@@ -82,6 +95,20 @@ public class ComplaintController {
                         .timeStamp(now())
                         .data(Map.of("complaint", complaintService.delete(id)))
                         .message("Complaint deleted")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+
+        );
+    }
+
+    @DeleteMapping("/delete-analysis/{id}")
+    public ResponseEntity<Response> deleteAnalysis(@PathVariable("id") Long id){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("complaint", complaintService.deleteAnalysis(id)))
+                        .message("Analysis deleted")
                         .status(OK)
                         .statusCode(OK.value())
                         .build()
