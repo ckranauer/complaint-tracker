@@ -12,9 +12,13 @@ public interface ComplaintService {
     Complaint create(ComplaintDto complaintDto);
     Collection<Complaint> list(int limit);
     Complaint get(Long id);
-    Complaint update(Complaint complaint);
+    Complaint update(ComplaintDto complaint);       //TODO: implement complaint update
     Boolean delete(Long id);
 
     Analysis addAnalysis(AnalysisDto analysisDto);
     Boolean deleteAnalysis(Long id);
+    Analysis update(AnalysisDto analysis);          //TODO: implement analysis update
+
+    void createAnalysisReport(Long analysisId);
+
 }

@@ -23,7 +23,7 @@ public class ComplaintController {
 
     private final ComplaintServiceImpl complaintService;
 
-    
+
     @PostMapping("/save")
     public ResponseEntity<Response> saveComplaint(@RequestBody @Valid ComplaintDto complaintDto){
         return ResponseEntity.ok(

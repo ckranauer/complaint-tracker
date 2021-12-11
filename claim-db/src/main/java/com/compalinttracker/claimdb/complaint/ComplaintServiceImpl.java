@@ -55,7 +55,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Complaint update(Complaint complaint) {
+    public Complaint update(ComplaintDto complaintDto) {
         return null;
     }
 
@@ -71,6 +71,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         log.info("Add analysis to the complaint.");
         Analysis analysis = new Analysis();
         Complaint complaint = complaintRepository.getById(analysisDto.getComplaintId());
+        // TODO: put these to the class (pass the Dto as argument and set values inside the class) ??
         analysis.setComplaint(complaint);
         analysis.setBarcodes(analysisDto.getBarcodes());
         analysis.setLifecycleInfo(analysisDto.getLifecycleInfo());
@@ -92,5 +93,15 @@ public class ComplaintServiceImpl implements  ComplaintService{
         Complaint complaint = complaintRepository.getById(complaintId);
         analysisRepository.deleteAnalysisByComplaintId(complaintId);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public Analysis update(AnalysisDto analysis) {
+        return null;
+    }
+
+    @Override
+    public void createAnalysisReport(Long analysisId) {
+
     }
 }
