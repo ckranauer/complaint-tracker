@@ -4,10 +4,12 @@ package com.compalinttracker.claimdb.complaint;
 import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name = "Complaint")
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @Table(
         name = "complaint"
 )
-public class Complaint {
+public class Complaint  {       //implements Serializable
 
     @Id
     @SequenceGenerator(                                 // BIGSERIAL data type
@@ -91,6 +93,7 @@ public class Complaint {
     )
     private boolean isPrio;
 
+   // @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonBackReference(value="complaint-analysis")
     @OneToOne(
             mappedBy = "complaint",
