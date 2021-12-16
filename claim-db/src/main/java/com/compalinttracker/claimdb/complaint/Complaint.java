@@ -4,12 +4,11 @@ package com.compalinttracker.claimdb.complaint;
 import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "Complaint")
@@ -72,7 +71,7 @@ public class Complaint  {       //implements Serializable
             name = "arrived_at",
             columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
     )
-    private LocalDateTime arrivedAt;
+    private LocalDate arrivedAt;
 
 
     @ManyToOne
@@ -108,7 +107,7 @@ public class Complaint  {       //implements Serializable
                      String qmsNumber,
                      String customerRefNumber,
                      String claimedFault,
-                     LocalDateTime arrivedAt,
+                     LocalDate arrivedAt,
                      UserProfile responsible,
                      boolean isPrio) {
         this.serialNumber = serialNumber;
@@ -125,7 +124,7 @@ public class Complaint  {       //implements Serializable
                      String qmsNumber,
                      String customerRefNumber,
                      String claimedFault,
-                     LocalDateTime arrivedAt,
+                     LocalDate arrivedAt,
                      boolean isPrio) {
         this.serialNumber = serialNumber;
         this.qmsNumber = qmsNumber;
