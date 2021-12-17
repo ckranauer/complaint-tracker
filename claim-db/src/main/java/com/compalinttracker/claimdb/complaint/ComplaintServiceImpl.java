@@ -38,12 +38,16 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaint.setQmsNumber(complaintDto.getQmsNumber());
         complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
         complaint.setClaimedFault(complaintDto.getClaimedFault());
-        int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
-        int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
-        int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
-        LocalDate date = LocalDate.of(year, Month.of(month), day);
-        complaint.setArrivedAt(date );
-        complaint.setPrio(complaintDto.getIsPrio());
+        if(complaintDto.getArrivedAt().length() > 0){
+            int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
+            int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
+            int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
+            LocalDate date = LocalDate.of(year, Month.of(month), day);
+            complaint.setArrivedAt(date );
+        }
+        if(complaintDto.getIsPrio() != null){
+            complaint.setPrio(complaintDto.getIsPrio());
+        }
         if(complaintDto.getResponsible() != 0) {
             UserProfile responsible = userProfileService.get(complaintDto.getResponsible());
             responsible.addComplaint(complaint);
