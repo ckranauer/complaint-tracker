@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+.router-content-container{
+    margin: 40px;
+}
+
+.nav-container{
+    margin-top: 40px;
+    margin-left: 40px;
+}
+
+
+.app-container {
+    margin: 50px;
+    background-color: white;
+    border-radius:  25px;
+}
+
+body{
+    background-color: rgb(166, 199, 188);
+}

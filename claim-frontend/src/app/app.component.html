@@ -1,5 +1,12 @@
-<nav>
-  <a routerLink="/complaints"> Complaints </a>
-</nav>
 
-<router-outlet></router-outlet>
+<div class="app-container"> 
+  <nav class="nav-container">
+    <a routerLink="/complaints"> Complaints </a>
+    <a routerlink="/label-printers"> Printers </a>
+  </nav>
+
+  <div class="router-content-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+  

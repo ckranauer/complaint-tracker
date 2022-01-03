@@ -14,9 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:4200");
     }
-
-    //TODO: Adding a corsFiletr to the application
-
-
-
 }
+
+
+//TODO: Adding a corsFiletr to the application

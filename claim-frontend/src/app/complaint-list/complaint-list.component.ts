@@ -41,9 +41,9 @@ export class ComplaintListComponent implements OnInit {
     );
   }
 
-  public saveComplaint(complaintFrom: NgForm): void {
+  public saveComplaint(complaintForm: NgForm): void {
     this.isLoading.next(true);
-    this.appState$ = this.complaintService.save$(complaintFrom.value as ComplaintDto)
+    this.appState$ = this.complaintService.save$(complaintForm.value as ComplaintDto )  //as ComplaintDto
       .pipe(
         map( response => {
           this.dataSubject.next(
@@ -51,11 +51,11 @@ export class ComplaintListComponent implements OnInit {
           );
           document.getElementById('closeModal').click();
           this.isLoading.next(false);
-          complaintFrom.resetForm({});
+          complaintForm.resetForm();
           return { dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}
         }),
-        startWith({ dataState: DataState.LOADING_STATE }),
-      catchError((error: string) => {
+        startWith({ dataState: DataState.LOADED_STATE }),
+        catchError((error: string) => {
         this.isLoading.next(false);
         return of({ dataState: DataState.ERROR_STATE })
       } )

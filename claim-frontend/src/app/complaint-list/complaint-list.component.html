@@ -9,6 +9,10 @@
                     <div class="col-sm-6">
                         <button type="button" class="btn btn-primary"> Print Report </button>
 
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addComplaintModal">
+                            Launch demo modal
+                          </button>
+
                         <a href="#addComplaintModal" class="btn btn-success" data-toggle="modal">
                             <i class="material-icons">&#xE147;</i>
                             <span> New Complaint </span>
@@ -35,7 +39,7 @@
                     <table class="table table-stripped table-hover" id="complaints">
                         <thead>
                             <tr>
-                                <th> Incoming date</th>
+                                <!--th> Incoming date</th-->
                                 <th> SerNo. </th>
                                 <!--th> Analysis started </th>
                                 <th> Analysis ended </th-->
@@ -49,7 +53,7 @@
                         </thead>
                         <tbody *ngFor="let complaint of appState.appData.data.complaints; let i = index">
                             <tr>
-                                <td> {{ complaint?.arrivedAt[0] }}.{{ complaint?.arrivedAt[1] }}.{{ complaint?.arrivedAt[2] }} </td>
+                                <!--td> {{ complaint?.arrivedAt[0] }}.{{ complaint?.arrivedAt[1] }}.{{ complaint?.arrivedAt[2] }} </td-->
                                 <td> {{ complaint?.serialNumber }} </td>
                                 <!--td> -- </td>
                                 <td> -- </td-->
@@ -74,7 +78,7 @@
 
 
 <!-- Add Complaint modal -->
-<div id = "addComplaintModal" class="modal fade">
+<div id ="addComplaintModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
          <div class="modal-content">
              <form #complaintForm="ngForm" (ngSubmit)="saveComplaint(complaintForm)">
@@ -115,7 +119,7 @@
                     </div>
                  </div>
                  <div class="modal-footer">
-                    <button type="button" class="btn btn.warning" id="closeModal" data-dismiss="modal">
+                    <button type="button" class="btn btn-warning" id="closeModal" data-dismiss="modal">
                         Cancel
                     </button>
                     <button type="submit" [disabled]="complaintForm.invalid || (isLoading$ | async)"

@@ -7,6 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComplaintListComponent } from './complaint-list/complaint-list.component';
 import { ComplaintService } from './service/complaint.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { ComplaintService } from './service/complaint.service';
     BrowserModule,
     AppRoutingModule,
     FormsModule,          // needed to add because the two way data binding -> wthout it in the input the course.component html and ts didnt work
-    ReactiveFormsModule
+    ReactiveFormsModule, 
+    NgbModule
   ],
   providers: [
     ComplaintService,
