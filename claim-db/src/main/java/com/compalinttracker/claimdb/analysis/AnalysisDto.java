@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +22,6 @@ public class AnalysisDto {
     private String conclusion;
     private LocalDateTime analysisStartedAt;
     private LocalDateTime analysisEndedAt;
-    private long analyzedBy;
+    private UUID analyzedBy;
 
 }

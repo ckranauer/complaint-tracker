@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -62,7 +63,7 @@ public class UserProfileController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getUser(@PathVariable ("id") Long id){
+    public ResponseEntity<Response> getUser(@PathVariable ("id") UUID id){
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
@@ -75,7 +76,7 @@ public class UserProfileController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteUser(@PathVariable ("id") Long id){
+    public ResponseEntity<Response> deleteUser(@PathVariable ("id") UUID id){
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())

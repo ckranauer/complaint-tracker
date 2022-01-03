@@ -6,15 +6,16 @@ import org.apache.catalina.User;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 
 public interface UserProfileService {
 
     UserProfile create(UserProfile userProfile);
     Collection<UserProfile> list(int limit);
-    UserProfile get(Long id);
+    UserProfile get(UUID id);
     UserProfile update(UserProfile userProfile);
-    Boolean delete(Long id);
+    Boolean delete(UUID id);
 
     //Actually we add userRoleLink to User and to Role
     Boolean addUserRoleToUserProfile(UserRoleLinkDto userRoleLinkDto);

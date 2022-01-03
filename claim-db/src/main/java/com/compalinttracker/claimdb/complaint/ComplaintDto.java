@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,6 @@ public class ComplaintDto {
 
 
     private String arrivedAt;
-    private long responsible;
+    private UUID responsible;
     private Boolean isPrio;
 }

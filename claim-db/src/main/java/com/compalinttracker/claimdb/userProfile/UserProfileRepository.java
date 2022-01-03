@@ -2,11 +2,14 @@ package com.compalinttracker.claimdb.userProfile;
 
 import com.compalinttracker.claimdb.analysis.Analysis;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
@@ -19,7 +22,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
                     "WHERE id = ?1",
             nativeQuery = true
     )
-    Optional<UserProfile> findUserProfileByIdNative(Long id);
+    Optional<UserProfile> findUserProfileByIdNative(UUID id);
 
     @Query(
             value = "SELECT * " +
@@ -30,7 +33,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     )
     List<UserProfile> findAllUserProfileUseThisRole(Long roleId);
 
-    Optional<UserProfile> findUserProfileById(Long id);
+    Optional<UserProfile> findUserProfileById(UUID id);
 
     @Query(
             value = "SELECT user_profile.id " +
@@ -53,4 +56,14 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
 
     Optional<UserProfile> findUserByEmail(String email);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value = "DELETE " +
+                    " FROM user_profile " +
+                    " WHERE id = ?1 ",
+            nativeQuery = true
+    )
+    int deleteUserProfileById(UUID userId);
 }

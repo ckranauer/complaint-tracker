@@ -10,9 +10,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "UserProfile")
 @Data
@@ -25,6 +28,7 @@ import java.util.List;
 )
 public class UserProfile {
 
+    /*
     @Id
     @SequenceGenerator(
             name = "user_profile_sequence",
@@ -38,9 +42,11 @@ public class UserProfile {
     @Column(
             name = "id",
             updatable = false
-    )
-    private Long id;
+    )*/
+    @Id
+    private UUID id;
 
+    @NotBlank
     @Column(
             name = "first_name",
             nullable = false,
@@ -48,6 +54,7 @@ public class UserProfile {
     )
     private String firstName;
 
+    @NotBlank
     @Column(
             name = "last_name",
             nullable = false,
@@ -55,6 +62,7 @@ public class UserProfile {
     )
     private String lastName;
 
+    @NotBlank
     @Column(
             name = "email",
             nullable = false,
@@ -69,7 +77,8 @@ public class UserProfile {
     )
     private LocalDateTime createdAt;
 
-    public UserProfile(String firstName, String lastName, String email) {
+    public UserProfile(UUID id, String firstName, String lastName, String email) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -146,5 +155,16 @@ public class UserProfile {
         userRoleLinks.remove(userRoleLink);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserProfile that = (UserProfile) o;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(createdAt, that.createdAt) && Objects.equals(userRoleLinks, that.userRoleLinks) && Objects.equals(complaints, that.complaints) && Objects.equals(analysises, that.analysises);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, createdAt, userRoleLinks, complaints, analysises);
+    }
 }

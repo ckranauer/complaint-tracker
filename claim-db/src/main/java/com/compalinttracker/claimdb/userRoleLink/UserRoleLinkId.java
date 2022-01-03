@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Embeddable
 @Data
@@ -17,9 +18,9 @@ public class UserRoleLinkId implements Serializable {
     private Long userRoleId;
 
     @Column(name = "user_profile_id")
-    private Long userProfileId;
+    private UUID userProfileId;
 
-    public UserRoleLinkId(Long userRoleId, Long userProfileId) {
+    public UserRoleLinkId(Long userRoleId, UUID userProfileId) {
         this.userRoleId = userRoleId;
         this.userProfileId = userProfileId;
     }

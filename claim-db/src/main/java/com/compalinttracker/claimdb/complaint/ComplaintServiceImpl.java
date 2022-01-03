@@ -48,7 +48,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         if(complaintDto.getIsPrio() != null){
             complaint.setPrio(complaintDto.getIsPrio());
         }
-        if(complaintDto.getResponsible() != 0) {
+        if(!complaintDto.getResponsible().equals(0)) {
             UserProfile responsible = userProfileService.get(complaintDto.getResponsible());
             responsible.addComplaint(complaint);
             complaint.setResponsible(responsible);

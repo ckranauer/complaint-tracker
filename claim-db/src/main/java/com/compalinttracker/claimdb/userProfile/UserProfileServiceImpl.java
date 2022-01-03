@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +41,7 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
-    public UserProfile get(Long id) {
+    public UserProfile get(UUID id) {
         log.info("Fetching user by id: {}", id);
         return userProfileRepository.findUserProfileById(id).get();
     }
@@ -51,9 +52,9 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public Boolean delete(UUID id) {
         log.info("Deleting user: {}", id);
-        userProfileRepository.deleteById(id);
+        userProfileRepository.deleteUserProfileById(id);
         return Boolean.TRUE;
     }
 
