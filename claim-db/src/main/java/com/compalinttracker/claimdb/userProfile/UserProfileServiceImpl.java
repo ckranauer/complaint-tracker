@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -30,8 +31,26 @@ public class UserProfileServiceImpl implements UserProfileService{
 
 
     public UserProfile create(UserProfile userProfile) {
-        log.info("Saving new user: {}", userProfile.getEmail());
+
+        // Check if the user profile with this email is exists
+        Optional<UserProfile> userProfileOptional = userProfileRepository.selectUserProfileByEmail(userProfile.getEmail());
+
+        // If taken, check if it belongs to same user
+        if(userProfileOptional.isPresent()){
+            UserProfile existingUserProfile = userProfileOptional.get();
+
+            if(existingUserProfile.getFirstName().equals(userProfile.getFirstName()) && existingUserProfile.getLastName().equals(userProfile.getLastName())){
+                return userProfile;
+            }
+            throw new IllegalStateException(String.format("email "+ userProfile.getEmail() + " is taken"));
+        }
+
+        if(userProfile.getId() == null){
+            userProfile.setId(UUID.randomUUID());
+        }
+
         userProfile.setCreatedAt(LocalDateTime.now());
+        log.info("Saving new user: {}", userProfile.getEmail());
         return userProfileRepository.save(userProfile);
     }
 

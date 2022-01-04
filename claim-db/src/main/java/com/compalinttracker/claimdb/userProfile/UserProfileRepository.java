@@ -15,6 +15,12 @@ import java.util.UUID;
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
     //List<UserProfile> findAll();
+    @Query(
+            value = "select id, first_name, last_number, email " +
+                    "from user_profile where email = ?1",
+            nativeQuery = true
+    )
+    Optional<UserProfile> selectUserProfileByEmail(String email);
 
     @Query(
             value = "SELECT * " +
@@ -24,6 +30,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     )
     Optional<UserProfile> findUserProfileByIdNative(UUID id);
 
+    // TODO: write test to the following natve query
+
     @Query(
             value = "SELECT * " +
                     "FROM user_profile " +
@@ -32,6 +40,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             nativeQuery = true
     )
     List<UserProfile> findAllUserProfileUseThisRole(Long roleId);
+
+
 
     Optional<UserProfile> findUserProfileById(UUID id);
 
