@@ -20,5 +20,6 @@ public interface ComplaintService {
     Analysis update(AnalysisDto analysis);          //TODO: implement analysis update
 
     void createAnalysisReport(Long analysisId);
+    void printLabel(Long ComplaintId);
 
 }

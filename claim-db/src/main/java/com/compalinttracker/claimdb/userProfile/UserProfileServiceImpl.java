@@ -32,7 +32,7 @@ public class UserProfileServiceImpl implements UserProfileService{
 
 
     public UserProfile create(UserProfile userProfile) {
-
+        log.info("Saving new user: {}", userProfile.getEmail());
         // Check if the user profile with this email is exists
         Optional<UserProfile> userProfileOptional = userProfileRepository.selectUserProfileByEmail(userProfile.getEmail());
 
@@ -51,7 +51,6 @@ public class UserProfileServiceImpl implements UserProfileService{
         }
 
         userProfile.setCreatedAt(LocalDateTime.now());
-        log.info("Saving new user: {}", userProfile.getEmail());
         return userProfileRepository.save(userProfile);
     }
 

@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Collection;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -48,7 +49,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         if(complaintDto.getIsPrio() != null){
             complaint.setPrio(complaintDto.getIsPrio());
         }
-        if(!complaintDto.getResponsible().equals(0)) {
+        if(complaintDto.getResponsible() != null) {
             UserProfile responsible = userProfileService.get(complaintDto.getResponsible());
             responsible.addComplaint(complaint);
             complaint.setResponsible(responsible);
@@ -94,9 +95,11 @@ public class ComplaintServiceImpl implements  ComplaintService{
         analysis.setConclusion(analysisDto.getConclusion());
         analysis.setAnalysisEndedAt(analysisDto.getAnalysisEndedAt());
         analysis.setAnalysisStartedAt(analysisDto.getAnalysisStartedAt());
-        UserProfile user = userProfileService.get(analysisDto.getAnalyzedBy());
-        user.addAnalysis(analysis);
-        analysis.setAnalyzedBy(user);
+        if(analysisDto.getAnalyzedBy() != null){
+            UserProfile user = userProfileService.get(analysisDto.getAnalyzedBy());
+            user.addAnalysis(analysis);
+            analysis.setAnalyzedBy(user);
+        }
         complaint.setAnalysis(analysis);
         return analysisRepository.save(analysis);
     }
@@ -115,7 +118,32 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public void createAnalysisReport(Long analysisId) {
+    public void createAnalysisReport(Long complaintId) {
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
+        Complaint complaint;
+        if(complaintOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
+        }
 
+        complaint = complaintOptional.get();
+
+        Optional<Analysis> analysisOptional = analysisRepository.findById(complaintId);
+
+        Analysis analysis;
+        // If the complaint does not contain analysis then the report will only contain the complaint data
+        if(analysisOptional.isPresent()){
+            analysis = analysisOptional.get();
+        }
+
+        // TODO : create reportCreator service and implementation
+        // TODO: report creator -> factory ? different reports or one standard
+
+
+
+    }
+
+    @Override
+    public void printLabel(Long ComplaintId) {
+        // TODO: create label printer service
     }
 }

@@ -43,8 +43,6 @@ public class UserProfileController {
                             .build()
             );
         }
-
-
     }
 
     @PostMapping("/save")
@@ -70,8 +68,6 @@ public class UserProfileController {
                             .build()
             );
         }
-
-
     }
 
     @PostMapping("/add-role-to-user")
@@ -96,7 +92,6 @@ public class UserProfileController {
                             .build()
             );
         }
-
     }
 
 
@@ -122,7 +117,6 @@ public class UserProfileController {
                             .build()
             );
         }
-
     }
 
     @GetMapping("/get/{id}")
@@ -147,10 +141,9 @@ public class UserProfileController {
                             .build()
             );
         }
-
     }
 
-    // TODO: Update user controller
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Response> updateUser(@RequestBody @Valid UserProfile userProfile,
                                                @PathVariable ("id") UUID id){
@@ -199,6 +192,5 @@ public class UserProfileController {
                             .build()
             );
         }
-
     }
 }
