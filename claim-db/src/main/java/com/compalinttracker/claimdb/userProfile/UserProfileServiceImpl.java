@@ -40,7 +40,7 @@ public class UserProfileServiceImpl implements UserProfileService{
             UserProfile existingUserProfile = userProfileOptional.get();
 
             if(existingUserProfile.getFirstName().equals(userProfile.getFirstName()) && existingUserProfile.getLastName().equals(userProfile.getLastName())){
-                return userProfile;
+                throw new IllegalStateException(String.format("User profile is already exists."));
             }
             throw new IllegalStateException(String.format("email "+ userProfile.getEmail() + " is taken"));
         }
@@ -82,9 +82,12 @@ public class UserProfileServiceImpl implements UserProfileService{
         Optional<UserProfile> optionalUserProfile = userProfileRepository.findUserProfileById(id);
 
         if(optionalUserProfile.isEmpty()){
-            return Boolean.FALSE;
+            throw new IllegalStateException("User with "+ id + " does not exists.");
         }
-        userProfileRepository.deleteUserProfileById(id);
+
+        if(userProfileRepository.deleteUserProfileById(id) == 0){
+            throw new IllegalStateException("User with "+ id + " cannot be deleted.");
+        }
         return Boolean.TRUE;
     }
 

@@ -12,8 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/user")
@@ -24,29 +23,55 @@ public class UserProfileController {
 
     @GetMapping("list")
     public ResponseEntity<Response> getUsers(){
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("users", userProfileService.list(1,10)))
-                        .message("Users retrieved")
-                        .status(OK)
-                        .statusCode(OK.value())
-                        .build()
-        );
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("users", userProfileService.list(1,10)))
+                            .message("Users retrieved")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+
 
     }
 
     @PostMapping("/save")
     public ResponseEntity<Response> saveUser(@RequestBody @Valid UserProfile userProfile){
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("user", userProfileService.create(userProfile)))
-                        .message("User created")
-                        .status(CREATED)
-                        .statusCode(CREATED.value())
-                        .build()
-        );
+
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("user", userProfileService.create(userProfile)))
+                            .message("User created")
+                            .status(CREATED)
+                            .statusCode(CREATED.value())
+                            .build()
+            );
+        }catch(IllegalStateException exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+
+
     }
 
     @PostMapping("/add-role-to-user")
@@ -64,27 +89,51 @@ public class UserProfileController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Response> getUser(@PathVariable ("id") UUID id){
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("user", userProfileService.get(id)))
-                        .message("User retrieved")
-                        .status(OK)
-                        .statusCode(OK.value())
-                        .build()
-        );
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("user", userProfileService.get(id)))
+                            .message("User retrieved")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch (Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response> deleteUser(@PathVariable ("id") UUID id){
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("user", userProfileService.delete(id)))
-                        .message("User deleted")
-                        .status(OK)
-                        .statusCode(OK.value())
-                        .build()
-        );
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("user", userProfileService.delete(id)))
+                            .message("User deleted")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+
     }
 }

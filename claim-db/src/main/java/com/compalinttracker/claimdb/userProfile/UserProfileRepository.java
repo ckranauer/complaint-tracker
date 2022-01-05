@@ -16,7 +16,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
     //List<UserProfile> findAll();
     @Query(
-            value = "select id, first_name, last_number, email " +
+            value = "select id, first_name, last_name, email, created_at " +
                     "from user_profile where email = ?1",
             nativeQuery = true
     )
