@@ -3,13 +3,13 @@ package com.compalinttracker.claimdb.userProfile;
 import com.compalinttracker.claimdb.userRole.UserRoleServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -18,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
 
 class UserProfileServiceImplTest {
 
@@ -26,6 +27,7 @@ class UserProfileServiceImplTest {
 
     @Mock
     private UserRoleServiceImpl userRoleServiceImpl;
+
 
     @Captor
     private ArgumentCaptor<UserProfile> userProfileArgumentCaptor;
@@ -136,18 +138,67 @@ class UserProfileServiceImplTest {
     }
 
     @Test
-    void itShouldList() {
+    void itShouldGetUserProfileList() {
         // Given
-        // When
-        // Then
+        int page = 0;
+        int limit = 2;
 
+        List<UserProfile> profiles = new ArrayList<>();
+        UserProfile profileOne = new UserProfile(UUID.randomUUID(), "FirstTest1", "LastTest1", "f1l1@gmail.com");
+        UserProfile profileTwo = new UserProfile(UUID.randomUUID(), "FirstTest2", "LastTest2", "f2l2@gmail.com");
+
+        profiles.add(profileOne);
+        profiles.add(profileTwo);
+
+        // When
+        when(userProfileRepository.findAll()).thenReturn(profiles);
+
+        // Then
+        assertEquals(2, underTest.list(limit, page).size());
+    }
+
+
+
+    @Test
+    void itShouldGetUserProfileById() {
+        // Given
+        UUID id = UUID.randomUUID();
+
+        // ... Existing UserProfile
+        given(userProfileRepository.findUserProfileById(id)).willReturn(Optional.of(Mockito.mock(UserProfile.class)));
+
+        // When
+        UserProfile userProfile = underTest.get(id);
+
+        // Then
+        assertThat(userProfile).isNotNull();
     }
 
     @Test
-    void itShouldGet() {
+    void itShouldThrownWhenUserProfileIsNotExists() {
         // Given
+        UUID id = UUID.randomUUID();
+
+        // ... UserProfile is not exists
+        given(userProfileRepository.findUserProfileById(id)).willReturn(Optional.empty());
+
         // When
         // Then
+        assertThatThrownBy(() -> underTest.get(id))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining(String.format("No value present"));
+    }
+
+    @Test
+    void itShouldThrownWhenIdIsNull() {
+        // Given
+        UUID id = null;
+
+        // When
+        // Then
+        assertThatThrownBy(() -> underTest.get(id))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining(String.format("id is null"));
 
     }
 
@@ -160,11 +211,34 @@ class UserProfileServiceImplTest {
     }
 
     @Test
-    void itShouldDelete() {
+    void itShouldDeleteUserProfile() {
         // Given
-        // When
-        // Then
+        UUID id = UUID.randomUUID();
 
+        given(userProfileRepository.findUserProfileById(id)).willReturn(Optional.of(Mockito.mock(UserProfile.class)));
+
+        // ... UserProfile exists
+        given(userProfileRepository.deleteUserProfileById(id)).willReturn(1);
+
+        // When
+        boolean isDeleted = underTest.delete(id);
+
+        // Then
+        assertThat(isDeleted).isTrue();
+    }
+
+    @Test
+    void itShouldNotDeleteUserProfileWhenItDoesNotExists() {
+        // Given
+        UUID id = UUID.randomUUID();
+        given(userProfileRepository.findUserProfileById(id)).willReturn(Optional.empty());
+
+        // When
+        boolean isDeleted = underTest.delete(id);
+
+        // Then
+        assertThat(isDeleted).isFalse();
+        then(userProfileRepository).should(never()).delete(any(UserProfile.class));
     }
 
     @Test

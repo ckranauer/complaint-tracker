@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface UserProfileService {
 
     UserProfile create(UserProfile userProfile);
-    Collection<UserProfile> list(int limit);
+    Collection<UserProfile> list(int limit, int page);
     UserProfile get(UUID id);
     UserProfile update(UserProfile userProfile);
     Boolean delete(UUID id);

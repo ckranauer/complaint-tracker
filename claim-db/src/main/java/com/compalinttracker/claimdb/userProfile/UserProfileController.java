@@ -27,7 +27,7 @@ public class UserProfileController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("users", userProfileService.list(10)))
+                        .data(Map.of("users", userProfileService.list(1,10)))
                         .message("Users retrieved")
                         .status(OK)
                         .statusCode(OK.value())

@@ -54,13 +54,18 @@ public class UserProfileServiceImpl implements UserProfileService{
         return userProfileRepository.save(userProfile);
     }
 
-    public Collection<UserProfile> list(int limit) {
+    public Collection<UserProfile> list(int limit, int page) {
         log.info("Fetching all users");
-        return userProfileRepository.findAll(PageRequest.of(0, limit)).toList();
+        return userProfileRepository.findAll();
+        //return userProfileRepository.findAll(PageRequest.of(page, limit)).toList();
     }
 
     @Override
     public UserProfile get(UUID id) {
+
+        if(id == null){
+            throw new IllegalStateException(String.format("id is null"));
+        }
         log.info("Fetching user by id: {}", id);
         return userProfileRepository.findUserProfileById(id).get();
     }
@@ -73,6 +78,12 @@ public class UserProfileServiceImpl implements UserProfileService{
     @Override
     public Boolean delete(UUID id) {
         log.info("Deleting user: {}", id);
+        // Check if user profile is exists
+        Optional<UserProfile> optionalUserProfile = userProfileRepository.findUserProfileById(id);
+
+        if(optionalUserProfile.isEmpty()){
+            return Boolean.FALSE;
+        }
         userProfileRepository.deleteUserProfileById(id);
         return Boolean.TRUE;
     }
