@@ -14,11 +14,12 @@ public interface UserProfileService {
     UserProfile create(UserProfile userProfile);
     Collection<UserProfile> list(int limit, int page);
     UserProfile get(UUID id);
-    UserProfile update(UserProfile userProfile);
+    UserProfile update(UUID id, UserProfile userProfile);
     Boolean delete(UUID id);
 
     //Actually we add userRoleLink to User and to Role
     Boolean addUserRoleToUserProfile(UserRoleLinkDto userRoleLinkDto);
+    Boolean removeRoleFromUser(UserRoleLinkDto userRoleLinkDto);
 
 
 }

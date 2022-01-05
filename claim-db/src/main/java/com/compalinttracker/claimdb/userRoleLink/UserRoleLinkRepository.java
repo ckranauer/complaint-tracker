@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface UserRoleLinkRepository extends JpaRepository<UserRoleLink, Long> {
@@ -17,7 +19,7 @@ public interface UserRoleLinkRepository extends JpaRepository<UserRoleLink, Long
                     " AND user_role_link.user_profile_id = ?1",
             nativeQuery = true
     )
-    UserRoleLink findUserRoleLinkById(Long userId, Long roleId);
+    Optional<UserRoleLink> findUserRoleLinkById(UUID userId, Long roleId);
 
     @Transactional
     @Modifying
@@ -28,7 +30,7 @@ public interface UserRoleLinkRepository extends JpaRepository<UserRoleLink, Long
                     " AND user_role_link.user_profile_id = ?1",
             nativeQuery = true
     )
-    int deleteUserRoleLinkById(Long userId, Long longId);
+    int deleteUserRoleLinkById(UUID userId, Long longId);
 
     @Transactional
     @Modifying

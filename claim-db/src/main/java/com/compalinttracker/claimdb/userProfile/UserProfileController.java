@@ -76,15 +76,53 @@ public class UserProfileController {
 
     @PostMapping("/add-role-to-user")
     public ResponseEntity<Response> addRoleToUser(@RequestBody @Valid UserRoleLinkDto userRoleLinkDto){
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("userRoleLink", userProfileService.addUserRoleToUserProfile(userRoleLinkDto)))
-                        .message("Role is added to user.")
-                        .status(CREATED)
-                        .statusCode(CREATED.value())
-                        .build()
-        );
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("userRoleLink", userProfileService.addUserRoleToUserProfile(userRoleLinkDto)))
+                            .message("Role is added to user.")
+                            .status(CREATED)
+                            .statusCode(CREATED.value())
+                            .build()
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+
+    }
+
+
+    @PostMapping("/remove-role-from-user")
+    public ResponseEntity<Response> removeRoleFromUser(@RequestBody @Valid UserRoleLinkDto userRoleLinkDto){
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("userRoleLink", userProfileService.removeRoleFromUser(userRoleLinkDto)))
+                            .message("Role is removed from user")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+
     }
 
     @GetMapping("/get/{id}")
@@ -110,6 +148,33 @@ public class UserProfileController {
             );
         }
 
+    }
+
+    // TODO: Update user controller
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Response> updateUser(@RequestBody @Valid UserProfile userProfile,
+                                               @PathVariable ("id") UUID id){
+
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("user", userProfileService.update(id, userProfile)))
+                            .message("User updated")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(IllegalStateException exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
     }
 
     @DeleteMapping("/delete/{id}")

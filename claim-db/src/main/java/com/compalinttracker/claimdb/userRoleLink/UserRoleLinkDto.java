@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class UserRoleLinkDto {
+@NoArgsConstructor
+public class UserRoleLinkDto  {
 
     private UUID userId;
     private Long roleId;

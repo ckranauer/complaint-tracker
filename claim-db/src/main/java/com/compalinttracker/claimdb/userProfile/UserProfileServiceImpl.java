@@ -27,7 +27,8 @@ import java.util.UUID;
 public class UserProfileServiceImpl implements UserProfileService{
 
     private final UserProfileRepository userProfileRepository;
-    private final UserRoleServiceImpl userRoleService;
+    private final UserRoleRepository userRoleRepository;
+    private final UserRoleLinkRepository userRoleLinkRepository;
 
 
     public UserProfile create(UserProfile userProfile) {
@@ -71,8 +72,14 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
-    public UserProfile update(UserProfile userProfile) {
-        return null;
+    public UserProfile update(UUID id, UserProfile userProfile) {
+        Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(id);
+        UserProfile actualUserProfile = userProfileOptional.get();
+        actualUserProfile.setCreatedAt(userProfile.getCreatedAt());
+        actualUserProfile.setEmail(userProfile.getEmail());
+        actualUserProfile.setFirstName(userProfile.getFirstName());
+        actualUserProfile.setLastName(userProfile.getLastName());
+        return actualUserProfile;
     }
 
     @Override
@@ -93,8 +100,32 @@ public class UserProfileServiceImpl implements UserProfileService{
 
     @Override
     public Boolean addUserRoleToUserProfile(UserRoleLinkDto userRoleLinkDto) {
-        UserProfile user = userProfileRepository.findUserProfileById(userRoleLinkDto.getUserId()).get();
-        UserRole role = userRoleService.get(userRoleLinkDto.getRoleId());
+
+        // Check if UserProfile exists
+        Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(userRoleLinkDto.getUserId());
+
+        if(userProfileOptional.isEmpty()){
+            throw new IllegalStateException("User with "+ userRoleLinkDto.getUserId() + " id does not exists.");
+        }
+        UserProfile user = userProfileOptional.get();
+
+
+        // Check if Role is exists
+        Optional<UserRole> userRoleOptional = userRoleRepository.findRoleByIdOpt(userRoleLinkDto.getRoleId());
+
+        if(userRoleOptional.isEmpty()){
+            throw new IllegalStateException("Role with "+ userRoleLinkDto.getRoleId() + " id does not exists.");
+        }
+        UserRole role = userRoleOptional.get();
+
+        // Check if the role is already added to the user
+        Optional<UserRoleLink> userRoleLinkOptional = userRoleLinkRepository.findUserRoleLinkById(userRoleLinkDto.getUserId(),userRoleLinkDto.getRoleId());
+
+        if(userRoleLinkOptional.isPresent()){
+            throw new IllegalStateException( role.getRole() +" role is already added to "+ user.getEmail() + " user ...");
+        }
+
+        // Create User Role Link
         UserRoleLink userRoleLink = new UserRoleLink(
                 (new UserRoleLinkId(userRoleLinkDto.getRoleId(), userRoleLinkDto.getUserId())),
                 role,
@@ -103,6 +134,20 @@ public class UserProfileServiceImpl implements UserProfileService{
         );
         user.addUserRoleLink(userRoleLink);
         role.addUserRoleLink(userRoleLink);
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean removeRoleFromUser(UserRoleLinkDto userRoleLinkDto) {
+
+        // Check if user has the role
+        Optional<UserRoleLink> userRoleLinkOptional = userRoleLinkRepository.findUserRoleLinkById(userRoleLinkDto.getUserId(),userRoleLinkDto.getRoleId());
+
+        if(userRoleLinkOptional.isEmpty()){
+            throw new IllegalStateException("User does not have this role");
+        }
+
+        userRoleLinkRepository.deleteUserRoleLinkById(userRoleLinkDto.getUserId(), userRoleLinkDto.getRoleId());
         return Boolean.TRUE;
     }
 }

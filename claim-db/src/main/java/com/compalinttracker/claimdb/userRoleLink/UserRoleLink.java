@@ -7,13 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity(name = "UserRoleLink")
 @Data
 @NoArgsConstructor
 @Table(name = "user_role_link")
-public class UserRoleLink {
+public class UserRoleLink  {
 
     @EmbeddedId
     private UserRoleLinkId id;

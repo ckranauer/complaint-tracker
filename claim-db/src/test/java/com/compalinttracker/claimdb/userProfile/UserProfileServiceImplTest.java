@@ -1,6 +1,8 @@
 package com.compalinttracker.claimdb.userProfile;
 
+import com.compalinttracker.claimdb.userRole.UserRoleRepository;
 import com.compalinttracker.claimdb.userRole.UserRoleServiceImpl;
+import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -22,11 +24,16 @@ import static org.mockito.Mockito.when;
 
 class UserProfileServiceImplTest {
 
+
+
     @Mock
     private UserProfileRepository userProfileRepository;
 
     @Mock
-    private UserRoleServiceImpl userRoleServiceImpl;
+    private UserRoleLinkRepository userRoleLinkRepository;
+
+    @Mock
+    private UserRoleRepository userRoleRepository;
 
 
     @Captor
@@ -39,7 +46,7 @@ class UserProfileServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        underTest = new UserProfileServiceImpl(userProfileRepository, userRoleServiceImpl);
+        underTest = new UserProfileServiceImpl(userProfileRepository,  userRoleRepository, userRoleLinkRepository );
     }
 
     @Test
