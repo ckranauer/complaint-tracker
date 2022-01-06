@@ -5,6 +5,7 @@ import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.analysis.AnalysisDto;
 import com.compalinttracker.claimdb.analysis.AnalysisRepository;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
+import com.compalinttracker.claimdb.userProfile.UserProfileRepository;
 import com.compalinttracker.claimdb.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
     private final ComplaintRepository complaintRepository;
     private final AnalysisRepository analysisRepository;
-    private final UserProfileService userProfileService;
+    private final UserProfileRepository userProfileRepository;
 
     @Override
     public Complaint create(ComplaintDto complaintDto) {
@@ -64,7 +65,11 @@ public class ComplaintServiceImpl implements  ComplaintService{
             complaint.setPrio(complaintDto.getIsPrio());
         }
         if(complaintDto.getResponsible() != null) {
-            UserProfile responsible = userProfileService.get(complaintDto.getResponsible());
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
+            if(userProfileOptional.isEmpty()){
+                throw new IllegalStateException("User with id: "+ complaintDto.getResponsible()+" is not exist");
+            }
+            UserProfile responsible = userProfileOptional.get();
             responsible.addComplaint(complaint);
             complaint.setResponsible(responsible);
         }
@@ -142,7 +147,11 @@ public class ComplaintServiceImpl implements  ComplaintService{
         }
 
         if(complaintDto.getResponsible() != null) {
-            UserProfile responsible = userProfileService.get(complaintDto.getResponsible());
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
+            if(userProfileOptional.isEmpty()){
+                throw new IllegalStateException("User with id: "+ complaintDto.getResponsible()+" is not exist");
+            }
+            UserProfile responsible = userProfileOptional.get();
             responsible.addComplaint(actualComplaint);
             actualComplaint.setResponsible(responsible);
         }
@@ -165,6 +174,13 @@ public class ComplaintServiceImpl implements  ComplaintService{
             throw new IllegalStateException("Complaint with id: "+ id + " does not exists.");
         }
 
+        // First need to delete the analysis which belongs to this claim, if it exist
+        Optional<Analysis> analysisOptional = analysisRepository.findAnalysisByComplaintId(id);
+
+        if(analysisOptional.isPresent()){
+            analysisRepository.deleteAnalysisByComplaintId(id);
+        }
+
         if(complaintRepository.deleteComplaintById(id) == 0){
             throw new IllegalStateException("Complaint with id: "+ id + " cannot be deleted.");
         }
@@ -174,6 +190,15 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Analysis addAnalysis(AnalysisDto analysisDto) {
         log.info("Add analysis to the complaint.");
+
+        // in the analysis repo check if another analysis already contains this complaint id
+        // it means that the complaint already has analysis, so it is not possible to add more
+        // it is possible to update but in another method
+        Optional<Analysis> analysisOptional = analysisRepository.findById(analysisDto.getComplaintId());
+        if(analysisOptional.isPresent()){
+            throw new IllegalStateException("Complaint with id: "+ analysisDto.getComplaintId()+ " already has analysis.");
+        }
+
         Analysis analysis = new Analysis();
         Complaint complaint = complaintRepository.getById(analysisDto.getComplaintId());
         // TODO: put these to the class (pass the Dto as argument and set values inside the class) ??
@@ -186,7 +211,11 @@ public class ComplaintServiceImpl implements  ComplaintService{
         analysis.setAnalysisEndedAt(analysisDto.getAnalysisEndedAt());
         analysis.setAnalysisStartedAt(analysisDto.getAnalysisStartedAt());
         if(analysisDto.getAnalyzedBy() != null){
-            UserProfile user = userProfileService.get(analysisDto.getAnalyzedBy());
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(analysisDto.getAnalyzedBy());
+            if(userProfileOptional.isEmpty()){
+                throw new IllegalStateException("User with id: "+ analysisDto.getAnalyzedBy()+" is not exist");
+            }
+            UserProfile user = userProfileOptional.get();
             user.addAnalysis(analysis);
             analysis.setAnalyzedBy(user);
         }
@@ -203,8 +232,32 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Analysis update(AnalysisDto analysis) {
-        return null;
+    public Analysis update(Long complaintId, AnalysisDto analysisDto) {
+
+        Optional<Analysis> analysisOptional = analysisRepository.findById(complaintId);
+        Analysis analysis;
+        if(analysisOptional.isEmpty()){
+            analysis = new Analysis();
+        }
+
+        analysis = analysisOptional.get();
+        analysis.setBarcodes(analysisDto.getBarcodes());
+        analysis.setLifecycleInfo(analysisDto.getLifecycleInfo());
+        analysis.setVisualAnalysis(analysisDto.getVisualAnalysis());
+        analysis.setElectricalAnalysis(analysisDto.getElectricalAnalysis());
+        analysis.setConclusion(analysisDto.getConclusion());
+        analysis.setAnalysisEndedAt(analysisDto.getAnalysisEndedAt());
+        analysis.setAnalysisStartedAt(analysisDto.getAnalysisStartedAt());
+        if(analysisDto.getAnalyzedBy() != null){
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(analysisDto.getAnalyzedBy());
+            if(userProfileOptional.isEmpty()){
+                throw new IllegalStateException("User with id: "+ analysisDto.getAnalyzedBy()+" is not exist");
+            }
+            UserProfile analyzedBy = userProfileOptional.get();
+            analyzedBy.addAnalysis(analysis);
+            analysis.setAnalyzedBy(analyzedBy);
+        }
+        return analysisRepository.save(analysis);
     }
 
     @Override

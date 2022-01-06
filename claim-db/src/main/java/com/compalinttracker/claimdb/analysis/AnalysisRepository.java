@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Repository
 public interface AnalysisRepository extends JpaRepository<Analysis, Long> {
@@ -14,4 +15,6 @@ public interface AnalysisRepository extends JpaRepository<Analysis, Long> {
     @Modifying
     @Query("DELETE FROM Analysis a WHERE a.id = ?1")
     int deleteAnalysisByComplaintId(Long id);
+
+    Optional<Analysis> findAnalysisByComplaintId(Long complaitId);
 }
