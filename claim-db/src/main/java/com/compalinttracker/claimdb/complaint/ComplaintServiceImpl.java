@@ -88,8 +88,72 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Complaint update(ComplaintDto complaintDto) {
-        return null;
+    public Complaint update(Long id, ComplaintDto complaintDto) {
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
+        if(complaintOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Complaint does not exist."));
+        }
+        Complaint actualComplaint = complaintOptional.get();
+
+        // Serial number cannot be null
+        if(complaintDto.getSerialNumber() == null){
+            throw new IllegalStateException("Serial number cannot be null.");
+        }
+
+        // Check if serial number is already exist
+        Optional<Complaint> serNoComplaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
+        if(serNoComplaintOptional.isPresent()  ){
+            // If yes then check if it belongs to the same complaint what we want to update,
+            if(serNoComplaintOptional.get().getId() !=  id){
+                // if it belongs to another claim
+                throw new IllegalStateException(String.format("Complaint with serial number: " + complaintDto.getSerialNumber() + " is already exist."));
+            }else{
+                // If yes, save
+                actualComplaint.setSerialNumber(complaintDto.getSerialNumber());
+            }
+        }else{
+            // if not present then save
+            actualComplaint.setSerialNumber(complaintDto.getSerialNumber());
+        }
+
+        Optional<Complaint> qmsNoComplaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
+        if(complaintDto.getQmsNumber() != null){
+            if(qmsNoComplaintOptional.isPresent()){
+                if(qmsNoComplaintOptional.get().getId() != id){
+                    throw new IllegalStateException(String.format("Complaint with QMS number: "+ complaintDto.getQmsNumber() + " is already exist."));
+                }else{
+                    actualComplaint.setQmsNumber(complaintDto.getQmsNumber());
+                }
+            }else{
+                actualComplaint.setQmsNumber(complaintDto.getQmsNumber());
+            }
+        }
+
+        actualComplaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
+        actualComplaint.setClaimedFault(complaintDto.getClaimedFault());
+
+        // TODO: solve the date conversion
+        if(complaintDto.getArrivedAt().length() > 0){
+            int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
+            int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
+            int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
+            LocalDate date = LocalDate.of(year, Month.of(month), day);
+            actualComplaint.setArrivedAt(date );
+        }
+
+        if(complaintDto.getResponsible() != null) {
+            UserProfile responsible = userProfileService.get(complaintDto.getResponsible());
+            responsible.addComplaint(actualComplaint);
+            actualComplaint.setResponsible(responsible);
+        }
+
+        if(complaintDto.getIsPrio() != null){
+            actualComplaint.setPrio(complaintDto.getIsPrio());
+        }
+
+        // TODO: implement it ??
+        //actualComplaint.setAnalysis(complaintDto.getAnalysis());
+        return actualComplaint;
     }
 
     @Override
@@ -163,9 +227,6 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
         // TODO : create reportCreator service and implementation
         // TODO: report creator -> factory ? different reports or one standard
-
-
-
     }
 
     @Override

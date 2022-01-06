@@ -15,11 +15,18 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     Optional<Complaint> findComplaintById(Long id);
 
     @Query(
-            value = "select * " +
-                    "from complaint where serial_number = ?1",
+            value = "SELECT * " +
+                    "FROM complaint WHERE serial_number = ?1",
             nativeQuery = true
     )
     Optional<Complaint> findComplaintBySerNo(String serialNumber);
+
+    @Query(
+            value = "SELECT * " +
+                    " FROM complaint WHERE qms_number = ?1 ",
+            nativeQuery = true
+    )
+    Optional<Complaint> findComplaintByQmsNo(String qmsNumber);
 
     @Transactional
     @Modifying
