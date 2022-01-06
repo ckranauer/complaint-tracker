@@ -33,6 +33,20 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Complaint create(ComplaintDto complaintDto) {
         log.info("Saving new complaint: {}", complaintDto.getQmsNumber());
+
+        // Check if the complaint is already exists, if the serial number is already used then the complaint is already exist
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
+
+        if(complaintOptional.isPresent()){
+            throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getSerialNumber() + " serial number is already exists"));
+        }
+
+        if(complaintDto.getQmsNumber() != null ){
+            if(complaintOptional.isPresent()  && complaintDto.getQmsNumber().equals(complaintOptional.get().getQmsNumber())){
+                throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getQmsNumber() + " qms number is already exists"));
+            }
+        }
+
         Complaint complaint = new Complaint();
         complaint.setCreatedAt(LocalDateTime.now());
         complaint.setSerialNumber(complaintDto.getSerialNumber());
@@ -58,15 +72,19 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Collection<Complaint> list(int limit) {
+    public Collection<Complaint> list(int limit, int page) {
         log.info("Fetching all complaints");
-        return complaintRepository.findAll(PageRequest.of(0,limit)).toList();
+        return complaintRepository.findAll(PageRequest.of(page,limit)).toList();
     }
 
     @Override
     public Complaint get(Long id) {
         log.info("Fetching complaint by id: {}", id);
-        return complaintRepository.findComplaintById(id).get();
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
+        if(complaintOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Complaint with id: "+ id + " is not exist."));
+        }
+        return complaintOptional.get();
     }
 
     @Override
@@ -77,7 +95,15 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Boolean delete(Long id) {
         log.info("Deleting complaint by id: {}", id);
-        complaintRepository.deleteById(id);
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
+
+        if(complaintOptional.isEmpty()){
+            throw new IllegalStateException("Complaint with id: "+ id + " does not exists.");
+        }
+
+        if(complaintRepository.deleteComplaintById(id) == 0){
+            throw new IllegalStateException("Complaint with id: "+ id + " cannot be deleted.");
+        }
         return Boolean.TRUE;
     }
 

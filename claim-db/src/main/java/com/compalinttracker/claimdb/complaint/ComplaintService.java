@@ -10,7 +10,7 @@ import java.util.Collection;
 public interface ComplaintService {
 
     Complaint create(ComplaintDto complaintDto);
-    Collection<Complaint> list(int limit);
+    Collection<Complaint> list(int limit, int page);
     Complaint get(Long id);
     Complaint update(ComplaintDto complaint);       //TODO: implement complaint update
     Boolean delete(Long id);
@@ -19,7 +19,7 @@ public interface ComplaintService {
     Boolean deleteAnalysis(Long id);
     Analysis update(AnalysisDto analysis);          //TODO: implement analysis update
 
-    void createAnalysisReport(Long analysisId);
-    void printLabel(Long ComplaintId);
+    void createAnalysisReport(Long analysisId);     // TODO: implement createAnalysisReport
+    void printLabel(Long ComplaintId);              // TODO: implement printLabel
 
 }

@@ -62,11 +62,10 @@ public class UserProfileServiceImpl implements UserProfileService{
 
     @Override
     public UserProfile get(UUID id) {
-
+        log.info("Fetching user by id: {}", id);
         if(id == null){
             throw new IllegalStateException(String.format("id is null"));
         }
-        log.info("Fetching user by id: {}", id);
         return userProfileRepository.findUserProfileById(id).get();
     }
 
@@ -92,7 +91,7 @@ public class UserProfileServiceImpl implements UserProfileService{
         }
 
         if(userProfileRepository.deleteUserProfileById(id) == 0){
-            throw new IllegalStateException("User with "+ id + " cannot be deleted.");
+            throw new IllegalStateException("User with id: "+ id + " cannot be deleted.");
         }
         return Boolean.TRUE;
     }
