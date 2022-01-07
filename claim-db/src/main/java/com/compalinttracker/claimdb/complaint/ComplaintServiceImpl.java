@@ -4,14 +4,12 @@ package com.compalinttracker.claimdb.complaint;
 import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.analysis.AnalysisDto;
 import com.compalinttracker.claimdb.analysis.AnalysisRepository;
+import com.compalinttracker.claimdb.complaint.reportCreator.ReportCreatorImpl;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
 import com.compalinttracker.claimdb.userProfile.UserProfileRepository;
-import com.compalinttracker.claimdb.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,6 +28,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     private final ComplaintRepository complaintRepository;
     private final AnalysisRepository analysisRepository;
     private final UserProfileRepository userProfileRepository;
+    private final ReportCreatorImpl reportCreator;
 
     @Override
     public Complaint create(ComplaintDto complaintDto) {
@@ -224,6 +223,16 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
+    public Analysis getAnalysis(Long id) {
+        log.info("Fetching analysis by id: {}", id);
+        Optional<Analysis> analysisOptional = analysisRepository.findAnalysisByComplaintId(id);
+        if(analysisOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Analysis with id: "+ id + " is not exist."));
+        }
+        return analysisOptional.get();
+    }
+
+    @Override
     public Boolean deleteAnalysis(Long complaintId) {
         log.info("Deleting analysis by id: {}", complaintId);
         Complaint complaint = complaintRepository.getById(complaintId);
@@ -261,25 +270,30 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public void createAnalysisReport(Long complaintId) {
+    public Boolean createAnalysisReport(Long complaintId) {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
-        Complaint complaint;
+
         if(complaintOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
         }
-
-        complaint = complaintOptional.get();
+        Complaint complaint = complaintOptional.get();
 
         Optional<Analysis> analysisOptional = analysisRepository.findById(complaintId);
 
-        Analysis analysis;
         // If the complaint does not contain analysis then the report will only contain the complaint data
-        if(analysisOptional.isPresent()){
-            analysis = analysisOptional.get();
+        if(analysisOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Complaint with id: " + complaintId + " does not contain analysis."));
+        }
+        Analysis analysis = analysisOptional.get();
+
+
+        try{
+            reportCreator.create(analysis);
+        }catch(Exception exception){
+            System.out.println(exception);
         }
 
-        // TODO : create reportCreator service and implementation
-        // TODO: report creator -> factory ? different reports or one standard
+        return Boolean.TRUE;
     }
 
     @Override

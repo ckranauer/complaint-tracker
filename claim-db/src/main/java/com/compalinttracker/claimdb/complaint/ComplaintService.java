@@ -17,9 +17,11 @@ public interface ComplaintService {
 
     Analysis addAnalysis(AnalysisDto analysisDto);
     Boolean deleteAnalysis(Long id);
-    Analysis update(Long complaintId, AnalysisDto analysis);          //TODO: implement analysis update
+    Analysis update(Long complaintId, AnalysisDto analysis);
+    Analysis getAnalysis(Long id);
 
-    void createAnalysisReport(Long analysisId);     // TODO: implement createAnalysisReport
+
+    Boolean createAnalysisReport(Long analysisId);     // TODO: implement createAnalysisReport
     void printLabel(Long ComplaintId);              // TODO: implement printLabel
 
 }

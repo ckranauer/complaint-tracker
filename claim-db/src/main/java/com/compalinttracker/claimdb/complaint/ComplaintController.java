@@ -6,6 +6,7 @@ import com.compalinttracker.claimdb.paginationParam.PaginationObj;
 import com.compalinttracker.claimdb.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -236,6 +237,32 @@ public class ComplaintController {
 
             );
         }catch (Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+    }
+
+
+
+    @GetMapping("/create-report/{id}")
+    public ResponseEntity<Response> createAnalysisReport(@PathVariable("id") Long id){
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("report", complaintService.createAnalysisReport(id)))
+                            .message("Analysis report is created")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())

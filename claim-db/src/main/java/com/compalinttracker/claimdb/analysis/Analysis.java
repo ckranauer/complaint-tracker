@@ -139,4 +139,12 @@ public class Analysis implements Serializable {
         this.analysisEndedAt = analysisEndedAt;
         this.analyzedBy = analyzedBy;
     }
+
+    public String isConfirmed(){
+        if(this.faultVerification){
+            return "The fault is confirmed.";
+        }else{
+            return "The fault is not confirmed.";
+        }
+    }
 }
