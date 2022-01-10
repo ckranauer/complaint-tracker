@@ -77,7 +77,7 @@ public class PrinterServerController {
                     Response.builder()
                             .timeStamp(now())
                             .data(Map.of("server", printerServerService.ping(id)))
-                            .message("Server pinged")
+                            .message("Server is running")
                             .status(OK)
                             .statusCode(OK.value())
                             .build()

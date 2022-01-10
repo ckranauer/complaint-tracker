@@ -1,27 +1,39 @@
 package com.compalinttracker.claimdb.complaint.labelPrinter;
 
 import com.compalinttracker.claimdb.complaint.ComplaintDto;
+import com.compalinttracker.claimdb.complaint.boxLabel.BoxLabel;
+import com.compalinttracker.claimdb.complaint.boxLabel.LabelFactory;
+import com.compalinttracker.claimdb.complaint.boxLabel.Mib2Label;
+import com.compalinttracker.claimdb.printerServer.PrinterServer;
+import com.compalinttracker.claimdb.printerServer.PrinterServerImpl;
+import com.compalinttracker.claimdb.printerServer.PrinterServerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class LabelPrinter implements  PrintService{
 
+    private final ZebraPrinter zebraPrinter;
+    private final PrinterServerRepository printerServerRepository;
+    private final LabelFactory labelFactory;
+
+
     @Override
-    public Boolean print(ComplaintDto complaintDto) {
+    public Boolean print(ComplaintDto complaintDto) throws IOException {
 
-        // TODO: 1. Create label String   --> this part can vary, different product with different labels
-        // label factory -> depending on the complaintDto.getProdGroup gives back a label -> pl MIB2 group -> MIB2 label
-        // MIB2 label implements the Box label interface, and it need a
-            // TODO: Create a BoxLabel interface
-            // TODO: pl MIB2 implement BoxLabel then it should have a build label method and should give back a string
+        Optional<PrinterServer> printerServerOptional = printerServerRepository.findById(1l);
+        PrinterServer server = printerServerOptional.get();
+        BoxLabel label = labelFactory.getLabel(complaintDto.getProdGroup().toUpperCase());
 
-        // 2. TODO: Print the String with the label printer
-        //
-
+        zebraPrinter.startConnection(server.getIp(), server.getPortNumber());
+        zebraPrinter.sendMessage(label.prepareLabelContent(complaintDto));
+        zebraPrinter.stopConnection();
 
         return Boolean.TRUE;
     }

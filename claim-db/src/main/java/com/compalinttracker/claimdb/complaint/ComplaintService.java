@@ -4,6 +4,7 @@ package com.compalinttracker.claimdb.complaint;
 import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.analysis.AnalysisDto;
 
+import java.io.IOException;
 import java.util.Collection;
 
 
@@ -22,6 +23,6 @@ public interface ComplaintService {
 
 
     Boolean createAnalysisReport(Long analysisId);
-    Boolean printLabel(ComplaintDto complaintDto);              // TODO: implement printLabel
-    Boolean printSavedLabel(Long id);
+    Boolean printLabel(ComplaintDto complaintDto) throws IOException;              // TODO: implement printLabel
+    Boolean printSavedLabel(Long id) throws IOException;
 }

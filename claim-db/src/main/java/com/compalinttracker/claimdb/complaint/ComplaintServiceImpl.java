@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -297,14 +298,16 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
     // object is come from the frontend
     @Override
-    public Boolean printLabel(ComplaintDto complaintDto) {
+    public Boolean printLabel(ComplaintDto complaintDto) throws IOException {
+
         labelPrinter.print(complaintDto);
+
         return Boolean.TRUE;
     }
 
     // read the complaint from db
     @Override
-    public Boolean printSavedLabel(Long complaintId) {
+    public Boolean printSavedLabel(Long complaintId) throws IOException {
         // TODO: create label printer service
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
         if(complaintOptional.isEmpty()){

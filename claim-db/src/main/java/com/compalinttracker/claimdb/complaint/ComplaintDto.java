@@ -20,7 +20,7 @@ public class ComplaintDto {
     private String qmsNumber;
     private String customerRefNumber;
     private String claimedFault;
-
+    private String prodGroup;
 
     private String arrivedAt;
     private UUID responsible;
