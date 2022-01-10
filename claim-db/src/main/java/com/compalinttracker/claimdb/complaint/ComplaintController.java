@@ -273,4 +273,55 @@ public class ComplaintController {
             );
         }
     }
+
+    // print label for an already saved claim
+    @GetMapping("/print-label-from-saved-complaint/{id}")
+    public ResponseEntity<Response> printSavedLabel(@PathVariable("id") Long id){
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("print", complaintService.printSavedLabel(id)))
+                            .message("Label is printed.")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+    }
+
+    // print label without saving the datas
+    @PostMapping("/print-label")
+    public ResponseEntity<Response> printLabel(@RequestBody @Valid ComplaintDto complaintDto){
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("print", complaintService.printLabel(complaintDto)))
+                            .message("Label printed")
+                            .status(CREATED)
+                            .statusCode(CREATED.value())
+                            .build()
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+    }
+
 }

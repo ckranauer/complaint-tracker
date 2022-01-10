@@ -4,6 +4,7 @@ package com.compalinttracker.claimdb.complaint;
 import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.analysis.AnalysisDto;
 import com.compalinttracker.claimdb.analysis.AnalysisRepository;
+import com.compalinttracker.claimdb.complaint.labelPrinter.LabelPrinter;
 import com.compalinttracker.claimdb.complaint.reportCreator.ReportCreatorImpl;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
 import com.compalinttracker.claimdb.userProfile.UserProfileRepository;
@@ -29,6 +30,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     private final AnalysisRepository analysisRepository;
     private final UserProfileRepository userProfileRepository;
     private final ReportCreatorImpl reportCreator;
+    private final LabelPrinter labelPrinter;
 
     @Override
     public Complaint create(ComplaintDto complaintDto) {
@@ -276,7 +278,6 @@ public class ComplaintServiceImpl implements  ComplaintService{
         if(complaintOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
         }
-        Complaint complaint = complaintOptional.get();
 
         Optional<Analysis> analysisOptional = analysisRepository.findById(complaintId);
 
@@ -286,18 +287,38 @@ public class ComplaintServiceImpl implements  ComplaintService{
         }
         Analysis analysis = analysisOptional.get();
 
-
         try{
             reportCreator.create(analysis);
         }catch(Exception exception){
             System.out.println(exception);
         }
-
         return Boolean.TRUE;
     }
 
+    // object is come from the frontend
     @Override
-    public void printLabel(Long ComplaintId) {
+    public Boolean printLabel(ComplaintDto complaintDto) {
+        labelPrinter.print(complaintDto);
+        return Boolean.TRUE;
+    }
+
+    // read the complaint from db
+    @Override
+    public Boolean printSavedLabel(Long complaintId) {
         // TODO: create label printer service
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
+        if(complaintOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
+        }
+        Complaint complaint = complaintOptional.get();
+        ComplaintDto complaintDto = new ComplaintDto();
+        complaintDto.setQmsNumber(complaint.getQmsNumber());
+        complaintDto.setCustomerRefNumber(complaint.getCustomerRefNumber());
+        complaintDto.setSerialNumber(complaint.getSerialNumber());
+        //complaintDto.setProductGroup(complaint.getProductGroup());       // TODO:  implement product group
+        complaintDto.setArrivedAt(complaint.getArrivedAt().toString());  // TODO: create method what makes a formated date -> 2022.01.07
+        complaintDto.setClaimedFault(complaint.getClaimedFault());
+        labelPrinter.print(complaintDto);
+        return Boolean.TRUE;
     }
 }

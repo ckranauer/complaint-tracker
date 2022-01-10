@@ -32,7 +32,11 @@ public class Product {
     )
     private Long id;
 
-    private String name;
+    @Column(
+            name = "group_name",
+            nullable = false
+    )
+    private String groupName;
 
     private String description;
 

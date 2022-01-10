@@ -21,7 +21,7 @@ public interface ComplaintService {
     Analysis getAnalysis(Long id);
 
 
-    Boolean createAnalysisReport(Long analysisId);     // TODO: implement createAnalysisReport
-    void printLabel(Long ComplaintId);              // TODO: implement printLabel
-
+    Boolean createAnalysisReport(Long analysisId);
+    Boolean printLabel(ComplaintDto complaintDto);              // TODO: implement printLabel
+    Boolean printSavedLabel(Long id);
 }
