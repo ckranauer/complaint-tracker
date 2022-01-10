@@ -21,7 +21,7 @@ public class LabelPrinter implements  PrintService{
 
         // 2. TODO: Print the String with the label printer
         //
-        // string string builder
+
 
         return Boolean.TRUE;
     }
