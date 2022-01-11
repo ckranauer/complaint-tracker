@@ -84,6 +84,8 @@ public class Complaint  {       //implements Serializable
     )
     private UserProfile responsible;
 
+    // private String partDescription;
+
     //private ProductInfo productInto;
 
     @Column(

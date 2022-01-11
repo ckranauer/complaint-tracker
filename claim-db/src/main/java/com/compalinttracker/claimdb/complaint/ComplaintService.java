@@ -22,7 +22,7 @@ public interface ComplaintService {
     Analysis getAnalysis(Long id);
 
 
-    Boolean createAnalysisReport(Long analysisId);
+    Boolean createAnalysisReport(Long analysisId) throws Exception;
     Boolean printLabel(ComplaintDto complaintDto) throws IOException;              // TODO: implement printLabel
     Boolean printSavedLabel(Long id) throws IOException;
 }

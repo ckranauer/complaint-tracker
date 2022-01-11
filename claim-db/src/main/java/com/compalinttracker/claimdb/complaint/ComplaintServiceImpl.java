@@ -43,7 +43,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         if(complaintOptional.isPresent()){
             throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getSerialNumber() + " serial number is already exists"));
         }
-
+        // TODO: from the frontend there was posible to complaint data with null value in SNR, QMS. Solve the issue
         if(complaintDto.getQmsNumber() != null ){
             if(complaintOptional.isPresent()  && complaintDto.getQmsNumber().equals(complaintOptional.get().getQmsNumber())){
                 throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getQmsNumber() + " qms number is already exists"));
@@ -273,7 +273,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Boolean createAnalysisReport(Long complaintId) {
+    public Boolean createAnalysisReport(Long complaintId) throws Exception {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
 
         if(complaintOptional.isEmpty()){
@@ -287,12 +287,8 @@ public class ComplaintServiceImpl implements  ComplaintService{
             throw new IllegalStateException(String.format("Complaint with id: " + complaintId + " does not contain analysis."));
         }
         Analysis analysis = analysisOptional.get();
+        reportCreator.create(analysis);
 
-        try{
-            reportCreator.create(analysis);
-        }catch(Exception exception){
-            System.out.println(exception);
-        }
         return Boolean.TRUE;
     }
 
@@ -308,7 +304,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     // read the complaint from db
     @Override
     public Boolean printSavedLabel(Long complaintId) throws IOException {
-        // TODO: create label printer service
+
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
         if(complaintOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
