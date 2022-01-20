@@ -11,7 +11,7 @@ import java.util.Collection;
 public interface ComplaintService {
 
     Complaint create(ComplaintDto complaintDto);
-    Collection<Complaint> list(int limit, int page);
+    Collection<ComplaintAnalysisDto> list(int limit, int page);
     Complaint get(Long id);
     Complaint update(Long id, ComplaintDto complaint);
     Boolean delete(Long id);

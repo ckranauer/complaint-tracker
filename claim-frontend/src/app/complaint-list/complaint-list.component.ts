@@ -4,6 +4,7 @@ import { BehaviorSubject, catchError, map, Observable, of, startWith } from 'rxj
 import { AppState } from '../app-state';
 import { ComplaintDto } from '../complaint/complaintDto';
 import { DataState } from '../enum/data-state.enum';
+import { PaginationObj } from '../interface/pagination-obj';
 import { ComplaintResponse } from '../response/complaint-response';
 import { ComplaintService } from '../service/complaint.service';
 
@@ -21,13 +22,32 @@ export class ComplaintListComponent implements OnInit {
   private isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoading.asObservable();
 
+  claims?: ComplaintResponse;
+
+  private pageObj: PaginationObj = {
+    "page": 0,
+    "limit": 10
+    
+  }
+
 
   constructor(private complaintService: ComplaintService){}
 
   ngOnInit(): void {
-    this.getClaims();
+    this.onGetComplaints(this.pageObj);
   }
 
+  onGetComplaints(pageObj: PaginationObj): void {
+    this.complaintService.getComplaints(pageObj)
+    .subscribe(
+      (response) => this.claims = response,
+      
+      (error: any) => console.log(error),
+      () => console.log('Done getting complaints')
+      ), console.log(this.claims?.data?.complaints);
+  }
+
+  /*
   public getClaims(): void{
     this.appState$ = this.complaintService.complaints$
     .pipe(
@@ -39,8 +59,9 @@ export class ComplaintListComponent implements OnInit {
         return of({ dataState: DataState.ERROR_STATE })
       } )
     );
-  }
+  }*/
 
+  /*
   public saveComplaint(complaintForm: NgForm): void {
     this.isLoading.next(true);
     this.appState$ = this.complaintService.save$(complaintForm.value as ComplaintDto )  //as ComplaintDto
@@ -60,6 +81,6 @@ export class ComplaintListComponent implements OnInit {
         return of({ dataState: DataState.ERROR_STATE })
       } )
       );
-  }
+  }*/
 
 }

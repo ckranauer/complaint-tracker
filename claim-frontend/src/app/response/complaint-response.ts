@@ -1,4 +1,5 @@
 import { Complaint } from "../complaint/complaint";
+import { ComplaintDto } from "../complaint/complaintDto";
 
 
 
@@ -9,5 +10,5 @@ export interface ComplaintResponse {
     reason: string;
     message: string;
     developerMessage: string;
-    data: { complaints?: Complaint[], complaint?: Complaint}
+    data: { complaints?: ComplaintDto[], complaint?: ComplaintDto}
 }

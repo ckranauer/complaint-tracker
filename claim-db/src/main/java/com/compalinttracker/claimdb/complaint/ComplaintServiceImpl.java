@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -79,9 +78,43 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Collection<Complaint> list(int limit, int page) {
-        log.info("Fetching all complaints");
-        return complaintRepository.findAll(PageRequest.of(page,limit)).toList();
+    public Collection<ComplaintAnalysisDto> list(int limit, int page) {   // TODO: change it to complaintDto
+        log.info("Fetching all complaints");                    // TODO: create a query which collect only the necessary datas
+        // TODO: create the complaintDTO what is in the frontend
+
+        // TODO: create  A projection interface to retrieve a subset of attributes
+        // TODO: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections
+        ;
+        Collection<ComplaintAnalysisDto> complaints = new ArrayList<ComplaintAnalysisDto>();
+       // complaintRepository.findAll(PageRequest.of(page,limit)).toList();
+        // TODO : stream
+
+        List<ComplaintAnalysisDto> rawComplaints = complaintRepository.findAllComplaintAnalysis();
+
+        for(ComplaintAnalysisDto cmp :rawComplaints){
+            if(cmp.getId().isPresent()){
+                System.out.println(cmp.getId().get());
+            }
+            if(cmp.getSerial_number().isPresent()){
+                System.out.println(cmp.getSerial_number().get());
+            }
+            if(cmp.getQms_number().isPresent()){
+                System.out.println(cmp.getQms_number().get());
+            }
+            if(cmp.getCustomer_ref_number().isPresent()){
+                System.out.println(cmp.getCustomer_ref_number().get());
+            }
+            if(cmp.getClaimed_fault().isPresent()){
+                System.out.println(cmp.getClaimed_fault().get());
+            }
+            if(cmp.getAnalysis_started_at().isPresent()){
+                System.out.println(cmp.getAnalysis_started_at().get());
+            }
+            if(cmp.getAnalysis_ended_at().isPresent()){
+                System.out.println(cmp.getAnalysis_ended_at().get());
+            }
+        }
+        return rawComplaints;
     }
 
     @Override
