@@ -18,16 +18,16 @@ export class ComplaintService {
   constructor(private http: HttpClient) { }
 
 
-  createComplaint(complaint: ComplaintCreateDto): Observable<Complaint> {
-    return this.http.post<Complaint>(`${this.apiUrl}/complaint/save`, complaint)
+  createComplaint(complaint: ComplaintCreateDto): Observable<ComplaintResponse> {
+    return this.http.post<ComplaintResponse>(`${this.apiUrl}/complaint/save`, complaint)
   }
 
   getComplaints(paginationObj: PaginationObj): Observable<ComplaintResponse> {
       return this.http.post<ComplaintResponse>(`${this.apiUrl}/complaint/list`, paginationObj);
   }
 
-  getComplaint(): Observable<Complaint> {
-    return this.http.get<Complaint>(`${this.apiUrl}/complaint/get/1`);
+  getComplaint(id :number): Observable<ComplaintResponse> {
+    return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/get/${id}`);
   }
 
   updateComplaint(complaint: ComplaintDto, id:number): Observable<Complaint> {

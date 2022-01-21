@@ -17,3 +17,5 @@ export interface ComplaintDto {
    // productGroup: string;
     analyzedBy: string;
 }
+
+

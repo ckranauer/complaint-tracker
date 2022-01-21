@@ -33,8 +33,9 @@ public class ComplaintServiceImpl implements  ComplaintService{
     private final LabelPrinter labelPrinter;
 
     @Override
-    public Complaint create(ComplaintDto complaintDto) {
+    public Collection<ComplaintAnalysisDto> create(ComplaintDto complaintDto) {
         log.info("Saving new complaint: {}", complaintDto.getQmsNumber());
+
 
         // Check if the complaint is already exists, if the serial number is already used then the complaint is already exist
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
@@ -74,7 +75,9 @@ public class ComplaintServiceImpl implements  ComplaintService{
             responsible.addComplaint(complaint);
             complaint.setResponsible(responsible);
         }
-        return complaintRepository.save(complaint);
+
+        complaintRepository.save(complaint);
+        return complaintRepository.findAllComplaintAnalysis();
     }
 
     @Override

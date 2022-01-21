@@ -37,7 +37,7 @@ public class Product {
             nullable = false
     )
     private String productName;
-    
+
 
     // TODO: product many to one relationship
 }

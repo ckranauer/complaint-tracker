@@ -4,9 +4,10 @@ export interface ComplaintCreateDto {
 
     serialNumber: string;
     qmsNumber: string;
-    customerReference: string;
+    customerRefNumber: string;
     claimedFault: string;
     arrivedAt: Date;
     isPrio: boolean;
     responsible: number;
 }
+

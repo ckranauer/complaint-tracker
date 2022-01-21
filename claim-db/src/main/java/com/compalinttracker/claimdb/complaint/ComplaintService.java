@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public interface ComplaintService {
 
-    Complaint create(ComplaintDto complaintDto);
+    Collection<ComplaintAnalysisDto>  create(ComplaintDto complaintDto);
     Collection<ComplaintAnalysisDto> list(int limit, int page);
     Complaint get(Long id);
     Complaint update(Long id, ComplaintDto complaint);

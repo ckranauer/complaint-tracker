@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { BehaviorSubject, catchError, map, Observable, of, startWith } from 'rxjs';
 import { AppState } from '../app-state';
+import { ComplaintCreateDto } from '../complaint/complaintCreateDto';
 import { ComplaintDto } from '../complaint/complaintDto';
 import { DataState } from '../enum/data-state.enum';
 import { PaginationObj } from '../interface/pagination-obj';
@@ -23,6 +24,7 @@ export class ComplaintListComponent implements OnInit {
   isLoading$ = this.isLoading.asObservable();
 
   claims?: ComplaintResponse;
+  claim?: ComplaintResponse;
 
   private pageObj: PaginationObj = {
     "page": 0,
@@ -37,6 +39,15 @@ export class ComplaintListComponent implements OnInit {
     this.onGetComplaints(this.pageObj);
   }
 
+  onGetComplaint(id: number): void{
+    console.log(id)
+    this.complaintService.getComplaint(id).subscribe(
+      (response) => this.claim = response,
+      (error: any) => console.log(error),
+      () => console.log('Done getting complaint')
+      );
+  }
+
   onGetComplaints(pageObj: PaginationObj): void {
     this.complaintService.getComplaints(pageObj)
     .subscribe(
@@ -45,6 +56,24 @@ export class ComplaintListComponent implements OnInit {
       (error: any) => console.log(error),
       () => console.log('Done getting complaints')
       ), console.log(this.claims?.data?.complaints);
+  }
+
+  onCreateComplaint(complaintCreateForm: NgForm): void{
+    console.log(complaintCreateForm.value)
+    this.complaintService.createComplaint(complaintCreateForm.value as ComplaintCreateDto).subscribe(
+      (response) => this.claims = response,
+      (error: any) => console.log(error),
+      () => console.log('Done getting complaint'),
+      ), complaintCreateForm.resetForm();
+  }
+
+  onUpdateComplaint(complaintUpdateForm: NgForm): void{
+    console.log(complaintUpdateForm.value)
+    this.complaintService.createComplaint(complaintUpdateForm.value as ComplaintCreateDto).subscribe(
+      (response) => this.claims = response,
+      (error: any) => console.log(error),
+      () => console.log('Done getting complaint'),
+      ), complaintUpdateForm.resetForm();
   }
 
   /*
