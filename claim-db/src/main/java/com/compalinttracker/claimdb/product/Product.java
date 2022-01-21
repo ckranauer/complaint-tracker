@@ -36,14 +36,8 @@ public class Product {
             name = "group_name",
             nullable = false
     )
-    private String groupName;
-
-    private String description;
-
-    private String type;  // transient ? calculate from the unit's barcode
-
-
-    // enum ??
+    private String productName;
+    
 
     // TODO: product many to one relationship
 }

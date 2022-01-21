@@ -8,8 +8,12 @@
             </form>
       </div>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button"  class="btn btn-primary btn-sm">Add complaint</button>
+        <button type="button" style=cursor:pointer class="btn btn-primary btn-sm">Add complaint</button>
       </div>
+
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Launch demo modal
+      </button>
     
       <table class="table table-striped table-hover" id="complaint-table">
           <thead>
@@ -41,28 +45,28 @@
             <tbody *ngFor="let complaint of claims?.data?.complaints">
               <tr >
                   <td>
-                      {{ complaint.arrived_at }}
+                      {{ complaint.arrivedAt }}
                   </td>
                   <td>
-                      {{ complaint.serial_number }}
+                      {{ complaint.serialNumber }}
                   </td>
                   <td>
-                      {{ complaint.analysis_started_at }}
+                      {{ complaint.analysisStartedAt }}
                   </td>
                   <td>
-                    {{ complaint.analysis_ended_at }}
+                    {{ complaint.analysisEndedAt }}
                   </td>
                   <td>
                     <!--  {{ complaint.productGroup }} -->
                   </td>
                   <td>
-                      {{ complaint?.analyzed_by }} 
+                      {{ complaint?.analyzedBy }} 
                   </td>
                   <td>
-                    {{ complaint.qms_number }}
+                    {{ complaint.qmsNumber }}
                   </td>
                   <td>
-                    {{ complaint.customer_ref_number }}
+                    {{ complaint.customerRefNumber }}
                   </td>
               </tr>
             </tbody>
@@ -71,6 +75,58 @@
         
     </div>
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add complaint</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Serial number</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">QMS number</label>
+                  <input type="text" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Customer number</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Product group</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Incoming date</label>
+                    <input type="date" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Claimed fault</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Responsible</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1">
+                  </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label" for="exampleCheck1">Prio</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
     
   
 

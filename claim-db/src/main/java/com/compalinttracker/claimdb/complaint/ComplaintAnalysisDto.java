@@ -13,14 +13,16 @@ import java.util.UUID;
 public interface ComplaintAnalysisDto {
 
         Optional<Long> getId();
-        Optional<String> getSerial_number();
-        Optional<String> getQms_number();
-        Optional<String> getCustomer_ref_number();
-        Optional<String> getClaimed_fault();
-        Optional<String> getAnalyzed_by();
-        Optional<String> getArrived_at();
-        Optional<String> getAnalysis_started_at();
-        Optional<String> getAnalysis_ended_at();
+        Optional<String> getSerialNumber();
+        Optional<String> getQmsNumber();
+        Optional<String> getCustomerRefNumber();
+        Optional<String> getClaimedFault();
+        Optional<String> getAnalyzedBy();
+        Optional<String> getArrivedAt();
+        Optional<String> getAnalysisStartedAt();
+        Optional<String> getAnalysisEndedAt();
+
+
 
 
 

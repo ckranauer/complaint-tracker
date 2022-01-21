@@ -3,17 +3,17 @@ import { UserDto } from "../user/userDto";
 export interface ComplaintDto {
    
 
-    serial_number: string;
-    qms_number: string;
-    customer_ref_number: string;
-    claimed_fault: string;
-    arrived_at: string;
+    serialNumber: string;
+    qmsNumber: string;
+    customerRefNumber: string;
+    claimedFault: string;
+    arrivedAt: string;
    
     //responsible: string;
 
-    analysis_started_at: string;
-    analysis_ended_at: string;
+    analysisStartedAt: string;
+    analysisEndedAt: string;
 
    // productGroup: string;
-    analyzed_by: string;
+    analyzedBy: string;
 }

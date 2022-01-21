@@ -18,13 +18,15 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     //         "claimed_fault " +
 
     @Query(
-            value = "SELECT complaint.id, serial_number, " +
-                    " qms_number, customer_ref_number, " +
-                    "claimed_fault, " +
-                    "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as analyzed_by, " +
-                    "arrived_at, " +
-                    "analysis_started_at, " +
-                    "analysis_ended_at " +
+            value = "SELECT complaint.id, " +
+                    "serial_number as serialNumber, " +
+                    "qms_number as qmsNumber, " +
+                    "customer_ref_number as customerRefNumber, " +
+                    "claimed_fault as claimedFault, " +
+                    "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as analyzedBy, " +
+                    "arrived_at as arrivedAt, " +
+                    "analysis_started_at as analysisStartedAt, " +
+                    "analysis_ended_at as analysisEndedAt " +
                     "FROM complaint " +
                     "LEFT JOIN analysis ON analysis.complaint_id = complaint.id " +
                     "LEFT JOIN user_profile ON analysis.user_profile_id = user_profile.id",

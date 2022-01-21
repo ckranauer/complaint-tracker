@@ -91,29 +91,6 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
         List<ComplaintAnalysisDto> rawComplaints = complaintRepository.findAllComplaintAnalysis();
 
-        for(ComplaintAnalysisDto cmp :rawComplaints){
-            if(cmp.getId().isPresent()){
-                System.out.println(cmp.getId().get());
-            }
-            if(cmp.getSerial_number().isPresent()){
-                System.out.println(cmp.getSerial_number().get());
-            }
-            if(cmp.getQms_number().isPresent()){
-                System.out.println(cmp.getQms_number().get());
-            }
-            if(cmp.getCustomer_ref_number().isPresent()){
-                System.out.println(cmp.getCustomer_ref_number().get());
-            }
-            if(cmp.getClaimed_fault().isPresent()){
-                System.out.println(cmp.getClaimed_fault().get());
-            }
-            if(cmp.getAnalysis_started_at().isPresent()){
-                System.out.println(cmp.getAnalysis_started_at().get());
-            }
-            if(cmp.getAnalysis_ended_at().isPresent()){
-                System.out.println(cmp.getAnalysis_ended_at().get());
-            }
-        }
         return rawComplaints;
     }
 
