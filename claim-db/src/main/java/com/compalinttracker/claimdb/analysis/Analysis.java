@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "Analysis")
@@ -76,13 +77,13 @@ public class Analysis implements Serializable {
             name = "analysis_started_at",
             columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
     )
-    private LocalDateTime analysisStartedAt;
+    private LocalDate analysisStartedAt;
 
     @Column(
             name = "analysis_ended_at",
             columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
     )
-    private LocalDateTime analysisEndedAt;
+    private LocalDate analysisEndedAt;
 
 
     @ManyToOne
@@ -103,8 +104,8 @@ public class Analysis implements Serializable {
             String visualAnalysis,
             String electricalAnalysis,
             String conclusion,
-            LocalDateTime analysisStartedAt,
-            LocalDateTime analysisEndedAt,
+            LocalDate analysisStartedAt,
+            LocalDate analysisEndedAt,
             UserProfile analyzedBy) {
         this.barcodes = barcodes;
         this.lifecycleInfo = lifecycleInfo;
@@ -125,8 +126,8 @@ public class Analysis implements Serializable {
                     String visualAnalysis,
                     String electricalAnalysis,
                     String conclusion,
-                    LocalDateTime analysisStartedAt,
-                    LocalDateTime analysisEndedAt,
+                    LocalDate analysisStartedAt,
+                    LocalDate analysisEndedAt,
                     UserProfile analyzedBy) {
         this.complaint = complaint;
         this.barcodes = barcodes;

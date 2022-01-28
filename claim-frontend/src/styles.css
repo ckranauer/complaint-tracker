@@ -10,14 +10,14 @@
 .col-10{
     padding-top: 60px;
     width: 80% !important;
+    background-color: #F0F2F5;
+}
+
+.container-fluid{
+    background-color: #F0F2F5;
 }
 
 
-.teszt {
-    padding-left: 80px;
-    padding-right: 80px;
-   
-}
 
 .search{
     padding-left: 180px;
@@ -62,4 +62,15 @@ a:hover{
 */
 #complaint-table{
     margin-top: 20px !important;
+    background-color: white !important;
+}
+
+.teszt{
+    background-color: white !important;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: 80px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

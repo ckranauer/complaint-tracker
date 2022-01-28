@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { BehaviorSubject, catchError, map, Observable, of, startWith } from 'rxjs';
 import { AppState } from '../app-state';
+import { Complaint } from '../complaint/complaint';
 import { ComplaintCreateDto } from '../complaint/complaintCreateDto';
 import { ComplaintDto } from '../complaint/complaintDto';
 import { DataState } from '../enum/data-state.enum';
@@ -25,6 +26,12 @@ export class ComplaintListComponent implements OnInit {
 
   claims?: ComplaintResponse;
   claim?: ComplaintResponse;
+  complaint?: ComplaintDto;
+
+  
+
+  
+  dateFormCtrl = new FormControl(new Date());
 
   private pageObj: PaginationObj = {
     "page": 0,
@@ -37,16 +44,20 @@ export class ComplaintListComponent implements OnInit {
 
   ngOnInit(): void {
     this.onGetComplaints(this.pageObj);
+    
+    
   }
+  
 
-  onGetComplaint(id: number): void{
-    console.log(id)
-    this.complaintService.getComplaint(id).subscribe(
+  onGetComplaint(complaint: ComplaintDto): void{
+    this.complaintService.getComplaint(complaint.id).subscribe(
       (response) => this.claim = response,
       (error: any) => console.log(error),
-      () => console.log('Done getting complaint')
+      () => console.log(this.claim)
       );
   }
+
+ 
 
   onGetComplaints(pageObj: PaginationObj): void {
     this.complaintService.getComplaints(pageObj)
@@ -69,11 +80,11 @@ export class ComplaintListComponent implements OnInit {
 
   onUpdateComplaint(complaintUpdateForm: NgForm): void{
     console.log(complaintUpdateForm.value)
-    this.complaintService.createComplaint(complaintUpdateForm.value as ComplaintCreateDto).subscribe(
+    this.complaintService.updateComplaint(complaintUpdateForm.value as ComplaintDto).subscribe(
       (response) => this.claims = response,
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
-      ), complaintUpdateForm.resetForm();
+      )
   }
 
   /*

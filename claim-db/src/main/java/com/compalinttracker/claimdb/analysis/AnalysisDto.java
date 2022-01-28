@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,8 +21,8 @@ public class AnalysisDto {
     private String visualAnalysis;
     private String electricalAnalysis;
     private String conclusion;
-    private LocalDateTime analysisStartedAt;
-    private LocalDateTime analysisEndedAt;
+    private LocalDate analysisStartedAt;
+    private LocalDate analysisEndedAt;
     private UUID analyzedBy;
 
 }

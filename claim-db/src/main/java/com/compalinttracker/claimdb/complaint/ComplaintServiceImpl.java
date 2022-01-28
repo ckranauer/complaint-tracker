@@ -35,15 +35,14 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Collection<ComplaintAnalysisDto> create(ComplaintDto complaintDto) {
         log.info("Saving new complaint: {}", complaintDto.getQmsNumber());
-
-
+        log.info("Responsible: {}", complaintDto.getResponsible());
         // Check if the complaint is already exists, if the serial number is already used then the complaint is already exist
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
 
         if(complaintOptional.isPresent()){
             throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getSerialNumber() + " serial number is already exists"));
         }
-        // TODO: from the frontend there was posible to complaint data with null value in SNR, QMS. Solve the issue
+        // TODO: from the frontend there was posible to complaint data with null value in SNR, QMS. Solve this issue
         if(complaintDto.getQmsNumber() != null ){
             if(complaintOptional.isPresent()  && complaintDto.getQmsNumber().equals(complaintOptional.get().getQmsNumber())){
                 throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getQmsNumber() + " qms number is already exists"));
@@ -66,6 +65,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         if(complaintDto.getIsPrio() != null){
             complaint.setPrio(complaintDto.getIsPrio());
         }
+        System.out.println("responsible"+ complaintDto.getResponsible());
         if(complaintDto.getResponsible() != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
             if(userProfileOptional.isEmpty()){
@@ -75,8 +75,12 @@ public class ComplaintServiceImpl implements  ComplaintService{
             responsible.addComplaint(complaint);
             complaint.setResponsible(responsible);
         }
+        Analysis analysis = new Analysis();
+        analysis.setComplaint(complaint);
+        complaint.setAnalysis(analysis);
 
         complaintRepository.save(complaint);
+        complaintRepository.findAllComplaintAnalysis().stream().forEach(System.out::println);
         return complaintRepository.findAllComplaintAnalysis();
     }
 
@@ -98,17 +102,20 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Complaint get(Long id) {
+    public ComplaintAnalysisDto get(Long id) {
         log.info("Fetching complaint by id: {}", id);
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
-        if(complaintOptional.isEmpty()){
+        Optional<ComplaintAnalysisDto> complaintAnalysisDtoOptional = complaintRepository.findComplaintAnalysisById(id);
+        if(complaintAnalysisDtoOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint with id: "+ id + " is not exist."));
         }
-        return complaintOptional.get();
+        return complaintAnalysisDtoOptional.get();
     }
 
     @Override
-    public Complaint update(Long id, ComplaintDto complaintDto) {
+    public Collection<ComplaintAnalysisDto> update(Long id, ComplaintUpdateDto complaintDto) {
+        log.info("Update complaint: {}", id);
+        log.info("Responsible: {}", complaintDto.getResponsible());
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
         if(complaintOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint does not exist."));
@@ -136,8 +143,9 @@ public class ComplaintServiceImpl implements  ComplaintService{
             actualComplaint.setSerialNumber(complaintDto.getSerialNumber());
         }
 
-        Optional<Complaint> qmsNoComplaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
+
         if(complaintDto.getQmsNumber() != null){
+            Optional<Complaint> qmsNoComplaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
             if(qmsNoComplaintOptional.isPresent()){
                 if(qmsNoComplaintOptional.get().getId() != id){
                     throw new IllegalStateException(String.format("Complaint with QMS number: "+ complaintDto.getQmsNumber() + " is already exist."));
@@ -153,31 +161,83 @@ public class ComplaintServiceImpl implements  ComplaintService{
         actualComplaint.setClaimedFault(complaintDto.getClaimedFault());
 
         // TODO: solve the date conversion
-        if(complaintDto.getArrivedAt().length() > 0){
-            int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
-            int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
-            int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
-            LocalDate date = LocalDate.of(year, Month.of(month), day);
-            actualComplaint.setArrivedAt(date );
+        if (complaintDto.getArrivedAt() != null) {
+            if(complaintDto.getArrivedAt().length() > 0){
+                int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
+                int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
+                int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
+                LocalDate date = LocalDate.of(year, Month.of(month), day);
+                actualComplaint.setArrivedAt(date );
+            }
+
         }
 
         if(complaintDto.getResponsible() != null) {
+            log.info("User profile before read");
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
+            log.info("User profile after read the optional");
             if(userProfileOptional.isEmpty()){
                 throw new IllegalStateException("User with id: "+ complaintDto.getResponsible()+" is not exist");
             }
             UserProfile responsible = userProfileOptional.get();
+            log.info("got the user profile from the optional");
             responsible.addComplaint(actualComplaint);
+            log.info("complaint added to user_profile(responsible) set");
             actualComplaint.setResponsible(responsible);
+            log.info("responsible set to complaint");
         }
 
-        if(complaintDto.getIsPrio() != null){
+
+        Analysis analysis = actualComplaint.getAnalysis();
+        analysis.setBarcodes(complaintDto.getBarcodes());
+        analysis.setLifecycleInfo(complaintDto.getLifecycleInfo());
+        analysis.setVisualAnalysis(complaintDto.getVisualAnalysis());
+        analysis.setElectricalAnalysis(complaintDto.getElectricalAnalysis());
+        analysis.setConclusion(complaintDto.getConclusion());
+
+        if (complaintDto.getAnalysisStartedAt() != null) {
+            if(complaintDto.getAnalysisStartedAt().length() > 0){
+                int year = Integer.parseInt(complaintDto.getAnalysisStartedAt().substring(0,4)); // TODO: create method in the class
+                int month = Integer.parseInt(complaintDto.getAnalysisStartedAt().substring(5,7));
+                int day = Integer.parseInt(complaintDto.getAnalysisStartedAt().substring(8,10));
+                LocalDate date = LocalDate.of(year, Month.of(month), day);
+                analysis.setAnalysisStartedAt(date);
+            }
+        }
+
+        if (complaintDto.getAnalysisEndedAt() != null) {
+            if(complaintDto.getAnalysisEndedAt().length() > 0){
+                int year = Integer.parseInt(complaintDto.getAnalysisEndedAt().substring(0,4)); // TODO: create method in the class
+                int month = Integer.parseInt(complaintDto.getAnalysisEndedAt().substring(5,7));
+                int day = Integer.parseInt(complaintDto.getAnalysisEndedAt().substring(8,10));
+                LocalDate date = LocalDate.of(year, Month.of(month), day);
+                analysis.setAnalysisEndedAt(date);
+            }
+        }
+
+        if(complaintDto.getAnalyzedBy() != null) {
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getAnalyzedBy());
+            if(userProfileOptional.isEmpty()){
+                throw new IllegalStateException("User with id: "+ complaintDto.getAnalyzedBy()+" is not exist");
+            }
+            UserProfile analyzedBy = userProfileOptional.get();
+            analyzedBy.addAnalysis(analysis);
+            analysis.setAnalyzedBy(analyzedBy);
+        }
+
+        actualComplaint.setAnalysis(analysis);
+        complaintRepository.save(actualComplaint);
+
+
+        /*
+        if(complaintAnalysisDto.getIsPrio() != null){
             actualComplaint.setPrio(complaintDto.getIsPrio());
         }
-
+*/
         // TODO: implement it ??
         //actualComplaint.setAnalysis(complaintDto.getAnalysis());
-        return actualComplaint;
+        log.info("Update is finished");
+        return complaintRepository.findAllComplaintAnalysis();
     }
 
     @Override

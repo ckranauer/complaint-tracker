@@ -8,6 +8,6 @@ export interface ComplaintCreateDto {
     claimedFault: string;
     arrivedAt: Date;
     isPrio: boolean;
-    responsible: number;
+    responsible: string;
 }
 

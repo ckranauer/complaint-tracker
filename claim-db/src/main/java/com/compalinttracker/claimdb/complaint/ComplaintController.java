@@ -4,6 +4,7 @@ import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.analysis.AnalysisDto;
 import com.compalinttracker.claimdb.paginationParam.PaginationObj;
 import com.compalinttracker.claimdb.response.Response;
+import com.compalinttracker.claimdb.userProfile.UserProfileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class ComplaintController {
 
     private final ComplaintServiceImpl complaintService;
+    private final UserProfileServiceImpl userProfileService;
 
 
     @PostMapping("/save")
@@ -32,7 +34,7 @@ public class ComplaintController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaints", complaintService.create(complaintDto)))
+                            .data(Map.of("complaints", complaintService.create(complaintDto), "users", userProfileService.list(10,0)))
                             .message("Complaint created")
                             .status(CREATED)
                             .statusCode(CREATED.value())
@@ -80,7 +82,7 @@ public class ComplaintController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaint", complaintService.get(id)))
+                            .data(Map.of("complaint", complaintService.get(id), "users", userProfileService.list(10,0)))
                             .message("Complaint retrieved")
                             .status(OK)
                             .statusCode(OK.value())
@@ -104,7 +106,7 @@ public class ComplaintController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("analysis", complaintService.get(id).getAnalysis()))
+                            .data(Map.of("analysis", complaintService.get(id)))
                             .message("Analysis retrieved")
                             .status(OK)
                             .statusCode(OK.value())
@@ -130,7 +132,7 @@ public class ComplaintController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaints", complaintService.list(paginationObj.getLimit(),paginationObj.getPage())))
+                            .data(Map.of("complaints", complaintService.list(paginationObj.getLimit(),paginationObj.getPage()), "users", userProfileService.list(10,0)))
                             .message("Complaints retrieved")
                             .status(OK)
                             .statusCode(OK.value())
@@ -173,14 +175,13 @@ public class ComplaintController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Response> updateComplaint(@RequestBody @Valid ComplaintDto complaintDto,
-                                                    @PathVariable ("id") Long id){
+    @PutMapping("/update")
+    public ResponseEntity<Response> updateComplaint(@RequestBody  ComplaintUpdateDto complaintDto){
         try{
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaint", complaintService.update(id, complaintDto)))
+                            .data(Map.of("complaints", complaintService.update(complaintDto.getId(), complaintDto),"users", userProfileService.list(10,0) ))
                             .message("Complaint updated")
                             .status(OK)
                             .statusCode(OK.value())

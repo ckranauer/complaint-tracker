@@ -30,9 +30,13 @@ export class ComplaintService {
     return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/get/${id}`);
   }
 
-  updateComplaint(complaint: ComplaintDto, id:number): Observable<Complaint> {
-    return this.http.put<Complaint>(`${this.apiUrl}/complaint/update/${id}`, complaint)
+  updateComplaint(complaint: ComplaintDto): Observable<ComplaintResponse> {
+    return this.http.put<ComplaintResponse>(`${this.apiUrl}/complaint/update`, complaint)
   }
+/*
+  updateComplaint(complaint: ComplaintDto): Observable<Complaint> {
+    return this.http.put<Complaint>(`${this.apiUrl}/complaint/update/${complaint.id}`, complaint)
+  }*/
 
   deleteComplaint(id: number): Observable<Complaint> {
     return this.http.delete<Complaint>(`${this.apiUrl}/complaint/delete/${id}`)

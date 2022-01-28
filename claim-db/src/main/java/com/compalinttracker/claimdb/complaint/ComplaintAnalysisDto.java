@@ -17,10 +17,25 @@ public interface ComplaintAnalysisDto {
         Optional<String> getQmsNumber();
         Optional<String> getCustomerRefNumber();
         Optional<String> getClaimedFault();
+        Optional<String> getResponsible();
+        Optional<String> getResponsibleId();
         Optional<String> getAnalyzedBy();
+        Optional<String> getAnalyzedById();
+        //Optional<String> getProductGroup();
+        //Optional<String> getType();
+        //Optional<String> getPartDescription();
         Optional<String> getArrivedAt();
         Optional<String> getAnalysisStartedAt();
         Optional<String> getAnalysisEndedAt();
+
+        Optional<String> getBarcodes();
+        Optional<String> getLifecycleInfo();
+        Optional<String> getFaultVerification();
+        Optional<String> getVisualAnalysis();
+        Optional<String> getElectricalAnalysis();
+        Optional<String> getConclusion();
+
+
 
 
 

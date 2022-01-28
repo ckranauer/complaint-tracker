@@ -23,16 +23,53 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
                     "qms_number as qmsNumber, " +
                     "customer_ref_number as customerRefNumber, " +
                     "claimed_fault as claimedFault, " +
+                    "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as responsible, " +
+                    "CAST(complaint.user_profile_id AS TEXT) as responsibleId, " +
                     "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as analyzedBy, " +
+                    "CAST(analysis.user_profile_id AS TEXT) as analyzedById, " +
                     "arrived_at as arrivedAt, " +
                     "analysis_started_at as analysisStartedAt, " +
-                    "analysis_ended_at as analysisEndedAt " +
+                    "analysis_ended_at as analysisEndedAt, " +
+                    "barcodes, " +
+                    "lifecycle_info as lifecycleInfo, " +
+                    "visual_analysis as visualAnalysis, " +
+                    "electrical_analysis as electricalAnalysis, " +
+                    "conclusion " +
                     "FROM complaint " +
                     "LEFT JOIN analysis ON analysis.complaint_id = complaint.id " +
-                    "LEFT JOIN user_profile ON analysis.user_profile_id = user_profile.id",
+                    "LEFT JOIN user_profile ON analysis.user_profile_id = user_profile.id " +
+                    "ORDER BY arrived_at DESC",
             nativeQuery = true
     )
     List<ComplaintAnalysisDto> findAllComplaintAnalysis();
+
+
+
+    @Query(
+            value = "SELECT complaint.id, " +
+                    "serial_number as serialNumber, " +
+                    "qms_number as qmsNumber, " +
+                    "customer_ref_number as customerRefNumber, " +
+                    "claimed_fault as claimedFault, " +
+                    "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as responsible, " +
+                    "CAST(complaint.user_profile_id AS TEXT) as responsibleId, " +
+                    "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as analyzedBy, " +
+                    "CAST(analysis.user_profile_id AS TEXT) as analyzedById, " +
+                    "arrived_at as arrivedAt, " +
+                    "analysis_started_at as analysisStartedAt, " +
+                    "analysis_ended_at as analysisEndedAt, " +
+                    "barcodes, " +
+                    "lifecycle_info as lifecycleInfo, " +
+                    "visual_analysis as visualAnalysis, " +
+                    "electrical_analysis as electricalAnalysis, " +
+                    "conclusion " +
+                    "FROM complaint " +
+                    "LEFT JOIN analysis ON analysis.complaint_id = complaint.id " +
+                    "LEFT JOIN user_profile ON analysis.user_profile_id = user_profile.id " +
+                    "WHERE complaint.id = ?1",
+            nativeQuery = true
+    )
+    Optional<ComplaintAnalysisDto> findComplaintAnalysisById(Long id);
 
     Optional<Complaint> findComplaintById(Long id);
 

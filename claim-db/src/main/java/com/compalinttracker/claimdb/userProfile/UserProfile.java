@@ -5,9 +5,11 @@ import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.complaint.Complaint;
 import com.compalinttracker.claimdb.userRoleLink.UserRoleLink;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

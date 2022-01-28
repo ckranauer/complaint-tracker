@@ -12,8 +12,8 @@ public interface ComplaintService {
 
     Collection<ComplaintAnalysisDto>  create(ComplaintDto complaintDto);
     Collection<ComplaintAnalysisDto> list(int limit, int page);
-    Complaint get(Long id);
-    Complaint update(Long id, ComplaintDto complaint);
+    ComplaintAnalysisDto get(Long id);
+    Collection<ComplaintAnalysisDto> update(Long id, ComplaintUpdateDto complaintDto);
     Boolean delete(Long id);
 
     Analysis addAnalysis(AnalysisDto analysisDto);
