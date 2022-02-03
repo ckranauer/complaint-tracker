@@ -29,7 +29,7 @@ public class LabelPrinter implements  PrintService{
 
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findById(1l);
         PrinterServer server = printerServerOptional.get();
-        BoxLabel label = labelFactory.getLabel(complaintDto.getProdGroup().toUpperCase());
+        BoxLabel label = labelFactory.getLabel(complaintDto.getProductInfo().toUpperCase());
 
         zebraPrinter.startConnection(server.getIp(), server.getPortNumber());
         zebraPrinter.sendMessage(label.prepareLabelContent(complaintDto));

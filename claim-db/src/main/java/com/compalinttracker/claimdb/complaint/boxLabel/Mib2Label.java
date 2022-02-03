@@ -12,7 +12,7 @@ public class Mib2Label implements BoxLabel{
                 "^A0N,30,30^FO50,20^FDQMS: " + complaintDto.getQmsNumber() + "^FS " +
                 "^A0N,30,30^FO50,60^FDCRN: "+ complaintDto.getCustomerRefNumber() + "^FS " +
                 "^A0N,30,30^FO50,100^FDSNR: "+ complaintDto.getSerialNumber() + "^FS " +
-                "^A0N,30,30^FO50,140^FDType: "+ complaintDto.getProdGroup().toUpperCase() + "^FS " +
+                "^A0N,30,30^FO50,140^FDType: "+ complaintDto.getProductInfo().toUpperCase() + "^FS " +
                 "^A0N,15,15^FO50,190^FD"+"Incoming date: " + "^FS " +
                 "^A0N,30,30^FO50,220^FD"+ complaintDto.getArrivedAt().substring(0,10).replace("-",".") + "^FS " +
                 "^A0N,15,15^FO200,190^FD"+"Analysis ended: " + "^FS " +

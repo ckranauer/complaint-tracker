@@ -20,15 +20,16 @@ public class PrinterServerImpl implements PrinterServerService {
     private final ZebraPrinter zebraPrinter;
 
     @Override
-    public PrinterServer create(PrinterServer printerServer) {
+    public Collection<PrinterServer> create(PrinterServer printerServer) {
         log.info("Saving new server: {}", printerServer.getName());
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findByServerName(printerServer.getName());
         // validate the server
-        return printerServerRepository.save(printerServer);
+        printerServerRepository.save(printerServer);
+        return printerServerRepository.findAll();
     }
 
     @Override
-    public Collection<PrinterServer> list() {
+    public Collection<PrinterServer> list(int limit, int page) {
         log.info("Fetching all servers");
 
         return printerServerRepository.findAll();

@@ -65,6 +65,14 @@ public class ComplaintServiceImpl implements  ComplaintService{
         if(complaintDto.getIsPrio() != null){
             complaint.setPrio(complaintDto.getIsPrio());
         }
+
+        if (complaintDto.getProductInfo() != null){
+            complaint.setProductInfo(complaintDto.getProductInfo());
+        }
+
+
+
+
         System.out.println("responsible"+ complaintDto.getResponsible());
         if(complaintDto.getResponsible() != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
@@ -115,7 +123,6 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Collection<ComplaintAnalysisDto> update(Long id, ComplaintUpdateDto complaintDto) {
         log.info("Update complaint: {}", id);
-        log.info("Responsible: {}", complaintDto.getResponsible());
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
         if(complaintOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint does not exist."));
@@ -187,13 +194,34 @@ public class ComplaintServiceImpl implements  ComplaintService{
             log.info("responsible set to complaint");
         }
 
+        if(complaintDto.getIsPrio() != null){
+            actualComplaint.setPrio(complaintDto.getIsPrio());
+        }
+
+        log.info("UPDATE: Product group: " + complaintDto.getProductInfo());
+        if (complaintDto.getProductInfo() != null){
+            actualComplaint.setProductInfo(complaintDto.getProductInfo());
+        }
+        log.info("Product group is updated");
+
 
         Analysis analysis = actualComplaint.getAnalysis();
+        log.info("analysis is read");
         analysis.setBarcodes(complaintDto.getBarcodes());
+        log.info("barcodes is updated");
         analysis.setLifecycleInfo(complaintDto.getLifecycleInfo());
+        log.info("lifecycle is updated");
+        if(complaintDto.getFaultVerification() != null){
+            analysis.setFaultVerification(complaintDto.getFaultVerification());
+        }
+
+        log.info("fault verif updated");
         analysis.setVisualAnalysis(complaintDto.getVisualAnalysis());
+        log.info("VA is updated");
         analysis.setElectricalAnalysis(complaintDto.getElectricalAnalysis());
+        log.info("EA is updated");
         analysis.setConclusion(complaintDto.getConclusion());
+        log.info("Conclusion is updated");
 
         if (complaintDto.getAnalysisStartedAt() != null) {
             if(complaintDto.getAnalysisStartedAt().length() > 0){
@@ -204,6 +232,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
                 analysis.setAnalysisStartedAt(date);
             }
         }
+        log.info("Analysis started is updated");
 
         if (complaintDto.getAnalysisEndedAt() != null) {
             if(complaintDto.getAnalysisEndedAt().length() > 0){
@@ -215,6 +244,8 @@ public class ComplaintServiceImpl implements  ComplaintService{
             }
         }
 
+        log.info("Analysis ended is updated");
+
         if(complaintDto.getAnalyzedBy() != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getAnalyzedBy());
             if(userProfileOptional.isEmpty()){
@@ -224,6 +255,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
             analyzedBy.addAnalysis(analysis);
             analysis.setAnalyzedBy(analyzedBy);
         }
+        log.info("AnalyzedBy is updated");
 
         actualComplaint.setAnalysis(analysis);
         complaintRepository.save(actualComplaint);

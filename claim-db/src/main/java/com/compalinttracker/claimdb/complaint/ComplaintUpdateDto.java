@@ -19,16 +19,15 @@ public class ComplaintUpdateDto {
     private String qmsNumber;
     private String customerRefNumber;
     private String claimedFault;
-    //private String prodGroup;
+    private String productInfo;
 
     private String arrivedAt;
     private UUID responsible;
-    //private Boolean isPrio;
+    private Boolean isPrio;
 
-    //private long complaintId;
     private String barcodes;
     private String lifecycleInfo;
-    private boolean faultVerification;
+    private Boolean faultVerification;
     private String visualAnalysis;
     private String electricalAnalysis;
     private String conclusion;

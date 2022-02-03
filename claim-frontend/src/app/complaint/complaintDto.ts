@@ -8,7 +8,7 @@ export interface ComplaintDto {
     customerRefNumber: string;
     claimedFault: string;
     arrivedAt: string;
-   
+    productInfo: string;
     responsible: string;
     responsibleId: string;
 
@@ -26,7 +26,9 @@ export interface ComplaintDto {
    // productGroup: string;
     analyzedBy: string;
     analyzedById: string;
-   // analyzedById: string;
+
+    isPrio: boolean;
+   
 }
 
 

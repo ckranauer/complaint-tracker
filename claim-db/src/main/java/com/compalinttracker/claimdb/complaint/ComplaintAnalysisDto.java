@@ -19,9 +19,10 @@ public interface ComplaintAnalysisDto {
         Optional<String> getClaimedFault();
         Optional<String> getResponsible();
         Optional<String> getResponsibleId();
+        Optional<Boolean> getIsPrio();
         Optional<String> getAnalyzedBy();
         Optional<String> getAnalyzedById();
-        //Optional<String> getProductGroup();
+        Optional<String> getProductInfo();
         //Optional<String> getType();
         //Optional<String> getPartDescription();
         Optional<String> getArrivedAt();
@@ -30,7 +31,7 @@ public interface ComplaintAnalysisDto {
 
         Optional<String> getBarcodes();
         Optional<String> getLifecycleInfo();
-        Optional<String> getFaultVerification();
+        Optional<Boolean> getFaultVerification();
         Optional<String> getVisualAnalysis();
         Optional<String> getElectricalAnalysis();
         Optional<String> getConclusion();

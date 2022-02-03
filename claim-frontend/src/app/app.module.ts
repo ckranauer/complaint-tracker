@@ -8,12 +8,15 @@ import { AppComponent } from './app.component';
 import { ComplaintListComponent } from './complaint-list/complaint-list.component';
 import { ComplaintService } from './service/complaint.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PrinterServerComponent } from './printer-server/printer-server.component';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ComplaintListComponent
+    ComplaintListComponent,
+    PrinterServerComponent
   ],
   imports: [
     HttpClientModule,

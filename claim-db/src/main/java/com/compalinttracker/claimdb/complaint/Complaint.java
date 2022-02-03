@@ -86,7 +86,7 @@ public class Complaint  {       //implements Serializable
 
     // private String partDescription;
 
-    //private ProductInfo productInto;
+    private String productInfo;
 
     @Column(
             name = "is_prio",

@@ -62,9 +62,7 @@
                     {{ complaint.analysisEndedAt?.substring(0,10) }}
                   </td>
                   <td>
-                    <!--  {{ complaint.productGroup }} -->
-                   
-                   
+                      {{ complaint?.productInfo }} 
                   </td>
                   <td>
                       {{ complaint?.analyzedBy }} 
@@ -110,12 +108,15 @@
                     <input ngModel type="text" class="form-control" name="customerRefNumber"  id="customerRefNumber">
                   </div>
                   <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Product group</label>
-                    <select ngModel id="select" class="form-select" >
-                        <option>--</option>
-                        <option>AUDI</option>
-                        <option>VW</option>
+                    <label for="productInfo" class="form-label">Product group</label>
+                    <select ngModel id="select" class="form-select" name="productInfo" >
+                        <option value="--">--</option>
+                        <option value="AUDI">AUDI</option>
+                        <option value="VW">VW</option>
+                        <option value="TOYOTA">TOYOTA</option>
+                        <option value="VOLVO">VOLVO</option>
                     </select>
+
                   </div>
                   
                     
@@ -142,8 +143,8 @@
 
                   </div>
                 <div class="mb-3 form-check">
-                  <input  ngModel type="checkbox" class="form-check-input" id="exampleCheck1" >
-                  <label  class="form-check-label" for="exampleCheck1">Prio</label>
+                  <input  ngModel type="checkbox" class="form-check-input" name="isPrio" >
+                  <label  class="form-check-label" for="isPrio">Priority issue</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
               </form>
@@ -189,12 +190,15 @@
                         <input [ngModel]="claim?.data.complaint.customerRefNumber" type="text" class="form-control" name="customerRefNumber" >
                       </div>
                       <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Product group</label>
-                        <select ngModel id="select" class="form-select" >
-                            <option>--</option>
-                            <option>AUDI</option>
-                            <option>VW</option>
+                        <label for="productInfo" class="form-label">Product group</label>
+                        <select [ngModel]="claim?.data.complaint.productInfo" id="select" class="form-select" name="productInfo" >
+                            <option value="--">--</option>
+                            <option value="AUDI">AUDI</option>
+                            <option value="VW">VW</option>
+                            <option value="TOYOTA">TOYOTA</option>
+                            <option value="VOLVO">VOLVO</option>
                         </select>
+
                       </div>
                       
                         
@@ -208,10 +212,6 @@
                       </div>
                       <div class="mb-3">
                         <label for="responsible" class="form-label">Responsible</label>
-                        <!--select [value]="claim?.data.user.id" id="responsible" class="form-select" name="responsible"  > 
-                            <option *ngFor="let user of claims?.data?.users" [value]="user?.id"> {{ user.firstName }} {{ user.lastName }}</option>
-                        </select-->
-
                         <select [ngModel]="claim?.data.complaint.responsibleId" id="responsible" class="form-select" name="responsible"  > 
                           <option [value]="null" > Select </option>
                           <option *ngFor="let user of claims?.data?.users"  [ngValue]="user?.id">  {{ user.firstName }} {{ user.lastName }}</option>
@@ -219,8 +219,9 @@
                         
                       </div>
                     <div class="mb-3 form-check">
-                      <input  ngModel type="checkbox" class="form-check-input"  >
-                      <label  class="form-check-label" for="exampleCheck1" >Prio</label>
+                      <!--input  ngModel type="checkbox" class="form-check-input"  name="isPrio" -->
+                      <input  [ngModel]="claim?.data.complaint.isPrio" type="checkbox" class="form-check-input"  name="isPrio" >
+                      <label  class="form-check-label" for="isPrio" >Priority issue</label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -231,20 +232,6 @@
                             <option *ngFor="let user of claims?.data?.users"  [ngValue]="user?.id">  {{ user.firstName }} {{ user.lastName }}</option>
                         </select>
 
-
-
-                        <!--select [(ngModel)]="analyzedById" id="analyzedBy" class="form-select" name="analyzedBy"  > 
-                            <option [value]="null" > Select </option>
-                            <option *ngFor="let user of claims?.data?.users"  [ngValue]="user?.id"> {{ user?.id}}{{ user.firstName }} {{ user.lastName }}</option>
-                        </select-->
-
-                        <!--select [ngModel]="claim?.data.user.id" id="analyzedBy" class="form-select" name="analyzedBy"  > 
-                      
-                          <option *ngFor="let user of claims?.data?.users"  [value]="user?.id"> {{ user.firstName }} {{ user.lastName }}</option>
-                      </select-->
-
-                    <!--label for="analyzedBy" class="form-label"> Analyzed by </label>
-                    <input type="text" [ngModel]="claim?.data.complaint.analyzedBy"  class="form-control" name="analyzedBy"  aria-describedby="analyzedBy" -->
                   </div>
                   <div class="mb-3">
                     <label for="analysisStartedAt" class="form-label"> Analysis started </label>
@@ -262,9 +249,9 @@
                     <label for="barcodes" class="form-label"> Barcodes </label>
                     <textarea rows="4" [ngModel]="claim?.data.complaint.barcodes"  class="form-control" name="barcodes"  aria-describedby="barcodes" ></textarea>
                   </div>
-                  <div class="mb-3">
-                    <label for="faultVerification" class="form-label"> Fault verification </label>
-                    <input type="text" [ngModel]="claim?.data.complaint.faultVerification"  class="form-control" name="faultVerification"  aria-describedby="faultVerification" >
+                  <div class="mb-3 form-check">
+                    <input  [ngModel]="claim?.data.complaint.faultVerification" type="checkbox" class="form-check-input"  name="faultVerification" >
+                    <label  class="form-check-label" for="faultVerification" > Fault verification</label>
                   </div>
                   
                 </div>

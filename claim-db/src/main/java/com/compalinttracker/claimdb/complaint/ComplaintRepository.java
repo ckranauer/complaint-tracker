@@ -25,8 +25,10 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
                     "claimed_fault as claimedFault, " +
                     "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as responsible, " +
                     "CAST(complaint.user_profile_id AS TEXT) as responsibleId, " +
+                    "is_prio as isPrio, " +
                     "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as analyzedBy, " +
                     "CAST(analysis.user_profile_id AS TEXT) as analyzedById, " +
+                    "product_info as productInfo, " +
                     "arrived_at as arrivedAt, " +
                     "analysis_started_at as analysisStartedAt, " +
                     "analysis_ended_at as analysisEndedAt, " +
@@ -53,8 +55,10 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
                     "claimed_fault as claimedFault, " +
                     "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as responsible, " +
                     "CAST(complaint.user_profile_id AS TEXT) as responsibleId, " +
+                    "is_prio as isPrio, " +
                     "CONCAT(user_profile.first_name, ' ', user_profile.last_name)  as analyzedBy, " +
                     "CAST(analysis.user_profile_id AS TEXT) as analyzedById, " +
+                    "product_info as productInfo, " +
                     "arrived_at as arrivedAt, " +
                     "analysis_started_at as analysisStartedAt, " +
                     "analysis_ended_at as analysisEndedAt, " +

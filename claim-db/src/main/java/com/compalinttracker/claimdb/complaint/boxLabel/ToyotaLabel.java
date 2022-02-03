@@ -9,7 +9,7 @@ public class ToyotaLabel implements BoxLabel{
         String labelContent =
                 "^XA" +
                         "^A0N,30,30^FO50,20^FDSNR: " + complaintDto.getSerialNumber()  + "^FS " +
-                        "^A0N,30,30^FO50,60^FDType: "+ complaintDto.getProdGroup().toUpperCase() + "^FS " +
+                        "^A0N,30,30^FO50,60^FDType: "+ complaintDto.getProductInfo().toUpperCase() + "^FS " +
                         "^A0N,15,15^FO50,110^FD Incoming date: ^FS " +
                         "^A0N,30,30^FO50,140^FD: "+ complaintDto.getArrivedAt().substring(0,10).replace("-",".") + "^FS " +
                         "^A0N,15,15^FO200,110^FD Analysis ended: ^FS " +

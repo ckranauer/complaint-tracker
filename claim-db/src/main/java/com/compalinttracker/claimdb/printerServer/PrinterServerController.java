@@ -1,5 +1,6 @@
 package com.compalinttracker.claimdb.printerServer;
 
+import com.compalinttracker.claimdb.paginationParam.PaginationObj;
 import com.compalinttracker.claimdb.response.Response;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +29,38 @@ public class PrinterServerController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("printer", printerServerService.create(printerServer)))
+                            .data(Map.of("servers", printerServerService.create(printerServer)))
                             .message("Printer server created")
                             .status(CREATED)
                             .statusCode(CREATED.value())
                             .build()
             );
         }catch(IllegalStateException exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<Response> getServers(@RequestBody PaginationObj paginationObj){
+        // TODO: send page and limit via the request instead of hardcoded -> Post request, request body contains the limit and page
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("servers", printerServerService.list(paginationObj.getLimit(),paginationObj.getPage())))
+                            .message("Servers retrieved")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())

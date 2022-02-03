@@ -4,8 +4,8 @@ import java.util.Collection;
 
 public interface PrinterServerService {
 
-    PrinterServer create(PrinterServer printerServer);
-    Collection<PrinterServer> list();
+    Collection<PrinterServer> create(PrinterServer printerServer);
+    Collection<PrinterServer> list(int limit, int page);
     PrinterServer get(long id);
     PrinterServer update(long id, PrinterServer printerServer);
     Boolean delete(long id);

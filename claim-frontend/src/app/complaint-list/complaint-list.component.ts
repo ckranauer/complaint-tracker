@@ -28,7 +28,6 @@ export class ComplaintListComponent implements OnInit {
   claim?: ComplaintResponse;
   complaint?: ComplaintDto;
 
-  
 
   
   dateFormCtrl = new FormControl(new Date());
@@ -70,7 +69,6 @@ export class ComplaintListComponent implements OnInit {
   }
 
   onCreateComplaint(complaintCreateForm: NgForm): void{
-    console.log(complaintCreateForm.value)
     this.complaintService.createComplaint(complaintCreateForm.value as ComplaintCreateDto).subscribe(
       (response) => this.claims = response,
       (error: any) => console.log(error),
