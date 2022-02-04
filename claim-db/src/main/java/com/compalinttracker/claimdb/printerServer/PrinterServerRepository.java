@@ -17,6 +17,8 @@ public interface PrinterServerRepository extends JpaRepository<PrinterServer, Lo
     )
     Optional<PrinterServer> findByServerName(String name);
 
+    Optional<PrinterServer> findById(Long id);
+
     @Query(
             value = "SELECT * " +
                     " FROM printer_server WHERE ip = ?1 " +

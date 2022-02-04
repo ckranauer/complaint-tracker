@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginationObj } from '../interface/pagination-obj';
 import { PrinterServerCreateDto } from '../printer-server/dtos/printerServerCreateDto';
+import { PrinterServerDto } from '../printer-server/dtos/printerServerDto';
 import { PrinterServerResponse } from '../response/printer-server-response';
 
 @Injectable({
@@ -23,7 +24,16 @@ export class PrinterServerService {
 
   getServers(paginationObj: PaginationObj): Observable<PrinterServerResponse> {
     return this.http.post<PrinterServerResponse>(`${this.apiUrl}/printer-server/list`, paginationObj);
-}
+  }
+
+  getServer(id :number): Observable<PrinterServerResponse> {
+    return this.http.get<PrinterServerResponse>(`${this.apiUrl}/printer-server/get/${id}`);
+  }
+
+
+  updateServer(server: PrinterServerDto): Observable<PrinterServerResponse> {
+    return this.http.put<PrinterServerResponse>(`${this.apiUrl}/printer-server/update`, server)
+  }
 
 
 

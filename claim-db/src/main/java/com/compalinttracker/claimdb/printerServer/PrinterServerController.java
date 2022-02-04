@@ -1,5 +1,6 @@
 package com.compalinttracker.claimdb.printerServer;
 
+import com.compalinttracker.claimdb.complaint.ComplaintUpdateDto;
 import com.compalinttracker.claimdb.paginationParam.PaginationObj;
 import com.compalinttracker.claimdb.response.Response;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
@@ -109,6 +110,30 @@ public class PrinterServerController {
                             .build()
             );
         }catch (Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Response> updateServer(@RequestBody ServerUpdateDto serverDto){
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("servers", printerServerService.update(serverDto)))
+                            .message("Server updated")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())

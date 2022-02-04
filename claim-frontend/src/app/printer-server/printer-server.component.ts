@@ -4,6 +4,7 @@ import { PaginationObj } from '../interface/pagination-obj';
 import { PrinterServerResponse } from '../response/printer-server-response';
 import { PrinterServerService } from '../service/printer-server.service';
 import { PrinterServerCreateDto } from './dtos/printerServerCreateDto';
+import { PrinterServerDto } from './dtos/printerServerDto';
 
 @Component({
   selector: 'app-printer-server',
@@ -39,6 +40,14 @@ export class PrinterServerComponent implements OnInit {
       );
   }
 
+  onGetServer(server: PrinterServerDto): void{
+    this.printerServerService.getServer(server.id).subscribe(
+      (response) => this.server = response,
+      (error: any) => console.log(error),
+      () => console.log(this.server)
+      );
+  }
+
 
   onCreateServer(serverCreateForm: NgForm): void{
     this.printerServerService.createServer(serverCreateForm.value as PrinterServerCreateDto).subscribe(
@@ -47,5 +56,16 @@ export class PrinterServerComponent implements OnInit {
       () => console.log('Done getting servers'),
       ), serverCreateForm.resetForm();
   }
+
+  onUpdateServer(serverUpdateForm: NgForm): void{
+    console.log(serverUpdateForm.value)
+    this.printerServerService.updateServer(serverUpdateForm.value as PrinterServerDto).subscribe(
+      (response) => this.servers = response,
+      (error: any) => console.log(error),
+      () => console.log('Done getting complaint'),
+      )
+  }
+
+
 
 }

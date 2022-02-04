@@ -3,6 +3,7 @@ package com.compalinttracker.claimdb.printerServer;
 import com.compalinttracker.claimdb.complaint.labelPrinter.ZebraPrinter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.Server;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -42,8 +43,22 @@ public class PrinterServerImpl implements PrinterServerService {
     }
 
     @Override
-    public PrinterServer update(long id, PrinterServer printerServer) {
-        return null;
+    public Collection<PrinterServer> update( ServerUpdateDto serverUpdateDto) {
+        log.info("Update printer server: {}", serverUpdateDto.getId());
+
+        Optional<PrinterServer> printerServerOptional = printerServerRepository.findById(serverUpdateDto.getId());
+        if(printerServerOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Printer server with id: "+ serverUpdateDto.getId() + " is not exist."));
+        }
+
+        PrinterServer printerServer = printerServerOptional.get();
+        // TODO: write IP, port number, name, description validator
+        printerServer.setIp(serverUpdateDto.getIp());
+        printerServer.setName(serverUpdateDto.getName());
+        printerServer.setPortNumber(serverUpdateDto.getPortNumber());
+        printerServerRepository.save(printerServer);
+
+        return printerServerRepository.findAll();
     }
 
     @Override
