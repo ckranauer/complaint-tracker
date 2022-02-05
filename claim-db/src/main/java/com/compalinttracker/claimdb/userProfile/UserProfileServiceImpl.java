@@ -1,5 +1,6 @@
 package com.compalinttracker.claimdb.userProfile;
 
+import com.compalinttracker.claimdb.complaint.ComplaintAnalysisDto;
 import com.compalinttracker.claimdb.userRole.UserRole;
 import com.compalinttracker.claimdb.userRole.UserRoleRepository;
 import com.compalinttracker.claimdb.userRole.UserRoleServiceImpl;
@@ -31,7 +32,7 @@ public class UserProfileServiceImpl implements UserProfileService{
     private final UserRoleLinkRepository userRoleLinkRepository;
 
 
-    public UserProfile create(UserProfile userProfile) {
+    public Collection<UserProfile>  create(UserProfile userProfile) {
         log.info("Saving new user: {}", userProfile.getEmail());
         // Check if the user profile with this email is exists
         Optional<UserProfile> userProfileOptional = userProfileRepository.selectUserProfileByEmail(userProfile.getEmail());
@@ -51,7 +52,8 @@ public class UserProfileServiceImpl implements UserProfileService{
         }
 
         userProfile.setCreatedAt(LocalDateTime.now());
-        return userProfileRepository.save(userProfile);
+        userProfileRepository.save(userProfile);
+        return userProfileRepository.findAll();
     }
 
     public Collection<UserProfile> list(int limit, int page) {
@@ -70,14 +72,15 @@ public class UserProfileServiceImpl implements UserProfileService{
     }
 
     @Override
-    public UserProfile update(UUID id, UserProfile userProfile) {
+    public Collection<UserProfile> update(UUID id, UserProfile userProfile) {
         Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(id);
         UserProfile actualUserProfile = userProfileOptional.get();
-        actualUserProfile.setCreatedAt(userProfile.getCreatedAt());
+        //actualUserProfile.setCreatedAt(userProfile.getCreatedAt());
         actualUserProfile.setEmail(userProfile.getEmail());
         actualUserProfile.setFirstName(userProfile.getFirstName());
         actualUserProfile.setLastName(userProfile.getLastName());
-        return actualUserProfile;
+        userProfileRepository.save(actualUserProfile);
+        return userProfileRepository.findAll();
     }
 
     @Override

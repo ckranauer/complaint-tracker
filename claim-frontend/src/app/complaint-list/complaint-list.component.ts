@@ -43,14 +43,20 @@ export class ComplaintListComponent implements OnInit {
 
   ngOnInit(): void {
     this.onGetComplaints(this.pageObj);
-    
-    
   }
   
 
   onGetComplaint(complaint: ComplaintDto): void{
     this.complaintService.getComplaint(complaint.id).subscribe(
-      (response) => this.claim = response,
+      (response) => this.claim = response, 
+      (error: any) => console.log(error),
+      () => console.log(this.claim)
+      );
+  }
+
+  onSearchComplaint(complaintSearchForm: NgForm): void{
+    this.complaintService.searchComplaint(complaintSearchForm.value as ComplaintDto).subscribe(
+      (response) => console.log(response),
       (error: any) => console.log(error),
       () => console.log(this.claim)
       );
@@ -65,7 +71,8 @@ export class ComplaintListComponent implements OnInit {
       
       (error: any) => console.log(error),
       () => console.log('Done getting complaints')
-      ), console.log(this.claims?.data?.complaints);
+      ), console.log(this.claims?.data?.complaints),
+      console.log(this.claims);
   }
 
   onCreateComplaint(complaintCreateForm: NgForm): void{

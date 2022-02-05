@@ -13,6 +13,7 @@ public interface ComplaintService {
     Collection<ComplaintAnalysisDto>  create(ComplaintDto complaintDto);
     Collection<ComplaintAnalysisDto> list(int limit, int page);
     ComplaintAnalysisDto get(Long id);
+    ComplaintAnalysisDto search(String serialNumber);
     Collection<ComplaintAnalysisDto> update(Long id, ComplaintUpdateDto complaintDto);
     Boolean delete(Long id);
 

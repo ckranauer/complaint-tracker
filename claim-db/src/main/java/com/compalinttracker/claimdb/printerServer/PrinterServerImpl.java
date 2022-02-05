@@ -62,9 +62,9 @@ public class PrinterServerImpl implements PrinterServerService {
     }
 
     @Override
-    public Boolean delete(long id) {
+    public Collection<PrinterServer> delete(long id) {
         printerServerRepository.deleteById(id);
-        return Boolean.TRUE;
+        return printerServerRepository.findAll();
     }
 
     @Override

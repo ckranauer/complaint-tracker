@@ -145,5 +145,30 @@ public class PrinterServerController {
         }
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response> deleteServer(@PathVariable("id") Long id){
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("servers", printerServerService.delete(id)))
+                            .message("Server deleted")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+    }
+
 
 }

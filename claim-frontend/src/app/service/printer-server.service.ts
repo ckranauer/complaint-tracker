@@ -35,6 +35,10 @@ export class PrinterServerService {
     return this.http.put<PrinterServerResponse>(`${this.apiUrl}/printer-server/update`, server)
   }
 
+  deleteServer(id: number): Observable<PrinterServerResponse> {
+    return this.http.delete<PrinterServerResponse>(`${this.apiUrl}/printer-server/delete/${id}`)
+  }
+
 
 
   /*

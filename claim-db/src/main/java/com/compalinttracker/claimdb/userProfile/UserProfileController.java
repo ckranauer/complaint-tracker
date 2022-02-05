@@ -1,5 +1,6 @@
 package com.compalinttracker.claimdb.userProfile;
 
+import com.compalinttracker.claimdb.paginationParam.PaginationObj;
 import com.compalinttracker.claimdb.response.Response;
 import com.compalinttracker.claimdb.userRoleLink.UserRoleLink;
 import com.compalinttracker.claimdb.userRoleLink.UserRoleLinkDto;
@@ -21,8 +22,8 @@ public class UserProfileController {
 
     private final UserProfileServiceImpl userProfileService;
 
-    @GetMapping("list")
-    public ResponseEntity<Response> getUsers(){
+    @PostMapping("/list")
+    public ResponseEntity<Response> getUsers(@RequestBody PaginationObj paginationObj){
         try{
             return ResponseEntity.ok(
                     Response.builder()
@@ -52,7 +53,7 @@ public class UserProfileController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("user", userProfileService.create(userProfile)))
+                            .data(Map.of("users", userProfileService.create(userProfile)))
                             .message("User created")
                             .status(CREATED)
                             .statusCode(CREATED.value())
@@ -144,15 +145,14 @@ public class UserProfileController {
     }
 
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Response> updateUser(@RequestBody @Valid UserProfile userProfile,
-                                               @PathVariable ("id") UUID id){
+    @PutMapping("/update")
+    public ResponseEntity<Response> updateUser(@RequestBody @Valid UserProfile userProfile){
 
         try{
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("user", userProfileService.update(id, userProfile)))
+                            .data(Map.of("users", userProfileService.update(userProfile.getId(), userProfile)))
                             .message("User updated")
                             .status(OK)
                             .statusCode(OK.value())

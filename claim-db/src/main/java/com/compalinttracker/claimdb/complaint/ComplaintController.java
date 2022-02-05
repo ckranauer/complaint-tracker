@@ -100,6 +100,30 @@ public class ComplaintController {
         }
     }
 
+    @GetMapping("/search/{serno}")
+    public ResponseEntity<Response> getComplaint(@PathVariable("serno") String serialNumber){
+        try{
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .data(Map.of("complaint", complaintService.search(serialNumber), "users", userProfileService.list(10,0)))
+                            .message("Complaint found and retrieved")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch(Exception exception){
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .timeStamp(now())
+                            .message(exception.getMessage())
+                            .status(FORBIDDEN)
+                            .statusCode(FORBIDDEN.value())
+                            .build()
+            );
+        }
+    }
+
     @GetMapping("/get-analysis/{id}")
     public ResponseEntity<Response> getAnalysis(@PathVariable("id") Long id){
         try{

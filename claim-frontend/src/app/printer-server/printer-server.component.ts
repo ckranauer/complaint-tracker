@@ -66,6 +66,15 @@ export class PrinterServerComponent implements OnInit {
       )
   }
 
+  onDeleteServer(server: PrinterServerDto): void{
+    
+    this.printerServerService.deleteServer(server.id).subscribe(
+      (response) => this.servers = response,
+      (error: any) => console.log(error),
+      () => console.log('Done getting complaint'),
+      )
+  }
+
 
 
 }

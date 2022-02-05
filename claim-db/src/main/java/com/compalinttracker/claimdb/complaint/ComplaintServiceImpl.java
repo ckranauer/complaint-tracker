@@ -35,9 +35,41 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Collection<ComplaintAnalysisDto> create(ComplaintDto complaintDto) {
         log.info("Saving new complaint: {}", complaintDto.getQmsNumber());
-        log.info("Responsible: {}", complaintDto.getResponsible());
+        log.info("Saving new complaint: {}", complaintDto.getSerialNumber());
+
+        System.out.println("Serno validation starts");
+
+        // Serial number validation
+        if(complaintDto.getSerialNumber() == null){
+            throw new IllegalStateException(String.format("Serial number can not be null"));
+        }
+
+        if(complaintDto.getSerialNumber().length() == 0){
+            throw new IllegalStateException(String.format("Serial number can not be empty"));
+        }
+
+        System.out.println("serno validation finished");
+        System.out.println("qms validation start");
+
+        // QMS number validation
+        // QMS number is enabled to be null
+        // but it is not enabled to be empty
+        if(complaintDto.getQmsNumber() != null){
+            System.out.println("QMS is not null");
+            // if the value from the front-end is blank then set the value to null
+            if(complaintDto.getQmsNumber().isBlank()){
+                complaintDto.setQmsNumber(null);
+            }
+            System.out.println("QMS length is not 0");
+        }
+
+        System.out.println("qms validation finished");
+
+
         // Check if the complaint is already exists, if the serial number is already used then the complaint is already exist
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
+
+        System.out.println("Complaint optional is ok");
 
         if(complaintOptional.isPresent()){
             throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getSerialNumber() + " serial number is already exists"));
@@ -49,19 +81,27 @@ public class ComplaintServiceImpl implements  ComplaintService{
             }
         }
 
+        System.out.println("Creating new complaint");
+
         Complaint complaint = new Complaint();
+        System.out.println("complaint created");
         complaint.setCreatedAt(LocalDateTime.now());
         complaint.setSerialNumber(complaintDto.getSerialNumber());
-        complaint.setQmsNumber(complaintDto.getQmsNumber());
+        if(complaintDto.getQmsNumber() != null){
+            complaint.setQmsNumber(complaintDto.getQmsNumber());
+        }
         complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
+        System.out.println("Customer ref number is set");
         complaint.setClaimedFault(complaintDto.getClaimedFault());
-        if(complaintDto.getArrivedAt().length() > 0){
+        System.out.println("claimed fault is set, Date set is starting");
+        if(complaintDto.getArrivedAt() != null && complaintDto.getArrivedAt().length() > 0){
             int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
             int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
             int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
             LocalDate date = LocalDate.of(year, Month.of(month), day);
             complaint.setArrivedAt(date );
         }
+        System.out.println("Date set is ok");
         if(complaintDto.getIsPrio() != null){
             complaint.setPrio(complaintDto.getIsPrio());
         }
@@ -118,6 +158,16 @@ public class ComplaintServiceImpl implements  ComplaintService{
             throw new IllegalStateException(String.format("Complaint with id: "+ id + " is not exist."));
         }
         return complaintAnalysisDtoOptional.get();
+    }
+
+    @Override
+    public ComplaintAnalysisDto search(String serialNumber) {
+        log.info("Search complaint by serial number: {}", serialNumber);
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(serialNumber);
+        if(complaintOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Complaint with serial number: "+ serialNumber + " is not exist."));
+        }
+        return complaintRepository.findComplaintAnalysisById(complaintOptional.get().getId()).get();
     }
 
     @Override

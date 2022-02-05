@@ -30,6 +30,10 @@ export class ComplaintService {
     return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/get/${id}`);
   }
 
+  searchComplaint(complaint: ComplaintDto): Observable<ComplaintResponse> {
+    return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/search/${complaint.serialNumber}`)
+  }
+
   updateComplaint(complaint: ComplaintDto): Observable<ComplaintResponse> {
     return this.http.put<ComplaintResponse>(`${this.apiUrl}/complaint/update`, complaint)
   }
