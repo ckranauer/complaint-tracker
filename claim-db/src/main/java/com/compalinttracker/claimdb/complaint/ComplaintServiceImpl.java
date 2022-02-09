@@ -34,86 +34,35 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
     @Override
     public Collection<ComplaintAnalysisDto> create(ComplaintDto complaintDto) {
-        log.info("Saving new complaint: {}", complaintDto.getQmsNumber());
         log.info("Saving new complaint: {}", complaintDto.getSerialNumber());
 
-        System.out.println("Serno validation starts");
+        // Check serial number
+        isSerialNumberValid(complaintDto);
 
-        // Serial number validation
-        if(complaintDto.getSerialNumber() == null){
-            throw new IllegalStateException(String.format("Serial number can not be null"));
-        }
+        // Check QMS number and set QMS number null if the value is blank
+        complaintDto = isQMSNumberValid(complaintDto);
 
-        if(complaintDto.getSerialNumber().length() == 0){
-            throw new IllegalStateException(String.format("Serial number can not be empty"));
-        }
+        // Check if the complaint is already exist with this serial number
+        complaintWithThisSerialNumberAlreadyExists(complaintDto);
 
-        System.out.println("serno validation finished");
-        System.out.println("qms validation start");
+        // Check arrivedAt
 
-        // QMS number validation
-        // QMS number is enabled to be null
-        // but it is not enabled to be empty
-        if(complaintDto.getQmsNumber() != null){
-            System.out.println("QMS is not null");
-            // if the value from the front-end is blank then set the value to null
-            if(complaintDto.getQmsNumber().isBlank()){
-                complaintDto.setQmsNumber(null);
-            }
-            System.out.println("QMS length is not 0");
-        }
-
-        System.out.println("qms validation finished");
-
-
-        // Check if the complaint is already exists, if the serial number is already used then the complaint is already exist
-        Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
-
-        System.out.println("Complaint optional is ok");
-
-        if(complaintOptional.isPresent()){
-            throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getSerialNumber() + " serial number is already exists"));
-        }
-        // TODO: from the frontend there was posible to complaint data with null value in SNR, QMS. Solve this issue
-        if(complaintDto.getQmsNumber() != null ){
-            if(complaintOptional.isPresent()  && complaintDto.getQmsNumber().equals(complaintOptional.get().getQmsNumber())){
-                throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getQmsNumber() + " qms number is already exists"));
-            }
-        }
-
-        System.out.println("Creating new complaint");
+        // Check
 
         Complaint complaint = new Complaint();
-        System.out.println("complaint created");
         complaint.setCreatedAt(LocalDateTime.now());
         complaint.setSerialNumber(complaintDto.getSerialNumber());
-        if(complaintDto.getQmsNumber() != null){
-            complaint.setQmsNumber(complaintDto.getQmsNumber());
-        }
+        complaint.setQmsNumber(complaintDto.getQmsNumber());
         complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
-        System.out.println("Customer ref number is set");
         complaint.setClaimedFault(complaintDto.getClaimedFault());
-        System.out.println("claimed fault is set, Date set is starting");
-        if(complaintDto.getArrivedAt() != null && complaintDto.getArrivedAt().length() > 0){
-            int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
-            int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
-            int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
-            LocalDate date = LocalDate.of(year, Month.of(month), day);
-            complaint.setArrivedAt(date );
-        }
-        System.out.println("Date set is ok");
+        complaint.setArrivedAt(complaintDto.getArrivedAt());
+
         if(complaintDto.getIsPrio() != null){
             complaint.setPrio(complaintDto.getIsPrio());
         }
 
-        if (complaintDto.getProductInfo() != null){
-            complaint.setProductInfo(complaintDto.getProductInfo());
-        }
+        complaint.setProductInfo(complaintDto.getProductInfo());
 
-
-
-
-        System.out.println("responsible"+ complaintDto.getResponsible());
         if(complaintDto.getResponsible() != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
             if(userProfileOptional.isEmpty()){
@@ -128,8 +77,52 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaint.setAnalysis(analysis);
 
         complaintRepository.save(complaint);
-        complaintRepository.findAllComplaintAnalysis().stream().forEach(System.out::println);
         return complaintRepository.findAllComplaintAnalysis();
+
+        /*
+        if(complaintDto.getArrivedAt() != null && complaintDto.getArrivedAt().length() > 0){
+            int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
+            int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
+            int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
+            LocalDate date = LocalDate.of(year, Month.of(month), day);
+            complaint.setArrivedAt(date );
+        }
+*/
+    }
+
+    private void complaintWithThisSerialNumberAlreadyExists(ComplaintDto complaintDto) {
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
+
+        if(complaintOptional.isPresent()){
+            throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getSerialNumber() + " serial number is already exist"));
+        }
+    }
+
+    private ComplaintDto isQMSNumberValid(ComplaintDto complaintDto) {
+        // QMS number is enabled to be null
+        // but it is not enabled to be empty/blank
+        // it must be unique
+        if(complaintDto.getQmsNumber() != null){
+            // Check if it is alredy in use
+            Optional<Complaint> complaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
+            if(complaintOptional.isPresent()){
+                throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getQmsNumber() + " qms number is already exist"));
+            }
+            // if the value from the front-end is blank then set the value to null
+            if(complaintDto.getQmsNumber().isBlank()) {
+                complaintDto.setQmsNumber(null);
+            }
+        }
+        return complaintDto;
+    }
+
+    private void isSerialNumberValid(ComplaintDto complaintDto) {
+        if(complaintDto.getSerialNumber() == null){
+            throw new IllegalStateException(String.format("Serial number can not be null"));
+        }
+        if(complaintDto.getSerialNumber().length() == 0){
+            throw new IllegalStateException(String.format("Serial number can not be empty"));
+        }
     }
 
     @Override
@@ -470,7 +463,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaintDto.setCustomerRefNumber(complaint.getCustomerRefNumber());
         complaintDto.setSerialNumber(complaint.getSerialNumber());
         //complaintDto.setProductGroup(complaint.getProductGroup());       // TODO:  implement product group
-        complaintDto.setArrivedAt(complaint.getArrivedAt().toString());  // TODO: create method what makes a formated date -> 2022.01.07
+        //complaintDto.setArrivedAt(complaint.getArrivedAt().toString());  // TODO: create method what makes a formated date -> 2022.01.07
         complaintDto.setClaimedFault(complaint.getClaimedFault());
         labelPrinter.print(complaintDto);
         return Boolean.TRUE;

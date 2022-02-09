@@ -24,7 +24,8 @@ public class ComplaintDto {
     private String claimedFault;
     private String productInfo;
 
-    private String arrivedAt;
+    private LocalDate arrivedAt;
+    //private String arrivedAt;
     private UUID responsible;
     private Boolean isPrio;
 }
