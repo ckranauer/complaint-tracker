@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class ComplaintUpdateDto {
     private String claimedFault;
     private String productInfo;
 
-    private String arrivedAt;
+    private LocalDate arrivedAt;   // String
     private UUID responsible;
     private Boolean isPrio;
 
@@ -31,8 +32,8 @@ public class ComplaintUpdateDto {
     private String visualAnalysis;
     private String electricalAnalysis;
     private String conclusion;
-    private String analysisStartedAt;
-    private String analysisEndedAt;
+    private LocalDate analysisStartedAt;
+    private LocalDate analysisEndedAt;
     private UUID analyzedBy;
 
 }

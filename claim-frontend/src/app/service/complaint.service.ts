@@ -7,6 +7,7 @@ import { Complaint } from '../complaint/complaint';
 import { ComplaintDto } from '../complaint/complaintDto';
 import { PaginationObj } from '../interface/pagination-obj';
 import { ComplaintCreateDto } from '../complaint/complaintCreateDto';
+import { ComplaintUpdateDto } from '../complaint/complaintUpdateDto';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class ComplaintService {
     return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/search/${complaint.serialNumber}`)
   }
 
-  updateComplaint(complaint: ComplaintDto): Observable<ComplaintResponse> {
+  updateComplaint(complaint: ComplaintUpdateDto): Observable<ComplaintResponse> {
     return this.http.put<ComplaintResponse>(`${this.apiUrl}/complaint/update`, complaint)
   }
 /*

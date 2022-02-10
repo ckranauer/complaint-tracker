@@ -10,6 +10,7 @@ import { ComplaintService } from './service/complaint.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PrinterServerComponent } from './printer-server/printer-server.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -30,7 +31,8 @@ import { UserListComponent } from './user-list/user-list.component';
   ],
   providers: [
     ComplaintService,
-    HttpClient
+    HttpClient,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

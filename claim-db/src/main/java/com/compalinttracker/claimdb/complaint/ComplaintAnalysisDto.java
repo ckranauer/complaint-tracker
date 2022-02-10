@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import javax.persistence.Column;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 

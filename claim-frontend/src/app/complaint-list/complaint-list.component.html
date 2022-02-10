@@ -50,16 +50,17 @@
             <tbody *ngFor="let complaint of claims?.data?.complaints">
               <tr >
                   <td>
-                      {{ complaint.arrivedAt?.substring(0,10) }}
+                    <!-- complaint.arrivedAt?.substring(0,10)  -->
+                      {{ complaint.arrivedAt | date:'mediumDate'}}
                   </td>
                   <td>
                       {{ complaint?.serialNumber }}
                   </td>
                   <td>
-                      {{ complaint.analysisStartedAt?.substring(0,10)  }}
+                      {{ complaint.analysisStartedAt | date:'mediumDate'  }}
                   </td>
                   <td>
-                    {{ complaint.analysisEndedAt?.substring(0,10) }}
+                    {{ complaint.analysisEndedAt | date:'mediumDate' }}
                   </td>
                   <td>
                       {{ complaint?.productInfo }} 
@@ -159,7 +160,7 @@
     
 
 
-<!-- Edit Complaint Modal -->
+<!-- Update Complaint Modal -->
 <div class="modal fade" id="updateComplaintModal" tabindex="-1" aria-labelledby="updateComplaintModal" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -204,7 +205,8 @@
                         
                       <div class="mb-3">
                         <label for="arrivedAt" class="form-label">Incoming date</label>
-                        <input [ngModel]="claim?.data.complaint.arrivedAt"  type="text" class="form-control" name="arrivedAt" >
+                        <input [ngModel]="claim?.data.complaint.arrivedAt | date:'yyyy-MM-dd'"   type="date" class="form-control" name="arrivedAt" >
+                        <!--  [ngModel]="claim?.data.complaint.arrivedAt"  type="text" class="form-control" name="arrivedAt" -->
                       </div>
                       <div class="mb-3">
                         <label for="claimedFault" class="form-label">Claimed fault</label>
@@ -235,11 +237,11 @@
                   </div>
                   <div class="mb-3">
                     <label for="analysisStartedAt" class="form-label"> Analysis started </label>
-                    <input type="text" [ngModel]="claim?.data.complaint.analysisStartedAt"  class="form-control" name="analysisStartedAt"  aria-describedby="analysisStartedAt" >
+                    <input type="date" [ngModel]="claim?.data.complaint.analysisStartedAt | date:'yyyy-MM-dd'"  class="form-control" name="analysisStartedAt"  aria-describedby="analysisStartedAt" >
                   </div>
                   <div class="mb-3">
                     <label for="analysisEndedAt" class="form-label"> Analysis ended </label>
-                    <input type="text" [ngModel]="claim?.data.complaint.analysisEndedAt"  class="form-control" name="analysisEndedAt"  aria-describedby="analysisEndedAt" >
+                    <input type="date" [ngModel]="claim?.data.complaint.analysisEndedAt | date:'yyyy-MM-dd'"  class="form-control" name="analysisEndedAt"  aria-describedby="analysisEndedAt" >
                   </div>
                   <div class="mb-3">
                     <label for="barcodes" class="form-label"> Part description </label>

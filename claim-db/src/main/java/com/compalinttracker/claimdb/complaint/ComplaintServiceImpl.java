@@ -11,6 +11,7 @@ import com.compalinttracker.claimdb.userProfile.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,29 +41,20 @@ public class ComplaintServiceImpl implements  ComplaintService{
         isSerialNumberValid(complaintDto);
 
         // Check QMS number and set QMS number null if the value is blank
-        complaintDto = isQMSNumberValid(complaintDto);
+        //complaintDto = isQMSNumberValid(complaintDto);
+        isQMSNumberValid(complaintDto);
 
         // Check if the complaint is already exist with this serial number
         complaintWithThisSerialNumberAlreadyExists(complaintDto);
 
-        // Check arrivedAt
+        Complaint complaint = createComplaint(complaintDto);
+        addResponsibleToComplaint(complaintDto, complaint);
+        complaintRepository.save(complaint);
+        Pageable pageable = PageRequest.of(0,20);
+        return complaintRepository.findAllComplaintAnalysis(pageable);
+    }
 
-        // Check
-
-        Complaint complaint = new Complaint();
-        complaint.setCreatedAt(LocalDateTime.now());
-        complaint.setSerialNumber(complaintDto.getSerialNumber());
-        complaint.setQmsNumber(complaintDto.getQmsNumber());
-        complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
-        complaint.setClaimedFault(complaintDto.getClaimedFault());
-        complaint.setArrivedAt(complaintDto.getArrivedAt());
-
-        if(complaintDto.getIsPrio() != null){
-            complaint.setPrio(complaintDto.getIsPrio());
-        }
-
-        complaint.setProductInfo(complaintDto.getProductInfo());
-
+    private Complaint addResponsibleToComplaint(ComplaintDto complaintDto, Complaint complaint) {
         if(complaintDto.getResponsible() != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
             if(userProfileOptional.isEmpty()){
@@ -72,22 +64,26 @@ public class ComplaintServiceImpl implements  ComplaintService{
             responsible.addComplaint(complaint);
             complaint.setResponsible(responsible);
         }
+        return complaint;
+    }
+
+    private Complaint createComplaint(ComplaintDto complaintDto) {
+        Complaint complaint = new Complaint();
+        complaint.setCreatedAt(LocalDateTime.now());
+        complaint.setSerialNumber(complaintDto.getSerialNumber());
+        complaint.setQmsNumber(complaintDto.getQmsNumber());
+        complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
+        complaint.setClaimedFault(complaintDto.getClaimedFault());
+        complaint.setArrivedAt(complaintDto.getArrivedAt());
+        // it will be false by default
+        if(complaintDto.getIsPrio() != null){
+            complaint.setPrio(complaintDto.getIsPrio());
+        }
+        complaint.setProductInfo(complaintDto.getProductInfo());
         Analysis analysis = new Analysis();
         analysis.setComplaint(complaint);
         complaint.setAnalysis(analysis);
-
-        complaintRepository.save(complaint);
-        return complaintRepository.findAllComplaintAnalysis();
-
-        /*
-        if(complaintDto.getArrivedAt() != null && complaintDto.getArrivedAt().length() > 0){
-            int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
-            int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
-            int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
-            LocalDate date = LocalDate.of(year, Month.of(month), day);
-            complaint.setArrivedAt(date );
-        }
-*/
+        return complaint;
     }
 
     private void complaintWithThisSerialNumberAlreadyExists(ComplaintDto complaintDto) {
@@ -126,26 +122,17 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Collection<ComplaintAnalysisDto> list(int limit, int page) {   // TODO: change it to complaintDto
-        log.info("Fetching all complaints");                    // TODO: create a query which collect only the necessary datas
-        // TODO: create the complaintDTO what is in the frontend
-
+    public Collection<ComplaintAnalysisDto> list(int limit, int page) {
+        log.info("Fetching all complaints");
         // TODO: create  A projection interface to retrieve a subset of attributes
         // TODO: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections
-        ;
-        Collection<ComplaintAnalysisDto> complaints = new ArrayList<ComplaintAnalysisDto>();
-       // complaintRepository.findAll(PageRequest.of(page,limit)).toList();
-        // TODO : stream
-
-        List<ComplaintAnalysisDto> rawComplaints = complaintRepository.findAllComplaintAnalysis();
-
-        return rawComplaints;
+        Pageable pageable = PageRequest.of(page,limit);
+        return complaintRepository.findAllComplaintAnalysis(pageable);
     }
 
     @Override
     public ComplaintAnalysisDto get(Long id) {
         log.info("Fetching complaint by id: {}", id);
-        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
         Optional<ComplaintAnalysisDto> complaintAnalysisDtoOptional = complaintRepository.findComplaintAnalysisById(id);
         if(complaintAnalysisDtoOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint with id: "+ id + " is not exist."));
@@ -209,85 +196,38 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
         actualComplaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
         actualComplaint.setClaimedFault(complaintDto.getClaimedFault());
-
-        // TODO: solve the date conversion
-        if (complaintDto.getArrivedAt() != null) {
-            if(complaintDto.getArrivedAt().length() > 0){
-                int year = Integer.parseInt(complaintDto.getArrivedAt().substring(0,4)); // TODO: create method in the class
-                int month = Integer.parseInt(complaintDto.getArrivedAt().substring(5,7));
-                int day = Integer.parseInt(complaintDto.getArrivedAt().substring(8,10));
-                LocalDate date = LocalDate.of(year, Month.of(month), day);
-                actualComplaint.setArrivedAt(date );
-            }
-
-        }
+        actualComplaint.setArrivedAt(complaintDto.getArrivedAt());
 
         if(complaintDto.getResponsible() != null) {
-            log.info("User profile before read");
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
-            log.info("User profile after read the optional");
             if(userProfileOptional.isEmpty()){
                 throw new IllegalStateException("User with id: "+ complaintDto.getResponsible()+" is not exist");
             }
             UserProfile responsible = userProfileOptional.get();
-            log.info("got the user profile from the optional");
             responsible.addComplaint(actualComplaint);
-            log.info("complaint added to user_profile(responsible) set");
             actualComplaint.setResponsible(responsible);
-            log.info("responsible set to complaint");
         }
 
         if(complaintDto.getIsPrio() != null){
             actualComplaint.setPrio(complaintDto.getIsPrio());
         }
 
-        log.info("UPDATE: Product group: " + complaintDto.getProductInfo());
         if (complaintDto.getProductInfo() != null){
             actualComplaint.setProductInfo(complaintDto.getProductInfo());
         }
-        log.info("Product group is updated");
-
-
+        
         Analysis analysis = actualComplaint.getAnalysis();
-        log.info("analysis is read");
         analysis.setBarcodes(complaintDto.getBarcodes());
-        log.info("barcodes is updated");
         analysis.setLifecycleInfo(complaintDto.getLifecycleInfo());
-        log.info("lifecycle is updated");
         if(complaintDto.getFaultVerification() != null){
             analysis.setFaultVerification(complaintDto.getFaultVerification());
         }
-
-        log.info("fault verif updated");
         analysis.setVisualAnalysis(complaintDto.getVisualAnalysis());
-        log.info("VA is updated");
         analysis.setElectricalAnalysis(complaintDto.getElectricalAnalysis());
-        log.info("EA is updated");
         analysis.setConclusion(complaintDto.getConclusion());
-        log.info("Conclusion is updated");
+        analysis.setAnalysisStartedAt(complaintDto.getAnalysisStartedAt());
+        analysis.setAnalysisEndedAt(complaintDto.getAnalysisEndedAt());
 
-        if (complaintDto.getAnalysisStartedAt() != null) {
-            if(complaintDto.getAnalysisStartedAt().length() > 0){
-                int year = Integer.parseInt(complaintDto.getAnalysisStartedAt().substring(0,4)); // TODO: create method in the class
-                int month = Integer.parseInt(complaintDto.getAnalysisStartedAt().substring(5,7));
-                int day = Integer.parseInt(complaintDto.getAnalysisStartedAt().substring(8,10));
-                LocalDate date = LocalDate.of(year, Month.of(month), day);
-                analysis.setAnalysisStartedAt(date);
-            }
-        }
-        log.info("Analysis started is updated");
-
-        if (complaintDto.getAnalysisEndedAt() != null) {
-            if(complaintDto.getAnalysisEndedAt().length() > 0){
-                int year = Integer.parseInt(complaintDto.getAnalysisEndedAt().substring(0,4)); // TODO: create method in the class
-                int month = Integer.parseInt(complaintDto.getAnalysisEndedAt().substring(5,7));
-                int day = Integer.parseInt(complaintDto.getAnalysisEndedAt().substring(8,10));
-                LocalDate date = LocalDate.of(year, Month.of(month), day);
-                analysis.setAnalysisEndedAt(date);
-            }
-        }
-
-        log.info("Analysis ended is updated");
 
         if(complaintDto.getAnalyzedBy() != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getAnalyzedBy());
@@ -298,7 +238,6 @@ public class ComplaintServiceImpl implements  ComplaintService{
             analyzedBy.addAnalysis(analysis);
             analysis.setAnalyzedBy(analyzedBy);
         }
-        log.info("AnalyzedBy is updated");
 
         actualComplaint.setAnalysis(analysis);
         complaintRepository.save(actualComplaint);
@@ -311,8 +250,8 @@ public class ComplaintServiceImpl implements  ComplaintService{
 */
         // TODO: implement it ??
         //actualComplaint.setAnalysis(complaintDto.getAnalysis());
-        log.info("Update is finished");
-        return complaintRepository.findAllComplaintAnalysis();
+        Pageable pageable = PageRequest.of(0,10);
+        return complaintRepository.findAllComplaintAnalysis(pageable);
     }
 
     @Override

@@ -9,6 +9,8 @@ import { DataState } from '../enum/data-state.enum';
 import { PaginationObj } from '../interface/pagination-obj';
 import { ComplaintResponse } from '../response/complaint-response';
 import { ComplaintService } from '../service/complaint.service';
+import { DatePipe } from '@angular/common';
+import { ComplaintUpdateDto } from '../complaint/complaintUpdateDto';
 
 @Component({
   selector: 'app-complaint-list',
@@ -23,14 +25,12 @@ export class ComplaintListComponent implements OnInit {
   private dataSubject = new BehaviorSubject<ComplaintResponse>(null);
   private isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoading.asObservable();
+ 
 
   claims?: ComplaintResponse;
   claim?: ComplaintResponse;
   complaint?: ComplaintDto;
 
-
-  
-  dateFormCtrl = new FormControl(new Date());
 
   private pageObj: PaginationObj = {
     "page": 0,
@@ -39,12 +39,16 @@ export class ComplaintListComponent implements OnInit {
   }
 
 
-  constructor(private complaintService: ComplaintService){}
+  constructor(private complaintService: ComplaintService, private datePipe: DatePipe){}
 
   ngOnInit(): void {
     this.onGetComplaints(this.pageObj);
+    
   }
-  
+
+ 
+
+
 
   onGetComplaint(complaint: ComplaintDto): void{
     this.complaintService.getComplaint(complaint.id).subscribe(
@@ -81,11 +85,12 @@ export class ComplaintListComponent implements OnInit {
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
       ), complaintCreateForm.resetForm();
+      //this.onGetComplaints(this.pageObj);
   }
 
   onUpdateComplaint(complaintUpdateForm: NgForm): void{
     console.log(complaintUpdateForm.value)
-    this.complaintService.updateComplaint(complaintUpdateForm.value as ComplaintDto).subscribe(
+    this.complaintService.updateComplaint(complaintUpdateForm.value as ComplaintUpdateDto).subscribe(
       (response) => this.claims = response,
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),

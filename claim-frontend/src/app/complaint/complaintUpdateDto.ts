@@ -1,6 +1,4 @@
-import { UserDto } from "../user/userDto";
-
-export interface ComplaintDto {
+export interface ComplaintUpdateDto {
    
     id: number;
     serialNumber: string;
@@ -8,7 +6,7 @@ export interface ComplaintDto {
     customerRefNumber: string;
     claimedFault: string;
     //arrivedAt: string;
-    arrivedAt: string;
+    arrivedAt: Date;
     productInfo: string;
     responsible: string;
     responsibleId: string;
@@ -31,5 +29,3 @@ export interface ComplaintDto {
     isPrio: boolean;
    
 }
-
-

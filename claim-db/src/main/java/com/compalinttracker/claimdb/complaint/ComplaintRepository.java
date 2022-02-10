@@ -1,6 +1,7 @@
 package com.compalinttracker.claimdb.complaint;
 
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -40,10 +41,10 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
                     "FROM complaint " +
                     "LEFT JOIN analysis ON analysis.complaint_id = complaint.id " +
                     "LEFT JOIN user_profile ON analysis.user_profile_id = user_profile.id " +
-                    "ORDER BY arrived_at DESC",
+                    "ORDER BY arrived_at DESC ",
             nativeQuery = true
     )
-    List<ComplaintAnalysisDto> findAllComplaintAnalysis();
+    List<ComplaintAnalysisDto> findAllComplaintAnalysis(Pageable pageable);
 
 
 
