@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
+//  Projection interface to retrieve a subset of attributes
+//  Info is from here https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections
+
 
 public interface ComplaintAnalysisDto {
 

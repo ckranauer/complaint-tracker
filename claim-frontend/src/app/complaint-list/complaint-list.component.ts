@@ -81,7 +81,10 @@ export class ComplaintListComponent implements OnInit {
 
   onCreateComplaint(complaintCreateForm: NgForm): void{
     this.complaintService.createComplaint(complaintCreateForm.value as ComplaintCreateDto).subscribe(
-      (response) => this.claims = response,
+      (response) => {
+        this.claims = response;
+        console.log(response);
+      },
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
       ), complaintCreateForm.resetForm();
@@ -91,11 +94,21 @@ export class ComplaintListComponent implements OnInit {
   onUpdateComplaint(complaintUpdateForm: NgForm): void{
     console.log(complaintUpdateForm.value)
     this.complaintService.updateComplaint(complaintUpdateForm.value as ComplaintUpdateDto).subscribe(
-      (response) => this.claims = response,
+      (response) => {
+        this.claims = response;
+        console.log(response);
+      } ,
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
       )
   }
+
+  onCreateAnalysisReport(id: number): void{
+    console.log(id);
+    this.complaintService.createReport(id).subscribe();
+  }
+
+ 
 
   /*
   public getClaims(): void{

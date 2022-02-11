@@ -38,7 +38,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         log.info("Saving new complaint: {}", complaintDto.getSerialNumber());
 
         // Check serial number
-        isSerialNumberValid(complaintDto);
+        isSerialNumberValid(complaintDto.getSerialNumber());
 
         // Check QMS number and set QMS number null if the value is blank
         //complaintDto = isQMSNumberValid(complaintDto);
@@ -48,24 +48,16 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaintWithThisSerialNumberAlreadyExists(complaintDto);
 
         Complaint complaint = createComplaint(complaintDto);
-        addResponsibleToComplaint(complaintDto, complaint);
+
+        // There is no need the return value because the @Transactional
+        addResponsibleToComplaint(complaintDto.getResponsible(), complaint);
+
         complaintRepository.save(complaint);
         Pageable pageable = PageRequest.of(0,20);
         return complaintRepository.findAllComplaintAnalysis(pageable);
     }
 
-    private Complaint addResponsibleToComplaint(ComplaintDto complaintDto, Complaint complaint) {
-        if(complaintDto.getResponsible() != null) {
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
-            if(userProfileOptional.isEmpty()){
-                throw new IllegalStateException("User with id: "+ complaintDto.getResponsible()+" is not exist");
-            }
-            UserProfile responsible = userProfileOptional.get();
-            responsible.addComplaint(complaint);
-            complaint.setResponsible(responsible);
-        }
-        return complaint;
-    }
+
 
     private Complaint createComplaint(ComplaintDto complaintDto) {
         Complaint complaint = new Complaint();
@@ -112,11 +104,11 @@ public class ComplaintServiceImpl implements  ComplaintService{
         return complaintDto;
     }
 
-    private void isSerialNumberValid(ComplaintDto complaintDto) {
-        if(complaintDto.getSerialNumber() == null){
+    private void isSerialNumberValid(String serialNumber) {
+        if(serialNumber== null){
             throw new IllegalStateException(String.format("Serial number can not be null"));
         }
-        if(complaintDto.getSerialNumber().length() == 0){
+        if(serialNumber.length() == 0){
             throw new IllegalStateException(String.format("Serial number can not be empty"));
         }
     }
@@ -124,10 +116,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Collection<ComplaintAnalysisDto> list(int limit, int page) {
         log.info("Fetching all complaints");
-        // TODO: create  A projection interface to retrieve a subset of attributes
-        // TODO: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections
-        Pageable pageable = PageRequest.of(page,limit);
-        return complaintRepository.findAllComplaintAnalysis(pageable);
+        return complaintRepository.findAllComplaintAnalysis(PageRequest.of(page,limit));
     }
 
     @Override
@@ -151,72 +140,56 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     @Override
-    public Collection<ComplaintAnalysisDto> update(Long id, ComplaintUpdateDto complaintDto) {
-        log.info("Update complaint: {}", id);
-        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
-        if(complaintOptional.isEmpty()){
-            throw new IllegalStateException(String.format("Complaint does not exist."));
-        }
-        Complaint actualComplaint = complaintOptional.get();
+    public Collection<ComplaintAnalysisDto> update( ComplaintUpdateDto complaintDto) {
+        log.info("Update complaint: {}", complaintDto.getId());
 
-        // Serial number cannot be null
-        if(complaintDto.getSerialNumber() == null){
-            throw new IllegalStateException("Serial number cannot be null.");
-        }
+        // Read complaint from db
+        // If it not exists throws exception
+        Complaint complaint = getComplaint(complaintDto.getId());
 
-        // Check if serial number is already exist
-        Optional<Complaint> serNoComplaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
-        if(serNoComplaintOptional.isPresent()  ){
-            // If yes then check if it belongs to the same complaint what we want to update,
-            if(serNoComplaintOptional.get().getId() !=  id){
-                // if it belongs to another claim
-                throw new IllegalStateException(String.format("Complaint with serial number: " + complaintDto.getSerialNumber() + " is already exist."));
-            }else{
-                // If yes, save
-                actualComplaint.setSerialNumber(complaintDto.getSerialNumber());
-            }
-        }else{
-            // if not present then save
-            actualComplaint.setSerialNumber(complaintDto.getSerialNumber());
-        }
+        // Serial number cannot be null, blank or taken
+        isSerialNumberValid(complaintDto.getSerialNumber());
 
+        // Check if serial number is taken
+        throwExceptionIfSernoIsTaken(complaintDto.getId(), complaintDto);
 
-        if(complaintDto.getQmsNumber() != null){
-            Optional<Complaint> qmsNoComplaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
-            if(qmsNoComplaintOptional.isPresent()){
-                if(qmsNoComplaintOptional.get().getId() != id){
-                    throw new IllegalStateException(String.format("Complaint with QMS number: "+ complaintDto.getQmsNumber() + " is already exist."));
-                }else{
-                    actualComplaint.setQmsNumber(complaintDto.getQmsNumber());
-                }
-            }else{
-                actualComplaint.setQmsNumber(complaintDto.getQmsNumber());
-            }
-        }
+        // Check if QMS number is valid or taken
+        isQMSValidAndNotTaken(complaintDto);
 
-        actualComplaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
-        actualComplaint.setClaimedFault(complaintDto.getClaimedFault());
-        actualComplaint.setArrivedAt(complaintDto.getArrivedAt());
+        // Check if responsible exists in db then add to complaint or throws exception
+        addResponsibleToComplaint(complaintDto.getResponsible(), complaint);
 
-        if(complaintDto.getResponsible() != null) {
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getResponsible());
-            if(userProfileOptional.isEmpty()){
-                throw new IllegalStateException("User with id: "+ complaintDto.getResponsible()+" is not exist");
-            }
-            UserProfile responsible = userProfileOptional.get();
-            responsible.addComplaint(actualComplaint);
-            actualComplaint.setResponsible(responsible);
-        }
+        // Set analysis fields
+        Analysis analysis = getAnalysis(complaintDto, complaint);
 
+        // Check if analyzedBy exists in db then add to Analysis or throws exception
+        updateAnalyzedBy(complaintDto.getAnalyzedBy(), analysis);
+
+        // Set complaint fields and add the analysis to complaint
+        setComplaintAnalysis(complaintDto, complaint, analysis);
+
+        complaintRepository.save(complaint);
+        return complaintRepository.findAllComplaintAnalysis(PageRequest.of(0,10));
+    }
+
+    private void setComplaintAnalysis(ComplaintUpdateDto complaintDto, Complaint complaint, Analysis analysis) {
+        complaint.setSerialNumber(complaintDto.getSerialNumber());
+        complaint.setQmsNumber(complaintDto.getQmsNumber());
+        complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
+        complaint.setClaimedFault(complaintDto.getClaimedFault());
+        complaint.setArrivedAt(complaintDto.getArrivedAt());
         if(complaintDto.getIsPrio() != null){
-            actualComplaint.setPrio(complaintDto.getIsPrio());
+            complaint.setPrio(complaintDto.getIsPrio());
         }
 
         if (complaintDto.getProductInfo() != null){
-            actualComplaint.setProductInfo(complaintDto.getProductInfo());
+            complaint.setProductInfo(complaintDto.getProductInfo());
         }
-        
-        Analysis analysis = actualComplaint.getAnalysis();
+        complaint.setAnalysis(analysis);
+    }
+
+    private Analysis getAnalysis(ComplaintUpdateDto complaintDto, Complaint complaint) {
+        Analysis analysis = complaint.getAnalysis();
         analysis.setBarcodes(complaintDto.getBarcodes());
         analysis.setLifecycleInfo(complaintDto.getLifecycleInfo());
         if(complaintDto.getFaultVerification() != null){
@@ -227,31 +200,64 @@ public class ComplaintServiceImpl implements  ComplaintService{
         analysis.setConclusion(complaintDto.getConclusion());
         analysis.setAnalysisStartedAt(complaintDto.getAnalysisStartedAt());
         analysis.setAnalysisEndedAt(complaintDto.getAnalysisEndedAt());
+        return analysis;
+    }
 
-
-        if(complaintDto.getAnalyzedBy() != null) {
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(complaintDto.getAnalyzedBy());
+    private void updateAnalyzedBy(UUID analyzedById, Analysis analysis) {
+        if(analyzedById != null) {
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(analyzedById);
             if(userProfileOptional.isEmpty()){
-                throw new IllegalStateException("User with id: "+ complaintDto.getAnalyzedBy()+" is not exist");
+                throw new IllegalStateException("User with id: "+ analyzedById +" is not exist");
             }
             UserProfile analyzedBy = userProfileOptional.get();
             analyzedBy.addAnalysis(analysis);
             analysis.setAnalyzedBy(analyzedBy);
         }
+    }
 
-        actualComplaint.setAnalysis(analysis);
-        complaintRepository.save(actualComplaint);
-
-
-        /*
-        if(complaintAnalysisDto.getIsPrio() != null){
-            actualComplaint.setPrio(complaintDto.getIsPrio());
+    private void addResponsibleToComplaint(UUID responsibleId, Complaint complaint) {
+        if(responsibleId != null) {
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(responsibleId);
+            if(userProfileOptional.isEmpty()){
+                throw new IllegalStateException("User with id: "+ responsibleId +" is not exist");
+            }
+            UserProfile responsible = userProfileOptional.get();
+            responsible.addComplaint(complaint);
+            complaint.setResponsible(responsible);
         }
-*/
-        // TODO: implement it ??
-        //actualComplaint.setAnalysis(complaintDto.getAnalysis());
-        Pageable pageable = PageRequest.of(0,10);
-        return complaintRepository.findAllComplaintAnalysis(pageable);
+    }
+
+
+
+    private void isQMSValidAndNotTaken(ComplaintUpdateDto complaintDto) {
+        if(complaintDto.getQmsNumber() != null){
+            Optional<Complaint> qmsNoComplaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
+            if(qmsNoComplaintOptional.isPresent()){
+                if(qmsNoComplaintOptional.get().getId() != complaintDto.getId()){
+                    throw new IllegalStateException(String.format("Complaint with QMS number: "+ complaintDto.getQmsNumber() + " is already exist."));
+                }
+            }
+        }
+    }
+
+    private void throwExceptionIfSernoIsTaken(Long id, ComplaintUpdateDto complaintDto) {
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
+        if(complaintOptional.isPresent()  ){
+            // If yes then check if it belongs to the same complaint what we want to update,
+            if(complaintOptional.get().getId() != id){
+                // if it belongs to another claim
+                throw new IllegalStateException(String.format("Complaint with serial number: " + complaintDto.getSerialNumber() + " is already exist."));
+            }
+        }
+    }
+
+    private Complaint getComplaint(Long id) {
+        Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
+        if(complaintOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Complaint does not exist."));
+        }
+        Complaint complaint = complaintOptional.get();
+        return complaint;
     }
 
     @Override
@@ -276,88 +282,16 @@ public class ComplaintServiceImpl implements  ComplaintService{
         return Boolean.TRUE;
     }
 
-    @Override
-    public Analysis addAnalysis(AnalysisDto analysisDto) {
-        log.info("Add analysis to the complaint.");
 
-        // in the analysis repo check if another analysis already contains this complaint id
-        // it means that the complaint already has analysis, so it is not possible to add more
-        // it is possible to update but in another method
-        Optional<Analysis> analysisOptional = analysisRepository.findById(analysisDto.getComplaintId());
-        if(analysisOptional.isPresent()){
-            throw new IllegalStateException("Complaint with id: "+ analysisDto.getComplaintId()+ " already has analysis.");
-        }
-
-        Analysis analysis = new Analysis();
-        Complaint complaint = complaintRepository.getById(analysisDto.getComplaintId());
-        // TODO: put these to the class (pass the Dto as argument and set values inside the class) ??
-        analysis.setComplaint(complaint);
-        analysis.setBarcodes(analysisDto.getBarcodes());
-        analysis.setLifecycleInfo(analysisDto.getLifecycleInfo());
-        analysis.setVisualAnalysis(analysisDto.getVisualAnalysis());
-        analysis.setElectricalAnalysis(analysisDto.getElectricalAnalysis());
-        analysis.setConclusion(analysisDto.getConclusion());
-        analysis.setAnalysisEndedAt(analysisDto.getAnalysisEndedAt());
-        analysis.setAnalysisStartedAt(analysisDto.getAnalysisStartedAt());
-        if(analysisDto.getAnalyzedBy() != null){
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(analysisDto.getAnalyzedBy());
-            if(userProfileOptional.isEmpty()){
-                throw new IllegalStateException("User with id: "+ analysisDto.getAnalyzedBy()+" is not exist");
-            }
-            UserProfile user = userProfileOptional.get();
-            user.addAnalysis(analysis);
-            analysis.setAnalyzedBy(user);
-        }
-        complaint.setAnalysis(analysis);
-        return analysisRepository.save(analysis);
-    }
-
-    @Override
-    public Analysis getAnalysis(Long id) {
-        log.info("Fetching analysis by id: {}", id);
-        Optional<Analysis> analysisOptional = analysisRepository.findAnalysisByComplaintId(id);
-        if(analysisOptional.isEmpty()){
-            throw new IllegalStateException(String.format("Analysis with id: "+ id + " is not exist."));
-        }
-        return analysisOptional.get();
-    }
-
-    @Override
+    /*
     public Boolean deleteAnalysis(Long complaintId) {
         log.info("Deleting analysis by id: {}", complaintId);
         Complaint complaint = complaintRepository.getById(complaintId);
         analysisRepository.deleteAnalysisByComplaintId(complaintId);
         return Boolean.TRUE;
     }
+    */
 
-    @Override
-    public Analysis update(Long complaintId, AnalysisDto analysisDto) {
-
-        Optional<Analysis> analysisOptional = analysisRepository.findById(complaintId);
-        Analysis analysis;
-        if(analysisOptional.isEmpty()){
-            analysis = new Analysis();
-        }
-
-        analysis = analysisOptional.get();
-        analysis.setBarcodes(analysisDto.getBarcodes());
-        analysis.setLifecycleInfo(analysisDto.getLifecycleInfo());
-        analysis.setVisualAnalysis(analysisDto.getVisualAnalysis());
-        analysis.setElectricalAnalysis(analysisDto.getElectricalAnalysis());
-        analysis.setConclusion(analysisDto.getConclusion());
-        analysis.setAnalysisEndedAt(analysisDto.getAnalysisEndedAt());
-        analysis.setAnalysisStartedAt(analysisDto.getAnalysisStartedAt());
-        if(analysisDto.getAnalyzedBy() != null){
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(analysisDto.getAnalyzedBy());
-            if(userProfileOptional.isEmpty()){
-                throw new IllegalStateException("User with id: "+ analysisDto.getAnalyzedBy()+" is not exist");
-            }
-            UserProfile analyzedBy = userProfileOptional.get();
-            analyzedBy.addAnalysis(analysis);
-            analysis.setAnalyzedBy(analyzedBy);
-        }
-        return analysisRepository.save(analysis);
-    }
 
     @Override
     public Boolean createAnalysisReport(Long complaintId) throws Exception {

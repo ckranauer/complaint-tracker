@@ -52,29 +52,6 @@ public class ComplaintController {
         }
     }
 
-    @PostMapping("/add-analysis")
-    public ResponseEntity<Response> addAnalysis(@RequestBody @Valid AnalysisDto analysisDto){
-        try{
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .data(Map.of("analysis", complaintService.addAnalysis(analysisDto)))
-                            .message("Analysis added to complaint")
-                            .status(CREATED)
-                            .statusCode(CREATED.value())
-                            .build()
-            );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
-    }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Response> getComplaint(@PathVariable("id") Long id){
@@ -124,31 +101,6 @@ public class ComplaintController {
         }
     }
 
-    @GetMapping("/get-analysis/{id}")
-    public ResponseEntity<Response> getAnalysis(@PathVariable("id") Long id){
-        try{
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .data(Map.of("analysis", complaintService.get(id)))
-                            .message("Analysis retrieved")
-                            .status(OK)
-                            .statusCode(OK.value())
-                            .build()
-            );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
-    }
-
-    //@GetMapping("/list")
     @PostMapping("/list")
     public ResponseEntity<Response> getComplaints(@RequestBody PaginationObj paginationObj){
         // TODO: send page and limit via the request instead of hardcoded -> Post request, request body contains the limit and page
@@ -205,7 +157,7 @@ public class ComplaintController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaints", complaintService.update(complaintDto.getId(), complaintDto),"users", userProfileService.list(10,0) ))
+                            .data(Map.of("complaints", complaintService.update(complaintDto),"users", userProfileService.list(10,0) ))
                             .message("Complaint updated")
                             .status(OK)
                             .statusCode(OK.value())
@@ -222,57 +174,6 @@ public class ComplaintController {
             );
         }
     }
-
-    @PutMapping("/update-analysis/{id}")
-    public ResponseEntity<Response> updateAnalysis(@RequestBody @Valid AnalysisDto analysisDto,
-                                                    @PathVariable ("id") Long id){
-        try{
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .data(Map.of("analysis", complaintService.update(id, analysisDto)))
-                            .message("Analysis updated")
-                            .status(OK)
-                            .statusCode(OK.value())
-                            .build()
-            );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
-    }
-
-    @DeleteMapping("/delete-analysis/{id}")
-    public ResponseEntity<Response> deleteAnalysis(@PathVariable("id") Long id){
-        try{
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .data(Map.of("complaint", complaintService.deleteAnalysis(id)))
-                            .message("Analysis deleted")
-                            .status(OK)
-                            .statusCode(OK.value())
-                            .build()
-
-            );
-        }catch (Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
-    }
-
 
 
     @GetMapping("/create-report/{id}")

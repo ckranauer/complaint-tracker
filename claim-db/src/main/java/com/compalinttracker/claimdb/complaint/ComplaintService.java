@@ -14,13 +14,9 @@ public interface ComplaintService {
     Collection<ComplaintAnalysisDto> list(int limit, int page);
     ComplaintAnalysisDto get(Long id);
     ComplaintAnalysisDto search(String serialNumber);
-    Collection<ComplaintAnalysisDto> update(Long id, ComplaintUpdateDto complaintDto);
+    Collection<ComplaintAnalysisDto> update(ComplaintUpdateDto complaintDto);
     Boolean delete(Long id);
 
-    Analysis addAnalysis(AnalysisDto analysisDto);
-    Boolean deleteAnalysis(Long id);
-    Analysis update(Long complaintId, AnalysisDto analysis);
-    Analysis getAnalysis(Long id);
 
 
     Boolean createAnalysisReport(Long analysisId) throws Exception;
