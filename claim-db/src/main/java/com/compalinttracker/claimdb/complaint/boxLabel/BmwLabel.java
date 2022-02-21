@@ -13,7 +13,7 @@ public class BmwLabel implements BoxLabel{
                 "^A0N,30,30^FO50,100^FDSNR: "+ complaintDto.getSerialNumber() + "^FS " +
                 "^A0N,30,30^FO50,140^FDType: "+ complaintDto.getProductInfo().toUpperCase() + "^FS " +
                 "^A0N,15,15^FO50,190^FD"+"Incoming date: " + "^FS " +
-                "^A0N,30,30^FO50,220^FD"+ complaintDto.getArrivedAt() /*.substring(0,10).replace("-",".")*/ + "^FS " +
+                "^A0N,30,30^FO50,220^FD"+ complaintDto.getFormattedArrivedAt()+ "^FS " +
                 "^A0N,15,15^FO200,190^FD"+"Analysis ended: " + "^FS " +
                 "^FO200,210^GB150,50,3^FS " +
                 "^A0N,15,15^FO50,280^FD"+"Problem description: " + "^FS " +

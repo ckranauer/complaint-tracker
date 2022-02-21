@@ -9,6 +9,12 @@ public class LabelFactory {
         if(type.equals("MIB2")){
             return new Mib2Label();
         }
+        if(type.equals("VW")){
+            return new Mib2Label();
+        }
+        if(type.equals("AUDI")){
+            return new Mib2Label();
+        }
         else if(type.equals("TOYOTA")){
             return new ToyotaLabel();
         }

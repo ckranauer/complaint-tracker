@@ -28,4 +28,8 @@ public class ComplaintDto {
     //private String arrivedAt;
     private UUID responsible;
     private Boolean isPrio;
+
+    public String getFormattedArrivedAt(){
+        return this.arrivedAt.toString().replace("-", ".");
+    }
 }

@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -53,8 +54,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         addResponsibleToComplaint(complaintDto.getResponsible(), complaint);
 
         complaintRepository.save(complaint);
-        Pageable pageable = PageRequest.of(0,20);
-        return complaintRepository.findAllComplaintAnalysis(pageable);
+        return complaintRepository.findAllComplaintAnalysis(PageRequest.of(0,20));
     }
 
 
@@ -116,6 +116,13 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Collection<ComplaintAnalysisDto> list(int limit, int page) {
         log.info("Fetching all complaints");
+        List<ComplaintAnalysisDto> complaints = complaintRepository.findAllComplaintAnalysis(PageRequest.of(0,20));
+        List<ComplaintAnalysisDto> filteredComplaints =complaints.stream()
+                .filter(complaint -> complaint.getQmsNumber().isPresent())
+                .collect(Collectors.toList());
+
+        filteredComplaints.stream().forEach(complaint -> System.out.println("Complaint: " +complaint.getSerialNumber().get()));
+
         return complaintRepository.findAllComplaintAnalysis(PageRequest.of(page,limit));
     }
 
@@ -228,7 +235,6 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
 
-
     private void isQMSValidAndNotTaken(ComplaintUpdateDto complaintDto) {
         if(complaintDto.getQmsNumber() != null){
             Optional<Complaint> qmsNoComplaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
@@ -269,7 +275,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
             throw new IllegalStateException("Complaint with id: "+ id + " does not exists.");
         }
 
-        // First need to delete the analysis which belongs to this claim, if it exist
+        // First need to delete the analysis which belongs to this claim, if it exists
         Optional<Analysis> analysisOptional = analysisRepository.findAnalysisByComplaintId(id);
 
         if(analysisOptional.isPresent()){
@@ -282,21 +288,9 @@ public class ComplaintServiceImpl implements  ComplaintService{
         return Boolean.TRUE;
     }
 
-
-    /*
-    public Boolean deleteAnalysis(Long complaintId) {
-        log.info("Deleting analysis by id: {}", complaintId);
-        Complaint complaint = complaintRepository.getById(complaintId);
-        analysisRepository.deleteAnalysisByComplaintId(complaintId);
-        return Boolean.TRUE;
-    }
-    */
-
-
     @Override
     public Boolean createAnalysisReport(Long complaintId) throws Exception {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
-
         if(complaintOptional.isEmpty()){
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
         }
@@ -316,9 +310,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     // object is come from the frontend
     @Override
     public Boolean printLabel(ComplaintDto complaintDto) throws IOException {
-
         labelPrinter.print(complaintDto);
-
         return Boolean.TRUE;
     }
 
@@ -335,8 +327,8 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaintDto.setQmsNumber(complaint.getQmsNumber());
         complaintDto.setCustomerRefNumber(complaint.getCustomerRefNumber());
         complaintDto.setSerialNumber(complaint.getSerialNumber());
-        //complaintDto.setProductGroup(complaint.getProductGroup());       // TODO:  implement product group
-        //complaintDto.setArrivedAt(complaint.getArrivedAt().toString());  // TODO: create method what makes a formated date -> 2022.01.07
+        complaintDto.setProductInfo(complaint.getProductInfo());
+        complaintDto.setArrivedAt(complaint.getArrivedAt());
         complaintDto.setClaimedFault(complaint.getClaimedFault());
         labelPrinter.print(complaintDto);
         return Boolean.TRUE;

@@ -20,6 +20,6 @@ public interface ComplaintService {
 
 
     Boolean createAnalysisReport(Long analysisId) throws Exception;
-    Boolean printLabel(ComplaintDto complaintDto) throws IOException;              // TODO: implement printLabel
+    Boolean printLabel(ComplaintDto complaintDto) throws IOException;
     Boolean printSavedLabel(Long id) throws IOException;
 }

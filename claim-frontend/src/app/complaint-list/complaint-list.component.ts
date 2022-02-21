@@ -60,10 +60,10 @@ export class ComplaintListComponent implements OnInit {
 
   onSearchComplaint(complaintSearchForm: NgForm): void{
     this.complaintService.searchComplaint(complaintSearchForm.value as ComplaintDto).subscribe(
-      (response) => console.log(response),
+      (response) => this.claim = response, 
       (error: any) => console.log(error),
       () => console.log(this.claim)
-      );
+      ),complaintSearchForm.resetForm();
   }
 
  
@@ -103,10 +103,30 @@ export class ComplaintListComponent implements OnInit {
       )
   }
 
+  onDeleteComplaint(id: number): void{
+    this.complaintService.deleteComplaint(id).subscribe(
+      (response) => console.log(response), 
+      (error: any) => console.log(error),
+      () => console.log(this.claim)
+      ),
+      this.onGetComplaints(this.pageObj);
+  }
+
   onCreateAnalysisReport(id: number): void{
     console.log(id);
-    this.complaintService.createReport(id).subscribe();
+    this.complaintService.createReport(id).subscribe(
+      (response) => console.log(response)
+    );
   }
+
+  onPrintLabelFromDB(id: number): void{
+    console.log(id);
+    this.complaintService.printLabelFromDB(id).subscribe(
+      (response) => console.log(response)
+    );
+  }
+
+  
 
  
 

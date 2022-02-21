@@ -1,8 +1,8 @@
 
     <div class="search">
-      <form class="d-flex" #complaintSearchForm="ngForm" (ngSubmit)="onSearchComplaint(complaintSearchForm)">
+      <form class="d-flex" #complaintSearchForm="ngForm" (ngSubmit)="onSearchComplaint(complaintSearchForm)"  >
           <input ngModel class="form-control me-2" name="serialNumber" type="search" placeholder="Serial Number" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit" class="btn btn-primary" >Search</button>
+          <button class="btn btn-outline-success" type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateComplaintModal">Search</button>
         </form>
   </div>
 
@@ -51,16 +51,16 @@
               <tr >
                   <td>
                     <!-- complaint.arrivedAt?.substring(0,10)  -->
-                      {{ complaint.arrivedAt | date:'mediumDate'}}
+                      {{ complaint?.arrivedAt | date:'mediumDate'}}
                   </td>
                   <td>
                       {{ complaint?.serialNumber }}
                   </td>
                   <td>
-                      {{ complaint.analysisStartedAt | date:'mediumDate'  }}
+                      {{ complaint?.analysisStartedAt | date:'mediumDate'  }}
                   </td>
                   <td>
-                    {{ complaint.analysisEndedAt | date:'mediumDate' }}
+                    {{ complaint?.analysisEndedAt | date:'mediumDate' }}
                   </td>
                   <td>
                       {{ complaint?.productInfo }} 
@@ -77,6 +77,10 @@
                   <td>
                     <button type="button" class="btn btn-secondary" (click)="onGetComplaint(complaint)" data-bs-toggle="modal" data-bs-target="#updateComplaintModal">
                         Edit  
+                      </button>
+                      &nbsp;
+                      <button type="button" class="btn btn-secondary" (click)="onDeleteComplaint(complaint.id)" >
+                        X  
                       </button>
                     
                 </td>
@@ -280,9 +284,13 @@
 
               
                 <button type="submit" class="btn btn-primary">Save</button>
-
+                &nbsp;
                 <button type="button" class="btn btn-secondary" (click)="onCreateAnalysisReport(claim?.data.complaint.id)">
                   Create report  
+                </button>
+                &nbsp;
+                <button type="button" class="btn btn-secondary" (click)="onPrintLabelFromDB(claim?.data.complaint.id)">
+                  Print label  
                 </button>
               </form>
         </div>

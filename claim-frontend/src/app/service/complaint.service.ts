@@ -51,6 +51,10 @@ export class ComplaintService {
     return this.http.post<Complaint>(`${this.apiUrl}/complaint/print-label`, complaint)
   }
 
+  printLabelFromDB(id: number): Observable<ComplaintResponse> {
+    return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/print-label-from-saved-complaint/${id}`);
+  }
+
   // "/create-report/{id}"
   // this.complaintService.createReport(id).subscribe();
 
