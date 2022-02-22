@@ -2,7 +2,6 @@ package com.compalinttracker.claimdb.complaint;
 
 
 import com.compalinttracker.claimdb.analysis.Analysis;
-import com.compalinttracker.claimdb.analysis.AnalysisDto;
 import com.compalinttracker.claimdb.analysis.AnalysisRepository;
 import com.compalinttracker.claimdb.complaint.labelPrinter.LabelPrinter;
 import com.compalinttracker.claimdb.complaint.reportCreator.ReportCreatorImpl;
@@ -11,14 +10,11 @@ import com.compalinttracker.claimdb.userProfile.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -116,7 +112,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Collection<ComplaintAnalysisDto> list(int limit, int page) {
         log.info("Fetching all complaints");
-        List<ComplaintAnalysisDto> complaints = complaintRepository.findAllComplaintAnalysis(PageRequest.of(0,20));
+        List<ComplaintAnalysisDto> complaints = complaintRepository.findAllComplaintAnalysis(PageRequest.of(page,limit));
         List<ComplaintAnalysisDto> filteredComplaints =complaints.stream()
                 .filter(complaint -> complaint.getQmsNumber().isPresent())
                 .collect(Collectors.toList());
@@ -332,5 +328,10 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaintDto.setClaimedFault(complaint.getClaimedFault());
         labelPrinter.print(complaintDto);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public long getCollectionSize() {
+        return complaintRepository.count();
     }
 }

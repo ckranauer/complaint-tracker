@@ -87,8 +87,21 @@
               </tr>
             </tbody>
         </table>
+
+        <div>
+          <ngb-pagination [collectionSize]="claims?.data?.sizeofcomplaints" [(page)]="pageObj.page" (pageChange)="onPageChange($event)" ></ngb-pagination>
+        </div>
+
+        <!--div>[collectionSize]="claims?.data?.sizeofcomplaints"
+          <ngb-pagination [collectionSize]="70" [(page)]="pageObj.page" (pageChange)="onPageChange($event)" ></ngb-pagination>
+        </div-->
+
+        
         
     </div>
+
+    
+    
 
 <!-- Add Complaint Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

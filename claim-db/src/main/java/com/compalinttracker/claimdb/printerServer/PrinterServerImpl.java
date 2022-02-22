@@ -1,5 +1,6 @@
 package com.compalinttracker.claimdb.printerServer;
 
+import com.compalinttracker.claimdb.complaint.Complaint;
 import com.compalinttracker.claimdb.complaint.labelPrinter.ZebraPrinter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +24,29 @@ public class PrinterServerImpl implements PrinterServerService {
     @Override
     public Collection<PrinterServer> create(PrinterServer printerServer) {
         log.info("Saving new server: {}", printerServer.getName());
-        Optional<PrinterServer> printerServerOptional = printerServerRepository.findByServerName(printerServer.getName());
+
         // validate the server
+        checkIfPrintServerAlreadyExists(printerServer);
+
+        // check if IP address && port number is taken
+        checkIfIpAndPortNumberIsTaken(printerServer);
+
         printerServerRepository.save(printerServer);
         return printerServerRepository.findAll();
+    }
+
+    private void checkIfIpAndPortNumberIsTaken(PrinterServer printerServer) {
+        if(printerServerRepository.findByIpAndPortNumber(printerServer.getIp(), printerServer.getPortNumber()).isPresent()){
+            throw new IllegalStateException((String.format("Printer server with "+ printerServer.getIp() + " IP address and "
+                                                            + printerServer.getPortNumber() + " port number is already exist")));
+        }
+    }
+
+    private void checkIfPrintServerAlreadyExists(PrinterServer printerServer) {
+        Optional<PrinterServer> printerServerOptional = printerServerRepository.findByServerName(printerServer.getName());
+        if(printerServerOptional.isPresent()){
+            throw new IllegalStateException((String.format("Printer server with "+ printerServer.getName() + " name is already exist")));
+        }
     }
 
     @Override
@@ -47,18 +67,48 @@ public class PrinterServerImpl implements PrinterServerService {
         log.info("Update printer server: {}", serverUpdateDto.getId());
 
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findById(serverUpdateDto.getId());
-        if(printerServerOptional.isEmpty()){
-            throw new IllegalStateException(String.format("Printer server with id: "+ serverUpdateDto.getId() + " is not exist."));
-        }
+        isServerExists(serverUpdateDto, printerServerOptional);
 
+        throwExceptionIfNameIsTaken(serverUpdateDto);
+
+        throwExceptionIfIpAndPortIsTaken(serverUpdateDto);
+
+        PrinterServer printerServer = getPrinterServer(serverUpdateDto, printerServerOptional);
+        printerServerRepository.save(printerServer);
+        return printerServerRepository.findAll();
+    }
+
+    private PrinterServer getPrinterServer(ServerUpdateDto serverUpdateDto, Optional<PrinterServer> printerServerOptional) {
         PrinterServer printerServer = printerServerOptional.get();
-        // TODO: write IP, port number, name, description validator
         printerServer.setIp(serverUpdateDto.getIp());
         printerServer.setName(serverUpdateDto.getName());
         printerServer.setPortNumber(serverUpdateDto.getPortNumber());
-        printerServerRepository.save(printerServer);
+        return printerServer;
+    }
 
-        return printerServerRepository.findAll();
+    private void throwExceptionIfIpAndPortIsTaken(ServerUpdateDto serverUpdateDto){
+        Optional<PrinterServer> printerServerOptional = printerServerRepository.findByIpAndPortNumber(serverUpdateDto.getIp(), serverUpdateDto.getPortNumber());
+        if(printerServerOptional.isPresent()){
+            if(printerServerOptional.get().getId() != serverUpdateDto.getId()){
+                throw new IllegalStateException((String.format("Printer server with "+ serverUpdateDto.getIp() + " IP address and "
+                        + serverUpdateDto.getPortNumber() + " port number is taken")));
+            }
+        }
+    }
+
+    private void throwExceptionIfNameIsTaken(ServerUpdateDto serverUpdateDto) {
+        Optional<PrinterServer> printerServerOptional = printerServerRepository.findByServerName(serverUpdateDto.getName());
+        if(printerServerOptional.isPresent()){
+            if(serverUpdateDto.getId() != printerServerOptional.get().getId()){
+                throw new IllegalStateException(String.format("Printer server with name: "+ serverUpdateDto.getName() + " is taken."));
+            }
+        }
+    }
+
+    private void isServerExists(ServerUpdateDto serverUpdateDto, Optional<PrinterServer> printerServerOptional) {
+        if(printerServerOptional.isEmpty()){
+            throw new IllegalStateException(String.format("Printer server with id: "+ serverUpdateDto.getId() + " is not exist."));
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, NgForm } from '@angular/forms';
 import { BehaviorSubject, catchError, map, Observable, of, startWith } from 'rxjs';
 import { AppState } from '../app-state';
@@ -19,12 +19,15 @@ import { ComplaintUpdateDto } from '../complaint/complaintUpdateDto';
 })
 export class ComplaintListComponent implements OnInit {
   
+  @Output() pageChange: EventEmitter<number> = new EventEmitter();
 
   appState$: Observable<AppState<ComplaintResponse>>;
   readonly DataState = DataState;
   private dataSubject = new BehaviorSubject<ComplaintResponse>(null);
   private isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoading.asObservable();
+  page = 0;
+  limit = 10;
  
 
   claims?: ComplaintResponse;
@@ -32,8 +35,8 @@ export class ComplaintListComponent implements OnInit {
   complaint?: ComplaintDto;
 
 
-  private pageObj: PaginationObj = {
-    "page": 0,
+  pageObj: PaginationObj = {
+    "page": 1,
     "limit": 10
     
   }
@@ -43,8 +46,24 @@ export class ComplaintListComponent implements OnInit {
 
   ngOnInit(): void {
     this.onGetComplaints(this.pageObj);
+    //this.onGetComplaints(this.page, this.limit);
     
   }
+/*
+  onChangePage(){
+    this.onGetComplaints(this.pageObj);
+  }
+  */
+
+ 
+
+ onPageChange = (pageNumber) => {
+  this.pageChange.emit(pageNumber)    
+  this.pageObj.page = pageNumber;
+  this.onGetComplaints(this.pageObj);
+  
+   
+}
 
  
 
@@ -82,13 +101,13 @@ export class ComplaintListComponent implements OnInit {
   onCreateComplaint(complaintCreateForm: NgForm): void{
     this.complaintService.createComplaint(complaintCreateForm.value as ComplaintCreateDto).subscribe(
       (response) => {
-        this.claims = response;
-        console.log(response);
+        //this.claims = response;
+        //console.log(response);
       },
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
       ), complaintCreateForm.resetForm();
-      //this.onGetComplaints(this.pageObj);
+      this.onGetComplaints(this.pageObj);
   }
 
   onUpdateComplaint(complaintUpdateForm: NgForm): void{

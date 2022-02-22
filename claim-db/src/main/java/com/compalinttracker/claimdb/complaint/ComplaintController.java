@@ -108,7 +108,9 @@ public class ComplaintController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaints", complaintService.list(paginationObj.getLimit(),paginationObj.getPage()), "users", userProfileService.list(10,0)))
+                            .data(Map.of("complaints", complaintService.list(paginationObj.getLimit(),paginationObj.getPage()-1),
+                                            "users", userProfileService.list(10,0),
+                                            "sizeofcomplaints", complaintService.getCollectionSize()))
                             .message("Complaints retrieved")
                             .status(OK)
                             .statusCode(OK.value())
