@@ -1,0 +1,321 @@
+
+    <div class="search">
+      <form class="d-flex" #complaintSearchForm="ngForm" (ngSubmit)="onSearchComplaint(complaintSearchForm)"  >
+          <input ngModel class="form-control me-2" name="serialNumber" type="search" placeholder="Serial Number" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateComplaintModal">Search</button>
+        </form>
+  </div>
+
+
+    <div class="teszt">   
+      
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Complaint
+          </button>
+      </div>
+
+      
+    
+      <table class="table table-striped table-hover" id="complaint-table">
+          <thead>
+              <td>
+                  Incoming date
+              </td>
+              <td>
+                  Serial Number
+              </td>
+              <td>
+                  Analysis started
+              </td>
+              <td>
+                  Analysis ended
+              </td>
+              <td>
+                  Product group
+              </td>
+              <td>
+                  Analyzed by
+              </td>
+              <td>
+                  QMS number
+              </td>
+              <td>
+                  Customer Ref. Number
+              </td>
+              <td>
+                
+            </td>
+            </thead>
+            <tbody *ngFor="let complaint of claims?.data?.complaints">
+              <tr >
+                  <td>
+                    <!-- complaint.arrivedAt?.substring(0,10)  -->
+                      {{ complaint?.arrivedAt | date:'mediumDate'}}
+                  </td>
+                  <td>
+                      {{ complaint?.serialNumber }}
+                  </td>
+                  <td>
+                      {{ complaint?.analysisStartedAt | date:'mediumDate'  }}
+                  </td>
+                  <td>
+                    {{ complaint?.analysisEndedAt | date:'mediumDate' }}
+                  </td>
+                  <td>
+                      {{ complaint?.productInfo }} 
+                  </td>
+                  <td>
+                      {{ complaint?.analyzedBy }} 
+                  </td>
+                  <td>
+                    {{ complaint?.qmsNumber }}
+                  </td>
+                  <td>
+                    {{ complaint?.customerRefNumber }}
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-secondary" (click)="onGetComplaint(complaint)" data-bs-toggle="modal" data-bs-target="#updateComplaintModal">
+                        Edit  
+                      </button>
+                      &nbsp;
+                      <button type="button" class="btn btn-secondary" (click)="onDeleteComplaint(complaint.id)" >
+                        X  
+                      </button>
+                    
+                </td>
+              </tr>
+            </tbody>
+        </table>
+
+        <div>
+          <ngb-pagination [collectionSize]="claims?.data?.sizeofcomplaints" [(page)]="pageObj.page" (pageChange)="onPageChange($event)" ></ngb-pagination>
+        </div>
+
+        <!--div>[collectionSize]="claims?.data?.sizeofcomplaints"
+          <ngb-pagination [collectionSize]="70" [(page)]="pageObj.page" (pageChange)="onPageChange($event)" ></ngb-pagination>
+        </div-->
+
+        
+        
+    </div>
+
+    
+    
+
+<!-- Add Complaint Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add complaint</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form #complaintCreateForm="ngForm" (ngSubmit)="onCreateComplaint(complaintCreateForm)">
+                <div class="mb-3">
+                  <label for="serialNumber" class="form-label">Serial number  </label>
+                  <input ngModel type="text" class="form-control" name="serialNumber"  id="serialNumber"  aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="qmsNumber" class="form-label">QMS number</label>
+                  <input ngModel  type="text" class="form-control" name="qmsNumber"  id="qmsNumber">
+                </div>
+                <div class="mb-3">
+                    <label for="customerRefNumber" class="form-label">Customer number</label>
+                    <input ngModel type="text" class="form-control" name="customerRefNumber"  id="customerRefNumber">
+                  </div>
+                  <div class="mb-3">
+                    <label for="productInfo" class="form-label">Product group</label>
+                    <select ngModel id="select" class="form-select" name="productInfo" >
+                        <option value="--">--</option>
+                        <option value="AUDI">AUDI</option>
+                        <option value="VW">VW</option>
+                        <option value="TOYOTA">TOYOTA</option>
+                        <option value="VOLVO">VOLVO</option>
+                    </select>
+
+                  </div>
+                  
+                    
+                  <div class="mb-3">
+                    <label for="arrivedAt" class="form-label">Incoming date</label>
+                    <input ngModel type="date" class="form-control" name="arrivedAt" id="arrivedAt">
+                  </div>
+                  <div class="mb-3">
+                    <label for="claimedFault" class="form-label">Claimed fault</label>
+                    <input ngModel type="text" class="form-control" name="claimedFault" id="claimedFault" >
+                  </div>
+                  <div class="mb-3">
+
+                    <!--label for="responsible" class="form-label">Responsible</label>
+                    <input ngModel type="text" class="form-control" name="responsible" id="responsible"-->
+
+                    
+
+                    <label for="responsible" class="form-label">Responsible</label>
+                    <select ngModel id="select" class="form-select" name=responsible >
+                        <option *ngFor="let user of claims?.data?.users" value="{{ user?.id }}"> {{ user.firstName }} {{ user.lastName }}</option>
+           
+                    </select>
+
+                  </div>
+                <div class="mb-3 form-check">
+                  <input  ngModel type="checkbox" class="form-check-input" name="isPrio" >
+                  <label  class="form-check-label" for="isPrio">Priority issue</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save and Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+
+<!-- Update Complaint Modal -->
+<div class="modal fade" id="updateComplaintModal" tabindex="-1" aria-labelledby="updateComplaintModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateComplaintModal">Edit complaint</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form #complaintUpdateForm="ngForm" (ngSubmit)="onUpdateComplaint(complaintUpdateForm)">
+
+              <div class="row">
+                <div class="col-md-3">
+                  
+                    <input [hidden]="true" [ngModel]="claim?.data.complaint.id" type="number"  class="form-control" name="id"  aria-describedby="id" >
+               
+                    <div class="mb-3">
+                      <label for="serialNumber" class="form-label"> Serial Number </label>
+                      <input [ngModel]="claim?.data.complaint.serialNumber" type="text"  class="form-control" name="serialNumber"  aria-describedby="serialNumber" >
+                    </div>
+                   
+                   
+                    <div class="mb-3">
+                      <label for="qmsNumber" class="form-label">QMS number</label>
+                      <input [ngModel]="claim?.data.complaint.qmsNumber"  type="text" class="form-control" name="qmsNumber" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="customerRefNumber" class="form-label">Customer number</label>
+                        <input [ngModel]="claim?.data.complaint.customerRefNumber" type="text" class="form-control" name="customerRefNumber" >
+                      </div>
+                      <div class="mb-3">
+                        <label for="productInfo" class="form-label">Product group</label>
+                        <select [ngModel]="claim?.data.complaint.productInfo" id="select" class="form-select" name="productInfo" >
+                            <option value="--">--</option>
+                            <option value="AUDI">AUDI</option>
+                            <option value="VW">VW</option>
+                            <option value="TOYOTA">TOYOTA</option>
+                            <option value="VOLVO">VOLVO</option>
+                        </select>
+
+                      </div>
+                      
+                        
+                      <div class="mb-3">
+                        <label for="arrivedAt" class="form-label">Incoming date</label>
+                        <input [ngModel]="claim?.data.complaint.arrivedAt | date:'yyyy-MM-dd'"   type="date" class="form-control" name="arrivedAt" >
+                        <!--  [ngModel]="claim?.data.complaint.arrivedAt"  type="text" class="form-control" name="arrivedAt" -->
+                      </div>
+                      <div class="mb-3">
+                        <label for="claimedFault" class="form-label">Claimed fault</label>
+                        <input [ngModel]="claim?.data.complaint.claimedFault" type="text" class="form-control" name="claimedFault" >
+                      </div>
+                      <div class="mb-3">
+                        <label for="responsible" class="form-label">Responsible</label>
+                        <select [ngModel]="claim?.data.complaint.responsibleId" id="responsible" class="form-select" name="responsible"  > 
+                          <option [value]="null" > Select </option>
+                          <option *ngFor="let user of claims?.data?.users"  [ngValue]="user?.id">  {{ user.firstName }} {{ user.lastName }}</option>
+                      </select>
+                        
+                      </div>
+                    <div class="mb-3 form-check">
+                      <!--input  ngModel type="checkbox" class="form-check-input"  name="isPrio" -->
+                      <input  [ngModel]="claim?.data.complaint.isPrio" type="checkbox" class="form-check-input"  name="isPrio" >
+                      <label  class="form-check-label" for="isPrio" >Priority issue</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label for="analyzedBy" class="form-label">Analyzed by</label>
+                          <select [ngModel]="claim?.data.complaint.analyzedById" id="analyzedBy" class="form-select" name="analyzedBy"  > 
+                            <option [value]="null" > Select </option>
+                            <option *ngFor="let user of claims?.data?.users"  [ngValue]="user?.id">  {{ user.firstName }} {{ user.lastName }}</option>
+                        </select>
+
+                  </div>
+                  <div class="mb-3">
+                    <label for="analysisStartedAt" class="form-label"> Analysis started </label>
+                    <input type="date" [ngModel]="claim?.data.complaint.analysisStartedAt | date:'yyyy-MM-dd'"  class="form-control" name="analysisStartedAt"  aria-describedby="analysisStartedAt" >
+                  </div>
+                  <div class="mb-3">
+                    <label for="analysisEndedAt" class="form-label"> Analysis ended </label>
+                    <input type="date" [ngModel]="claim?.data.complaint.analysisEndedAt | date:'yyyy-MM-dd'"  class="form-control" name="analysisEndedAt"  aria-describedby="analysisEndedAt" >
+                  </div>
+                  <div class="mb-3">
+                    <label for="barcodes" class="form-label"> Part description </label>
+                    <textarea rows="2" [ngModel]="claim?.data.complaint.barcodes"  class="form-control" name="barcodes"  aria-describedby="barcodes" ></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label for="barcodes" class="form-label"> Barcodes </label>
+                    <textarea rows="4" [ngModel]="claim?.data.complaint.barcodes"  class="form-control" name="barcodes"  aria-describedby="barcodes" ></textarea>
+                  </div>
+                  <div class="mb-3 form-check">
+                    <input  [ngModel]="claim?.data.complaint.faultVerification" type="checkbox" class="form-check-input"  name="faultVerification" >
+                    <label  class="form-check-label" for="faultVerification" > Fault verification</label>
+                  </div>
+                  
+                </div>
+                <div class="col-md-5">
+                  
+                  <div class="mb-3">
+                    <label for="lifecycleInfo" class="form-label"> Lifecycle into </label>
+                    <textarea rows="3" [ngModel]="claim?.data.complaint.lifecycleInfo"  class="form-control" name="lifecycleInfo"  aria-describedby="lifecycleInfo" ></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label for="visualAnalysis" class="form-label"> Visual investigation </label>
+                    <textarea rows="3" [ngModel]="claim?.data.complaint.visualAnalysis"  class="form-control" name="visualAnalysis"  aria-describedby="visualAnalysis" ></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label for="electricalAnalysis" class="form-label"> Electrical analysis </label>
+                    <textarea rows="5" [ngModel]="claim?.data.complaint.electricalAnalysis"   class="form-control" name="electricalAnalysis"  aria-describedby="electricalAnalysis" ></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label for="conclusion" class="form-label"> Conclusion </label>
+                    <textarea rows="3" [ngModel]="claim?.data.complaint.conclusion"   class="form-control" name="conclusion"  aria-describedby="conclusion" ></textarea>
+                  </div>
+                </div>
+            </div>
+
+              
+                <button type="submit" class="btn btn-primary">Save</button>
+                &nbsp;
+                <button type="button" class="btn btn-secondary" (click)="onCreateAnalysisReport(claim?.data.complaint.id)">
+                  Create report  
+                </button>
+                &nbsp;
+                <button type="button" class="btn btn-secondary" (click)="onPrintLabelFromDB(claim?.data.complaint.id)">
+                  Print label  
+                </button>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save and Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  
+
+  
+

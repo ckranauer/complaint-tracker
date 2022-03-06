@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -103,7 +104,6 @@ public class ComplaintController {
 
     @PostMapping("/list")
     public ResponseEntity<Response> getComplaints(@RequestBody PaginationObj paginationObj){
-        // TODO: send page and limit via the request instead of hardcoded -> Post request, request body contains the limit and page
         try{
             return ResponseEntity.ok(
                     Response.builder()

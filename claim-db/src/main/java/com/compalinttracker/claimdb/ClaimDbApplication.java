@@ -3,12 +3,17 @@ package com.compalinttracker.claimdb;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import java.util.Arrays;
+
 
 @SpringBootApplication
 public class ClaimDbApplication {
@@ -16,6 +21,7 @@ public class ClaimDbApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ClaimDbApplication.class, args);
 	}
+
 
 	@Bean
 	public CorsFilter corsFilter(){
@@ -32,5 +38,9 @@ public class ClaimDbApplication {
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 		return new CorsFilter(urlBasedCorsConfigurationSource);
 	}
+
+
+
+
 
 }
