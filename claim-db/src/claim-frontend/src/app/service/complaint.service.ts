@@ -13,8 +13,8 @@ import { ComplaintUpdateDto } from '../complaint/complaintUpdateDto';
   providedIn: 'root'
 })
 export class ComplaintService {
-
-  private readonly apiUrl = 'http://localhost:8080';
+  // Complainttracker-env.eba-zqnmujjv.us-east-1.elasticbeanstalk.com
+  private readonly apiUrl = 'http://complainttracker-env.eba-zqnmujjv.us-east-1.elasticbeanstalk.com';//'http://localhost:8080';
 
   constructor(private http: HttpClient) { }
 

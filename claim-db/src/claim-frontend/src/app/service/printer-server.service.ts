@@ -11,10 +11,10 @@ import { PrinterServerResponse } from '../response/printer-server-response';
 })
 export class PrinterServerService {
 
-  
 
 
-  private readonly apiUrl = 'http://localhost:8080';
+
+  private readonly apiUrl = 'http://complainttracker-env.eba-zqnmujjv.us-east-1.elasticbeanstalk.com';// 'http://localhost:8080';
 
   constructor(private http: HttpClient) { }
 
@@ -67,5 +67,5 @@ export class PrinterServerService {
   }
 */
 
-  
+
 }
