@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -50,7 +51,6 @@ public class ComplaintController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Response> getComplaint(@PathVariable("id") Long id){
-        try{
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -60,21 +60,10 @@ public class ComplaintController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
     @GetMapping("/search/{serno}")
     public ResponseEntity<Response> getComplaint(@PathVariable("serno") String serialNumber){
-        try{
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -84,21 +73,10 @@ public class ComplaintController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
     @PostMapping("/list")
     public ResponseEntity<Response> getComplaints(@RequestBody PaginationObj paginationObj){
-        try{
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -110,21 +88,10 @@ public class ComplaintController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response> deleteComplaint(@PathVariable("id") Long id){
-        try{
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -135,21 +102,10 @@ public class ComplaintController {
                             .build()
 
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
     @PutMapping("/update")
     public ResponseEntity<Response> updateComplaint(@RequestBody  ComplaintUpdateDto complaintDto){
-        try{
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -159,22 +115,11 @@ public class ComplaintController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
 
     @GetMapping("/create-report/{id}")
-    public ResponseEntity<Response> createAnalysisReport(@PathVariable("id") Long id){
-        try{
+    public ResponseEntity<Response> createAnalysisReport(@PathVariable("id") Long id) throws Exception {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -184,22 +129,12 @@ public class ComplaintController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
     // print label for an already saved claim
     @GetMapping("/print-label-from-saved-complaint/{id}")
-    public ResponseEntity<Response> printSavedLabel(@PathVariable("id") Long id){
-        try{
+    public ResponseEntity<Response> printSavedLabel(@PathVariable("id") Long id) throws IOException {
+
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -209,22 +144,11 @@ public class ComplaintController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
     // print label without saving the datas
     @PostMapping("/print-label")
-    public ResponseEntity<Response> printLabel(@RequestBody @Valid ComplaintDto complaintDto){
-        try{
+    public ResponseEntity<Response> printLabel(@RequestBody @Valid ComplaintDto complaintDto) throws IOException {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -234,16 +158,5 @@ public class ComplaintController {
                             .statusCode(CREATED.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
-
 }
