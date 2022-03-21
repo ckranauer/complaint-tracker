@@ -54,7 +54,7 @@ public class ComplaintController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("complaint", complaintService.get(id), "users", userProfileService.list(10, 0)))
+                        .data(Map.of("complaint", complaintService.get(id)))
                         .message("Complaint retrieved")
                         .status(OK)
                         .statusCode(OK.value())
@@ -106,10 +106,11 @@ public class ComplaintController {
 
     @PutMapping("/update")
     public ResponseEntity<Response> updateComplaint(@RequestBody ComplaintUpdateDto complaintDto) {
+        complaintService.update(complaintDto);
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("complaints", complaintService.update(complaintDto), "users", userProfileService.list(10, 0)))
+                        //.data(Map.of("complaints", complaintService.update(complaintDto), "users", userProfileService.list(10, 0)))
                         .message("Complaint updated")
                         .status(OK)
                         .statusCode(OK.value())

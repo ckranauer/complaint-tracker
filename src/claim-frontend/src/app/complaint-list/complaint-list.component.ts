@@ -131,8 +131,9 @@ export class ComplaintListComponent implements OnInit {
     console.log(complaintUpdateForm.value)
     this.complaintService.updateComplaint(complaintUpdateForm.value as ComplaintUpdateDto).subscribe(
       (response) => {
-        this.claims = response;
+        //this.claims = response;
         console.log(response);
+        this.onGetComplaints();
       } ,
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
@@ -141,11 +142,13 @@ export class ComplaintListComponent implements OnInit {
 
   onDeleteComplaint(id: number): void{
     this.complaintService.deleteComplaint(id).subscribe(
-      (response) => console.log(response), 
+      (response) => {
+        console.log(response);
+        this.onGetComplaints();
+      }, 
       (error: any) => console.log(error),
       () => console.log(this.claim)
-      ),
-      this.onGetComplaints();
+      )
   }
 
   onCreateAnalysisReport(id: number): void{
