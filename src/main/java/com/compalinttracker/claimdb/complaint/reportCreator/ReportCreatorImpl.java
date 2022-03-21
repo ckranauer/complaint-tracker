@@ -19,6 +19,9 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class ReportCreatorImpl implements ReportCreator{
 
+    // TODO: save the report to AWS E3 bitbucket
+    // TODO: give back the report and send to the frontend
+
     @Override
     public void create(Analysis analysis) throws Exception {
 

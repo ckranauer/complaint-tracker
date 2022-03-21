@@ -28,6 +28,10 @@ public class ComplaintController {
     private final ComplaintServiceImpl complaintService;
     private final UserProfileServiceImpl userProfileService;
 
+    //TODO: solve the exception handling in the service layer
+    // TODO: refactor methods, for example create complaint should be void and gives back only what needed
+    // TODO: practice git branches
+
 
     @PostMapping("/save")
     public ResponseEntity<Response> saveComplaint(@RequestBody @Valid ComplaintDto complaintDto){
