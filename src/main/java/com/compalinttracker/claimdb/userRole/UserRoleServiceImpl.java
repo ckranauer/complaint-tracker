@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @Slf4j
-public class UserRoleServiceImpl implements  UserRoleService{
+public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
     private final UserRoleLinkRepository userRoleLinkRepository;
@@ -25,13 +25,13 @@ public class UserRoleServiceImpl implements  UserRoleService{
 
         // Check if role exists
         Optional<UserRole> userRoleOptional = userRoleRepository.findRoleById(userRole.getId());
-        if(userRoleOptional.isPresent()){
+        if (userRoleOptional.isPresent()) {
             throw new IllegalStateException(String.format("User role already exists"));
         }
-        if(userRole.getRole() == null ){
+        if (userRole.getRole() == null) {
             throw new IllegalStateException(String.format("User role name can't be null."));
         }
-        if(userRole.getDescription() == null){
+        if (userRole.getDescription() == null) {
             throw new IllegalStateException(String.format("User role description can't be null."));
         }
         return userRoleRepository.save(userRole);
@@ -53,7 +53,7 @@ public class UserRoleServiceImpl implements  UserRoleService{
     public UserRole update(Long id, UserRole userRole) {
         // Check if role exists
         Optional<UserRole> userRoleOptional = userRoleRepository.findRoleById(userRole.getId());
-        if(userRoleOptional.isEmpty()){
+        if (userRoleOptional.isEmpty()) {
             throw new IllegalStateException(String.format("User role does not exist."));
         }
         UserRole actualRole = userRoleOptional.get();
@@ -66,8 +66,8 @@ public class UserRoleServiceImpl implements  UserRoleService{
     public Boolean delete(Long id) {
         log.info("Deleting user role by id: {}", id);
         Optional<UserRole> userRoleOptional = userRoleRepository.findRoleById(id);
-        if(userRoleOptional.isEmpty()){
-            throw new IllegalStateException(String.format("Role with "+id +" id does not exist."));
+        if (userRoleOptional.isEmpty()) {
+            throw new IllegalStateException(String.format("Role with " + id + " id does not exist."));
         }
         // first must to delete user role link
         userRoleLinkRepository.deleteUserRoleLinkById(id);

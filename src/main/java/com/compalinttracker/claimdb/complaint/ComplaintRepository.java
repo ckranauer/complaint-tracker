@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
 
-   //  " qms_number, customer_ref_number, " +
+    //  " qms_number, customer_ref_number, " +
     //         "claimed_fault " +
 
     @Query(
@@ -44,8 +44,7 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
                     "ORDER BY arrived_at DESC ",
             nativeQuery = true
     )
-    List<ComplaintAnalysisDto> findAllComplaintAnalysis(Pageable pageable);
-
+    List<ComplaintAnalysisDto> findAllComplaintAnalysis();
 
 
     @Query(

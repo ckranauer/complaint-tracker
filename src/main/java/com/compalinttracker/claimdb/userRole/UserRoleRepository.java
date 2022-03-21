@@ -31,7 +31,7 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     @Query(
             value = "SELECT user_profile_id " +
                     "FROM user_role " +
-                    "JOIN user_role_link ON user_role.id = user_role_link.user_role_id "+
+                    "JOIN user_role_link ON user_role.id = user_role_link.user_role_id " +
                     "WHERE user_role_id = ?1",
             nativeQuery = true
     )
@@ -40,7 +40,7 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     @Query(
             value = "SELECT * " +
                     "FROM user_profile " +
-                    "JOIN user_role_link ON user_profile.id = user_role_link.user_profile_id "+
+                    "JOIN user_role_link ON user_profile.id = user_role_link.user_profile_id " +
                     "JOIN user_role ON user_role.id = user_role_link.user_role_id " +
                     "WHERE user_role_id = ?1",
             nativeQuery = true

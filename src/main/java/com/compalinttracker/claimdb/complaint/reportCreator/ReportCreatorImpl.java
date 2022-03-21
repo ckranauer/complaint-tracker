@@ -17,7 +17,7 @@ import java.util.HashMap;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ReportCreatorImpl implements ReportCreator{
+public class ReportCreatorImpl implements ReportCreator {
 
     // TODO: save the report to AWS E3 bitbucket
     // TODO: give back the report and send to the frontend
@@ -34,23 +34,23 @@ public class ReportCreatorImpl implements ReportCreator{
         HashMap<String, String> variables = addVariables(analysis);
         documentPart.variableReplace(variables);
 
-        File exportFile = new File("Analysis Report - "+ analysis.getComplaint().getQmsNumber() + ".docx");
+        File exportFile = new File("Analysis Report - " + analysis.getComplaint().getQmsNumber() + ".docx");
         wordMLPackage.save(exportFile);
 
     }
 
-    private HashMap<String, String> addVariables(Analysis analysis){
+    private HashMap<String, String> addVariables(Analysis analysis) {
         HashMap<String, String> variables = new HashMap<>();
 
         variables.put("qmsNumber", analysis.getComplaint().getQmsNumber());
         variables.put("customerRefNumber", analysis.getComplaint().getCustomerRefNumber());
         variables.put("partDescription", "Default");
         variables.put("failureDescription", analysis.getComplaint().getClaimedFault());
-        variables.put("arrivedAt", analysis.getComplaint().getArrivedAt().toString().substring(0,10).replace("-","."));
-        variables.put("analysisEndedAt", analysis.getAnalysisEndedAt().toString().substring(0,10).replace("-","."));
-        if(analysis.getAnalyzedBy() != null){
+        variables.put("arrivedAt", analysis.getComplaint().getArrivedAt().toString().substring(0, 10).replace("-", "."));
+        variables.put("analysisEndedAt", analysis.getAnalysisEndedAt().toString().substring(0, 10).replace("-", "."));
+        if (analysis.getAnalyzedBy() != null) {
             variables.put("analyzedBy", analysis.getAnalyzedBy().getFirstName() + " " + analysis.getAnalyzedBy().getLastName());
-        }else{
+        } else {
             variables.put("analyzedBy", "");
         }
         variables.put("productBarcodes", analysis.getBarcodes());

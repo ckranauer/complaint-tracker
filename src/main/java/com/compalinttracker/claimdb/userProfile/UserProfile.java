@@ -25,7 +25,7 @@ import java.util.UUID;
 @Table(
         name = "user_profile",
         uniqueConstraints = {
-                @UniqueConstraint(name="user_profile_email_unique", columnNames = "email")
+                @UniqueConstraint(name = "user_profile_email_unique", columnNames = "email")
         }
 )
 public class UserProfile {
@@ -88,7 +88,7 @@ public class UserProfile {
     }
 
 
-    @JsonBackReference(value="user-role")
+    @JsonBackReference(value = "user-role")
     @OneToMany(
             cascade = {CascadeType.ALL},
             mappedBy = "userProfile"
@@ -96,7 +96,7 @@ public class UserProfile {
     private List<UserRoleLink> userRoleLinks = new ArrayList<>();
 
 
-    @JsonBackReference(value="user-complaint")
+    @JsonBackReference(value = "user-complaint")
     @OneToMany(
             mappedBy = "responsible",
             //orphanRemoval = true,
@@ -106,7 +106,7 @@ public class UserProfile {
     private List<Complaint> complaints = new ArrayList<>();
 
 
-    @JsonBackReference(value="user-analysis")
+    @JsonBackReference(value = "user-analysis")
     @OneToMany(
             mappedBy = "analyzedBy",
             //orphanRemoval = true,
@@ -115,29 +115,29 @@ public class UserProfile {
     )
     private List<Analysis> analysises = new ArrayList<>();
 
-    public void addUserRoleLink(UserRoleLink userRoleLink){
-        if(!userRoleLinks.contains(userRoleLink)){
+    public void addUserRoleLink(UserRoleLink userRoleLink) {
+        if (!userRoleLinks.contains(userRoleLink)) {
             userRoleLinks.add(userRoleLink);
         }
     }
 
-    public void addComplaint(Complaint complaint){
-        if(!this.complaints.contains(complaint)){
+    public void addComplaint(Complaint complaint) {
+        if (!this.complaints.contains(complaint)) {
             this.complaints.add(complaint);
             complaint.setResponsible(this);   // it keeps both way sync
         }
     }
 
-    public void removeComplaint(Complaint complaint){
-        if(!this.complaints.contains(complaint)){
+    public void removeComplaint(Complaint complaint) {
+        if (!this.complaints.contains(complaint)) {
             this.complaints.remove(complaint);
             complaint.setResponsible(null);
         }
     }
 
-    public void addAnalysis(Analysis analysis){
+    public void addAnalysis(Analysis analysis) {
         System.out.println("Add analysis method");
-        if(!this.analysises.contains(analysis)){
+        if (!this.analysises.contains(analysis)) {
             System.out.println("inside the if");
             this.analysises.add(analysis);
             System.out.println("analysis added to analysises");
@@ -146,14 +146,14 @@ public class UserProfile {
         }
     }
 
-    public void removeAnalysis(Analysis analysis){
-        if(!this.analysises.contains(analysis)){
+    public void removeAnalysis(Analysis analysis) {
+        if (!this.analysises.contains(analysis)) {
             this.analysises.remove(analysis);
             analysis.setAnalyzedBy(null);
         }
     }
 
-    public void removeUserRoleLink(UserRoleLink userRoleLink){
+    public void removeUserRoleLink(UserRoleLink userRoleLink) {
         userRoleLinks.remove(userRoleLink);
     }
 

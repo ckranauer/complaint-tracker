@@ -15,8 +15,6 @@ public class ZebraPrinter {
     private BufferedReader in;
 
 
-
-
     public void startConnection(String ip, int port) throws IOException {
         clientSocket = new Socket(ip, port);
         out = new PrintWriter(clientSocket.getOutputStream(), true);

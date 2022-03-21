@@ -23,18 +23,18 @@ public class UserProfileController {
     private final UserProfileServiceImpl userProfileService;
 
     @PostMapping("/list")
-    public ResponseEntity<Response> getUsers(@RequestBody PaginationObj paginationObj){
-        try{
+    public ResponseEntity<Response> getUsers(@RequestBody PaginationObj paginationObj) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("users", userProfileService.list(1,10)))
+                            .data(Map.of("users", userProfileService.list(1, 10)))
                             .message("Users retrieved")
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -47,9 +47,9 @@ public class UserProfileController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Response> saveUser(@RequestBody @Valid UserProfile userProfile){
+    public ResponseEntity<Response> saveUser(@RequestBody @Valid UserProfile userProfile) {
 
-        try{
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -59,7 +59,7 @@ public class UserProfileController {
                             .statusCode(CREATED.value())
                             .build()
             );
-        }catch(IllegalStateException exception){
+        } catch (IllegalStateException exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -72,8 +72,8 @@ public class UserProfileController {
     }
 
     @PostMapping("/add-role-to-user")
-    public ResponseEntity<Response> addRoleToUser(@RequestBody @Valid UserRoleLinkDto userRoleLinkDto){
-        try{
+    public ResponseEntity<Response> addRoleToUser(@RequestBody @Valid UserRoleLinkDto userRoleLinkDto) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -83,7 +83,7 @@ public class UserProfileController {
                             .statusCode(CREATED.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -97,8 +97,8 @@ public class UserProfileController {
 
 
     @PostMapping("/remove-role-from-user")
-    public ResponseEntity<Response> removeRoleFromUser(@RequestBody @Valid UserRoleLinkDto userRoleLinkDto){
-        try{
+    public ResponseEntity<Response> removeRoleFromUser(@RequestBody @Valid UserRoleLinkDto userRoleLinkDto) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -108,7 +108,7 @@ public class UserProfileController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -121,8 +121,8 @@ public class UserProfileController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getUser(@PathVariable ("id") UUID id){
-        try{
+    public ResponseEntity<Response> getUser(@PathVariable("id") UUID id) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -132,7 +132,7 @@ public class UserProfileController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -146,9 +146,9 @@ public class UserProfileController {
 
 
     @PutMapping("/update")
-    public ResponseEntity<Response> updateUser(@RequestBody @Valid UserProfile userProfile){
+    public ResponseEntity<Response> updateUser(@RequestBody @Valid UserProfile userProfile) {
 
-        try{
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -158,7 +158,7 @@ public class UserProfileController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(IllegalStateException exception){
+        } catch (IllegalStateException exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -171,8 +171,8 @@ public class UserProfileController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteUser(@PathVariable ("id") UUID id){
-        try{
+    public ResponseEntity<Response> deleteUser(@PathVariable("id") UUID id) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -182,7 +182,7 @@ public class UserProfileController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())

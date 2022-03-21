@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
-public class ComplaintServiceImpl implements  ComplaintService{
+public class ComplaintServiceImpl implements ComplaintService {
 
     private final ComplaintRepository complaintRepository;
     private final AnalysisRepository analysisRepository;
@@ -31,7 +31,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     private final LabelPrinter labelPrinter;
 
     @Override
-    public Collection<ComplaintAnalysisDto> create(ComplaintDto complaintDto) {
+    public void create(ComplaintDto complaintDto) {
         log.info("Saving new complaint: {}", complaintDto.getSerialNumber());
 
         // Check serial number
@@ -50,9 +50,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         addResponsibleToComplaint(complaintDto.getResponsible(), complaint);
 
         complaintRepository.save(complaint);
-        return complaintRepository.findAllComplaintAnalysis(PageRequest.of(0,20));
     }
-
 
 
     private Complaint createComplaint(ComplaintDto complaintDto) {
@@ -64,7 +62,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaint.setClaimedFault(complaintDto.getClaimedFault());
         complaint.setArrivedAt(complaintDto.getArrivedAt());
         // it will be false by default
-        if(complaintDto.getIsPrio() != null){
+        if (complaintDto.getIsPrio() != null) {
             complaint.setPrio(complaintDto.getIsPrio());
         }
         complaint.setProductInfo(complaintDto.getProductInfo());
@@ -77,8 +75,8 @@ public class ComplaintServiceImpl implements  ComplaintService{
     private void complaintWithThisSerialNumberAlreadyExists(ComplaintDto complaintDto) {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
 
-        if(complaintOptional.isPresent()){
-            throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getSerialNumber() + " serial number is already exist"));
+        if (complaintOptional.isPresent()) {
+            throw new IllegalStateException(String.format("Complaint with " + complaintDto.getSerialNumber() + " serial number is already exist"));
         }
     }
 
@@ -86,14 +84,14 @@ public class ComplaintServiceImpl implements  ComplaintService{
         // QMS number is enabled to be null
         // but it is not enabled to be empty/blank
         // it must be unique
-        if(complaintDto.getQmsNumber() != null){
+        if (complaintDto.getQmsNumber() != null) {
             // Check if it is alredy in use
             Optional<Complaint> complaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
-            if(complaintOptional.isPresent()){
-                throw new IllegalStateException(String.format("Complaint with "+ complaintDto.getQmsNumber() + " qms number is already exist"));
+            if (complaintOptional.isPresent()) {
+                throw new IllegalStateException(String.format("Complaint with " + complaintDto.getQmsNumber() + " qms number is already exist"));
             }
             // if the value from the front-end is blank then set the value to null
-            if(complaintDto.getQmsNumber().isBlank()) {
+            if (complaintDto.getQmsNumber().isBlank()) {
                 complaintDto.setQmsNumber(null);
             }
         }
@@ -101,33 +99,33 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     private void isSerialNumberValid(String serialNumber) {
-        if(serialNumber== null){
+        if (serialNumber == null) {
             throw new IllegalStateException(String.format("Serial number can not be null"));
         }
-        if(serialNumber.length() == 0){
+        if (serialNumber.length() == 0) {
             throw new IllegalStateException(String.format("Serial number can not be empty"));
         }
     }
 
     @Override
-    public Collection<ComplaintAnalysisDto> list(int limit, int page) {
+    public List<ComplaintAnalysisDto> list() {
         log.info("Fetching all complaints");
-        List<ComplaintAnalysisDto> complaints = complaintRepository.findAllComplaintAnalysis(PageRequest.of(page,limit));
-        List<ComplaintAnalysisDto> filteredComplaints =complaints.stream()
+        List<ComplaintAnalysisDto> complaints = complaintRepository.findAllComplaintAnalysis();
+        List<ComplaintAnalysisDto> filteredComplaints = complaints.stream()
                 .filter(complaint -> complaint.getQmsNumber().isPresent())
                 .collect(Collectors.toList());
 
-        filteredComplaints.stream().forEach(complaint -> System.out.println("Complaint: " +complaint.getSerialNumber().get()));
+        filteredComplaints.stream().forEach(complaint -> System.out.println("Complaint: " + complaint.getSerialNumber().get()));
 
-        return complaintRepository.findAllComplaintAnalysis(PageRequest.of(page,limit));
+        return complaintRepository.findAllComplaintAnalysis();
     }
 
     @Override
     public ComplaintAnalysisDto get(Long id) {
         log.info("Fetching complaint by id: {}", id);
         Optional<ComplaintAnalysisDto> complaintAnalysisDtoOptional = complaintRepository.findComplaintAnalysisById(id);
-        if(complaintAnalysisDtoOptional.isEmpty()){
-            throw new IllegalStateException(String.format("Complaint with id: "+ id + " is not exist."));
+        if (complaintAnalysisDtoOptional.isEmpty()) {
+            throw new IllegalStateException(String.format("Complaint with id: " + id + " is not exist."));
         }
         return complaintAnalysisDtoOptional.get();
     }
@@ -136,14 +134,14 @@ public class ComplaintServiceImpl implements  ComplaintService{
     public ComplaintAnalysisDto search(String serialNumber) {
         log.info("Search complaint by serial number: {}", serialNumber);
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(serialNumber);
-        if(complaintOptional.isEmpty()){
-            throw new IllegalStateException(String.format("Complaint with serial number: "+ serialNumber + " is not exist."));
+        if (complaintOptional.isEmpty()) {
+            throw new IllegalStateException(String.format("Complaint with serial number: " + serialNumber + " is not exist."));
         }
         return complaintRepository.findComplaintAnalysisById(complaintOptional.get().getId()).get();
     }
 
     @Override
-    public Collection<ComplaintAnalysisDto> update( ComplaintUpdateDto complaintDto) {
+    public Collection<ComplaintAnalysisDto> update(ComplaintUpdateDto complaintDto) {
         log.info("Update complaint: {}", complaintDto.getId());
 
         // Read complaint from db
@@ -172,7 +170,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         setComplaintAnalysis(complaintDto, complaint, analysis);
 
         complaintRepository.save(complaint);
-        return complaintRepository.findAllComplaintAnalysis(PageRequest.of(0,10));
+        return complaintRepository.findAllComplaintAnalysis();
     }
 
     private void setComplaintAnalysis(ComplaintUpdateDto complaintDto, Complaint complaint, Analysis analysis) {
@@ -181,11 +179,11 @@ public class ComplaintServiceImpl implements  ComplaintService{
         complaint.setCustomerRefNumber(complaintDto.getCustomerRefNumber());
         complaint.setClaimedFault(complaintDto.getClaimedFault());
         complaint.setArrivedAt(complaintDto.getArrivedAt());
-        if(complaintDto.getIsPrio() != null){
+        if (complaintDto.getIsPrio() != null) {
             complaint.setPrio(complaintDto.getIsPrio());
         }
 
-        if (complaintDto.getProductInfo() != null){
+        if (complaintDto.getProductInfo() != null) {
             complaint.setProductInfo(complaintDto.getProductInfo());
         }
         complaint.setAnalysis(analysis);
@@ -195,7 +193,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
         Analysis analysis = complaint.getAnalysis();
         analysis.setBarcodes(complaintDto.getBarcodes());
         analysis.setLifecycleInfo(complaintDto.getLifecycleInfo());
-        if(complaintDto.getFaultVerification() != null){
+        if (complaintDto.getFaultVerification() != null) {
             analysis.setFaultVerification(complaintDto.getFaultVerification());
         }
         analysis.setVisualAnalysis(complaintDto.getVisualAnalysis());
@@ -207,10 +205,10 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     private void updateAnalyzedBy(UUID analyzedById, Analysis analysis) {
-        if(analyzedById != null) {
+        if (analyzedById != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(analyzedById);
-            if(userProfileOptional.isEmpty()){
-                throw new IllegalStateException("User with id: "+ analyzedById +" is not exist");
+            if (userProfileOptional.isEmpty()) {
+                throw new IllegalStateException("User with id: " + analyzedById + " is not exist");
             }
             UserProfile analyzedBy = userProfileOptional.get();
             analyzedBy.addAnalysis(analysis);
@@ -219,10 +217,10 @@ public class ComplaintServiceImpl implements  ComplaintService{
     }
 
     private void addResponsibleToComplaint(UUID responsibleId, Complaint complaint) {
-        if(responsibleId != null) {
+        if (responsibleId != null) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(responsibleId);
-            if(userProfileOptional.isEmpty()){
-                throw new IllegalStateException("User with id: "+ responsibleId +" is not exist");
+            if (userProfileOptional.isEmpty()) {
+                throw new IllegalStateException("User with id: " + responsibleId + " is not exist");
             }
             UserProfile responsible = userProfileOptional.get();
             responsible.addComplaint(complaint);
@@ -232,11 +230,11 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
 
     private void isQMSValidAndNotTaken(ComplaintUpdateDto complaintDto) {
-        if(complaintDto.getQmsNumber() != null){
+        if (complaintDto.getQmsNumber() != null) {
             Optional<Complaint> qmsNoComplaintOptional = complaintRepository.findComplaintByQmsNo(complaintDto.getQmsNumber());
-            if(qmsNoComplaintOptional.isPresent()){
-                if(qmsNoComplaintOptional.get().getId() != complaintDto.getId()){
-                    throw new IllegalStateException(String.format("Complaint with QMS number: "+ complaintDto.getQmsNumber() + " is already exist."));
+            if (qmsNoComplaintOptional.isPresent()) {
+                if (qmsNoComplaintOptional.get().getId() != complaintDto.getId()) {
+                    throw new IllegalStateException(String.format("Complaint with QMS number: " + complaintDto.getQmsNumber() + " is already exist."));
                 }
             }
         }
@@ -244,9 +242,9 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
     private void throwExceptionIfSernoIsTaken(Long id, ComplaintUpdateDto complaintDto) {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintBySerNo(complaintDto.getSerialNumber());
-        if(complaintOptional.isPresent()  ){
+        if (complaintOptional.isPresent()) {
             // If yes then check if it belongs to the same complaint what we want to update,
-            if(complaintOptional.get().getId() != id){
+            if (complaintOptional.get().getId() != id) {
                 // if it belongs to another claim
                 throw new IllegalStateException(String.format("Complaint with serial number: " + complaintDto.getSerialNumber() + " is already exist."));
             }
@@ -255,7 +253,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
 
     private Complaint getComplaint(Long id) {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
-        if(complaintOptional.isEmpty()){
+        if (complaintOptional.isEmpty()) {
             throw new IllegalStateException(String.format("Complaint does not exist."));
         }
         Complaint complaint = complaintOptional.get();
@@ -267,19 +265,19 @@ public class ComplaintServiceImpl implements  ComplaintService{
         log.info("Deleting complaint by id: {}", id);
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(id);
 
-        if(complaintOptional.isEmpty()){
-            throw new IllegalStateException("Complaint with id: "+ id + " does not exists.");
+        if (complaintOptional.isEmpty()) {
+            throw new IllegalStateException("Complaint with id: " + id + " does not exists.");
         }
 
         // First need to delete the analysis which belongs to this claim, if it exists
         Optional<Analysis> analysisOptional = analysisRepository.findAnalysisByComplaintId(id);
 
-        if(analysisOptional.isPresent()){
+        if (analysisOptional.isPresent()) {
             analysisRepository.deleteAnalysisByComplaintId(id);
         }
 
-        if(complaintRepository.deleteComplaintById(id) == 0){
-            throw new IllegalStateException("Complaint with id: "+ id + " cannot be deleted.");
+        if (complaintRepository.deleteComplaintById(id) == 0) {
+            throw new IllegalStateException("Complaint with id: " + id + " cannot be deleted.");
         }
         return Boolean.TRUE;
     }
@@ -287,14 +285,14 @@ public class ComplaintServiceImpl implements  ComplaintService{
     @Override
     public Boolean createAnalysisReport(Long complaintId) throws Exception {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
-        if(complaintOptional.isEmpty()){
+        if (complaintOptional.isEmpty()) {
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
         }
 
         Optional<Analysis> analysisOptional = analysisRepository.findById(complaintId);
 
         // If the complaint does not contain analysis then the report will only contain the complaint data
-        if(analysisOptional.isEmpty()){
+        if (analysisOptional.isEmpty()) {
             throw new IllegalStateException(String.format("Complaint with id: " + complaintId + " does not contain analysis."));
         }
         Analysis analysis = analysisOptional.get();
@@ -315,7 +313,7 @@ public class ComplaintServiceImpl implements  ComplaintService{
     public Boolean printSavedLabel(Long complaintId) throws IOException {
 
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
-        if(complaintOptional.isEmpty()){
+        if (complaintOptional.isEmpty()) {
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
         }
         Complaint complaint = complaintOptional.get();

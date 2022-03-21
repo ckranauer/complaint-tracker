@@ -22,10 +22,9 @@ public class UserRoleController {
     private final UserRoleServiceImpl userRoleService;
 
 
-
     @PostMapping("/save")
-    public ResponseEntity<Response> saveRole(@RequestBody @Valid UserRole userRole){
-        try{
+    public ResponseEntity<Response> saveRole(@RequestBody @Valid UserRole userRole) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -35,7 +34,7 @@ public class UserRoleController {
                             .statusCode(CREATED.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -49,18 +48,18 @@ public class UserRoleController {
 
     // Endpoint for the admin page, admin can see roles
     @GetMapping("list")
-    public ResponseEntity<Response> getRoles(){
-        try{
+    public ResponseEntity<Response> getRoles() {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("roles", userRoleService.list(1,10)))
+                            .data(Map.of("roles", userRoleService.list(1, 10)))
                             .message("Roles retrieved")
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -74,8 +73,8 @@ public class UserRoleController {
 
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getRole(@PathVariable("id") Long id){
-        try{
+    public ResponseEntity<Response> getRole(@PathVariable("id") Long id) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -85,7 +84,7 @@ public class UserRoleController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -98,8 +97,8 @@ public class UserRoleController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteRole(@PathVariable("id") Long id){
-        try{
+    public ResponseEntity<Response> deleteRole(@PathVariable("id") Long id) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -109,7 +108,7 @@ public class UserRoleController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -124,9 +123,9 @@ public class UserRoleController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Response> updateRole(@RequestBody @Valid UserRole userRole,
-                                               @PathVariable ("id") Long id){
+                                               @PathVariable("id") Long id) {
 
-        try{
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -136,7 +135,7 @@ public class UserRoleController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(IllegalStateException exception){
+        } catch (IllegalStateException exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())

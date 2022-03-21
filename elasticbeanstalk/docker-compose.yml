@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   backend:
-    image: "ckranauer/springboot-angular-complaint:19"
+    image: "ckranauer/springboot-angular-complaint:21"
     ports:
       - "80:8080"
     restart: "always"

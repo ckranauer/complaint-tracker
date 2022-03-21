@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleLinkDto  {
+public class UserRoleLinkDto {
 
     private UUID userId;
     private Long roleId;
