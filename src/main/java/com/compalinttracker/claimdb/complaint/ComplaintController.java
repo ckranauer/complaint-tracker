@@ -35,7 +35,7 @@ public class ComplaintController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaints", complaintService.create(complaintDto), "users", userProfileService.list(10,0)))
+                            //.data(Map.of("complaints", complaintService.create(complaintDto), "users", userProfileService.list(10,0)))
                             .message("Complaint created")
                             .status(CREATED)
                             .statusCode(CREATED.value())
