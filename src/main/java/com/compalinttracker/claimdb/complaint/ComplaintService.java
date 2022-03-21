@@ -16,12 +16,12 @@ public interface ComplaintService {
 
     ComplaintAnalysisDto search(String serialNumber);
 
-    Collection<ComplaintAnalysisDto> update(ComplaintUpdateDto complaintDto);
+    void update(ComplaintUpdateDto complaintDto);
 
     Boolean delete(Long id);
 
 
-    Boolean createAnalysisReport(Long analysisId) throws Exception;
+    byte[] createAnalysisReport(Long analysisId) throws Exception;
 
     Boolean printLabel(ComplaintDto complaintDto) throws IOException;
 

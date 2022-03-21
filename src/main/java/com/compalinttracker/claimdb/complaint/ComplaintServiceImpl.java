@@ -9,10 +9,15 @@ import com.compalinttracker.claimdb.userProfile.UserProfile;
 import com.compalinttracker.claimdb.userProfile.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -141,7 +146,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public Collection<ComplaintAnalysisDto> update(ComplaintUpdateDto complaintDto) {
+    public void update(ComplaintUpdateDto complaintDto) {
         log.info("Update complaint: {}", complaintDto.getId());
 
         // Read complaint from db
@@ -170,7 +175,6 @@ public class ComplaintServiceImpl implements ComplaintService {
         setComplaintAnalysis(complaintDto, complaint, analysis);
 
         complaintRepository.save(complaint);
-        return complaintRepository.findAllComplaintAnalysis();
     }
 
     private void setComplaintAnalysis(ComplaintUpdateDto complaintDto, Complaint complaint, Analysis analysis) {
@@ -283,7 +287,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public Boolean createAnalysisReport(Long complaintId) throws Exception {
+    public byte[] createAnalysisReport(Long complaintId) throws Exception {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
         if (complaintOptional.isEmpty()) {
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
@@ -296,9 +300,22 @@ public class ComplaintServiceImpl implements ComplaintService {
             throw new IllegalStateException(String.format("Complaint with id: " + complaintId + " does not contain analysis."));
         }
         Analysis analysis = analysisOptional.get();
-        reportCreator.create(analysis);
 
-        return Boolean.TRUE;
+        // TODO: return the analysis report
+        File report = reportCreator.create(analysis);
+
+        FileInputStream input = new FileInputStream(report);
+        MultipartFile multipartFile = new MockMultipartFile(
+                "file",
+                report.getName(),
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                IOUtils.toByteArray(input));
+
+        // TODO: save the report to the bucket
+        // TODO: save it to Output Stream and set it as S3 Bucket
+
+        // TODO: return the report from S3 bucket
+        return null;
     }
 
     // object is come from the frontend

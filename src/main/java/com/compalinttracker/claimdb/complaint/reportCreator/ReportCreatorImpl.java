@@ -23,7 +23,7 @@ public class ReportCreatorImpl implements ReportCreator {
     // TODO: give back the report and send to the frontend
 
     @Override
-    public void create(Analysis analysis) throws Exception {
+    public File create(Analysis analysis) throws Exception {
 
         InputStream templateInputStream = this.getClass().getClassLoader().getResourceAsStream("report template.docx");
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(templateInputStream);
@@ -35,8 +35,10 @@ public class ReportCreatorImpl implements ReportCreator {
         documentPart.variableReplace(variables);
 
         File exportFile = new File("Analysis Report - " + analysis.getComplaint().getQmsNumber() + ".docx");
+        // TODO: save it to Output Stream and set it as S3 Bucket
         wordMLPackage.save(exportFile);
-
+        //wordMLPackage.getContentType();
+        return exportFile;
     }
 
     private HashMap<String, String> addVariables(Analysis analysis) {
