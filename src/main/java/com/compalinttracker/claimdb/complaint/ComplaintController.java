@@ -35,26 +35,16 @@ public class ComplaintController {
 
     @PostMapping("/save")
     public ResponseEntity<Response> saveComplaint(@RequestBody @Valid ComplaintDto complaintDto){
-        try{
+
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("complaints", complaintService.create(complaintDto), "users", userProfileService.list(10,0)))
+                            //.data(Map.of("complaints", complaintService.create(complaintDto), "users", userProfileService.list(10,0)))
                             .message("Complaint created")
                             .status(CREATED)
                             .statusCode(CREATED.value())
                             .build()
             );
-        }catch(Exception exception){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message(exception.getMessage())
-                            .status(FORBIDDEN)
-                            .statusCode(FORBIDDEN.value())
-                            .build()
-            );
-        }
     }
 
 

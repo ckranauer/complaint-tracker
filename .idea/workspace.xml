@@ -7,7 +7,6 @@
     <list default="true" id="c9cfe401-19d2-4324-adbe-46715c9d135d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/reportCreator/ReportCreatorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/reportCreator/ReportCreatorImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
