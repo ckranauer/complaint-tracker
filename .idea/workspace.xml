@@ -6,13 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="c9cfe401-19d2-4324-adbe-46715c9d135d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elasticbeanstalk/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/elasticbeanstalk/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/claim-frontend/src/app/service/complaint.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/claim-frontend/src/app/service/complaint.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/claim-frontend/src/app/service/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/claim-frontend/src/app/service/user.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analysis Report - Q02.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Analysis Report - Q02.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/config/AmazonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/config/AmazonConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

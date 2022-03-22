@@ -291,7 +291,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public void createAnalysisReport(Long complaintId) throws Exception {
+    public byte[] createAnalysisReport(Long complaintId) throws Exception {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
         if (complaintOptional.isEmpty()) {
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
@@ -305,32 +305,23 @@ public class ComplaintServiceImpl implements ComplaintService {
         }
         Analysis analysis = analysisOptional.get();
 
-        // TODO: return the analysis report
         File report = reportCreator.create(analysis);
 
         FileInputStream input = new FileInputStream(report);
-
         MultipartFile analysisReport = new MockMultipartFile(
                 "file",
                 report.getName(),
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 IOUtils.toByteArray(input));
 
-        System.out.println("Content type: "+ analysisReport.getContentType() +" - Size :"+ analysisReport.getSize());
-
-
+        // Save the report to the S3 bucket
         uploadAnalysisReport(complaintId, analysisReport);
 
 
-
-
-        // instead of the multipart give the s3 the file insput stream ??
-
-        // TODO: save the report to the bucket
-        // TODO: save it to Output Stream and set it as S3 Bucket
-
         // TODO: return the report from S3 bucket
-
+        String fileName = String.format("%s-%s", analysisReport.getOriginalFilename(), complaintId);
+        byte[] reportFromBucket = downloadUserProfileImage(fileName);
+        return reportFromBucket;
     }
 
     public void uploadAnalysisReport(Long complaintId, MultipartFile file) {
@@ -349,7 +340,8 @@ public class ComplaintServiceImpl implements ComplaintService {
         // the image will be in the user's folder
         String path = String.format("%s/%s", BucketName.ANALYSIS_REPORT.getBucketName(), complaintId);
         System.out.println("Path: "+path);
-        String fileName = String.format("%s-%s", file.getOriginalFilename(), complaintId);
+        //String fileName = String.format("%s-%s", file.getOriginalFilename(), complaintId);
+        String fileName = complaintId.toString();
         System.out.println("File name : "+fileName);
         try {
             fileStore.save(path, fileName, Optional.of(metadata), file.getInputStream() );
@@ -357,6 +349,12 @@ public class ComplaintServiceImpl implements ComplaintService {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public byte[] downloadUserProfileImage(String complaintId) {
+        //UserProfile user = getUserOrThrow(userProfileId);
+        String path = String.format("%s/%s", BucketName.ANALYSIS_REPORT.getBucketName(), complaintId);
+        return fileStore.download(path, complaintId.toString());
     }
 
     private void isFileEmpty(MultipartFile file) {

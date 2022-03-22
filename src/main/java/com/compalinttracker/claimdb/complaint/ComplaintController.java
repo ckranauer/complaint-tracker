@@ -118,9 +118,9 @@ public class ComplaintController {
         );
     }
 
-
+/*
     @GetMapping("/create-report/{id}")
-    public ResponseEntity<Response> createAnalysisReport(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<Response> createAnalysisReport2(@PathVariable("id") Long id) throws Exception {
         complaintService.createAnalysisReport(id);
         return ResponseEntity.ok(
                 Response.builder()
@@ -131,6 +131,13 @@ public class ComplaintController {
                         .statusCode(OK.value())
                         .build()
         );
+    }
+
+ */
+
+    @GetMapping("/create-report/{id}")
+    public byte[] createAnalysisReport(@PathVariable("id") Long id) throws Exception {
+        return complaintService.createAnalysisReport(id);
     }
 
     // print label for an already saved claim
