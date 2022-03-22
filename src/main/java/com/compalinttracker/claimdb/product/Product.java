@@ -19,7 +19,7 @@ public class Product {
     @Id
     @SequenceGenerator(                                 // BIGSERIAL data type
             name = "product_sequence",
-            sequenceName =  "product_sequence",
+            sequenceName = "product_sequence",
             allocationSize = 1                          // how much a sequence increase from
     )
     @GeneratedValue(

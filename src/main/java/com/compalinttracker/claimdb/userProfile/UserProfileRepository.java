@@ -42,13 +42,12 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     List<UserProfile> findAllUserProfileUseThisRole(Long roleId);
 
 
-
     Optional<UserProfile> findUserProfileById(UUID id);
 
     @Query(
             value = "SELECT user_profile.id " +
                     "FROM user_profile JOIN user_role_link ON user_profile.id = user_role_link.user_profile_id " +
-                    "JOIN user_role ON user_role.id = user_role_link.user_role_id "+
+                    "JOIN user_role ON user_role.id = user_role_link.user_role_id " +
                     "WHERE user_role_link.user_role_id = ?1",
             nativeQuery = true
     )
@@ -58,7 +57,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     @Query(
             value = "SELECT u FROM UserProfile u " +
                     "JOIN Analysis" +
-                    "JOIN user_role ON user_role.id = user_role_link.user_role_id "+
+                    "JOIN user_role ON user_role.id = user_role_link.user_role_id " +
                     "WHERE user_role_link.user_role_id = ?1",
             nativeQuery = true
     )

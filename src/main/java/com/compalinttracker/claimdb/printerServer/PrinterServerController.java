@@ -24,9 +24,9 @@ public class PrinterServerController {
     private final PrinterServerImpl printerServerService;
 
     @PostMapping("/save")
-    public ResponseEntity<Response> saveServer(@RequestBody @Valid PrinterServer printerServer){
+    public ResponseEntity<Response> saveServer(@RequestBody @Valid PrinterServer printerServer) {
 
-        try{
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -36,7 +36,7 @@ public class PrinterServerController {
                             .statusCode(CREATED.value())
                             .build()
             );
-        }catch(IllegalStateException exception){
+        } catch (IllegalStateException exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -49,19 +49,19 @@ public class PrinterServerController {
     }
 
     @PostMapping("/list")
-    public ResponseEntity<Response> getServers(@RequestBody PaginationObj paginationObj){
+    public ResponseEntity<Response> getServers(@RequestBody PaginationObj paginationObj) {
         // TODO: send page and limit via the request instead of hardcoded -> Post request, request body contains the limit and page
-        try{
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
-                            .data(Map.of("servers", printerServerService.list(paginationObj.getLimit(),paginationObj.getPage())))
+                            .data(Map.of("servers", printerServerService.list(paginationObj.getLimit(), paginationObj.getPage())))
                             .message("Servers retrieved")
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -74,8 +74,8 @@ public class PrinterServerController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getServer(@PathVariable ("id") long id){
-        try{
+    public ResponseEntity<Response> getServer(@PathVariable("id") long id) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -85,7 +85,7 @@ public class PrinterServerController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -98,8 +98,8 @@ public class PrinterServerController {
     }
 
     @GetMapping("/ping/{id}")
-    public ResponseEntity<Response> pingServer(@PathVariable ("id") long id){
-        try{
+    public ResponseEntity<Response> pingServer(@PathVariable("id") long id) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -109,7 +109,7 @@ public class PrinterServerController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -122,8 +122,8 @@ public class PrinterServerController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Response> updateServer(@RequestBody ServerUpdateDto serverDto){
-        try{
+    public ResponseEntity<Response> updateServer(@RequestBody ServerUpdateDto serverDto) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -133,7 +133,7 @@ public class PrinterServerController {
                             .statusCode(OK.value())
                             .build()
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -146,8 +146,8 @@ public class PrinterServerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteServer(@PathVariable("id") Long id){
-        try{
+    public ResponseEntity<Response> deleteServer(@PathVariable("id") Long id) {
+        try {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())
@@ -158,7 +158,7 @@ public class PrinterServerController {
                             .build()
 
             );
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(now())

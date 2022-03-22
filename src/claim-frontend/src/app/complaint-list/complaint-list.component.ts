@@ -11,6 +11,8 @@ import { ComplaintResponse } from '../response/complaint-response';
 import { ComplaintService } from '../service/complaint.service';
 import { DatePipe } from '@angular/common';
 import { ComplaintUpdateDto } from '../complaint/complaintUpdateDto';
+import { UserService } from '../service/user.service';
+import { UserResponse } from '../response/user-response';
 
 @Component({
   selector: 'app-complaint-list',
@@ -34,6 +36,9 @@ export class ComplaintListComponent implements OnInit {
   claim?: ComplaintResponse;
   complaint?: ComplaintDto;
 
+  users?: UserResponse;
+  user?: UserResponse;
+
 
   pageObj: PaginationObj = {
     "page": 1,
@@ -42,10 +47,11 @@ export class ComplaintListComponent implements OnInit {
   }
 
 
-  constructor(private complaintService: ComplaintService, private datePipe: DatePipe){}
+  constructor(private complaintService: ComplaintService, private userService: UserService , private datePipe: DatePipe){}
 
   ngOnInit(): void {
-    this.onGetComplaints(this.pageObj);
+    this.onGetComplaints();
+    this.onGetUsers(this.pageObj);
     //this.onGetComplaints(this.page, this.limit);
     
   }
@@ -56,15 +62,15 @@ export class ComplaintListComponent implements OnInit {
   */
 
  
-
+/*
  onPageChange = (pageNumber) => {
   this.pageChange.emit(pageNumber)    
   this.pageObj.page = pageNumber;
-  this.onGetComplaints(this.pageObj);
+  this.onGetComplaints();
   
    
 }
-
+*/
  
 
 
@@ -87,8 +93,8 @@ export class ComplaintListComponent implements OnInit {
 
  
 
-  onGetComplaints(pageObj: PaginationObj): void {
-    this.complaintService.getComplaints(pageObj)
+  onGetComplaints(): void {
+    this.complaintService.getComplaints()
     .subscribe(
       (response) => this.claims = response,
       
@@ -98,24 +104,36 @@ export class ComplaintListComponent implements OnInit {
       console.log(this.claims);
   }
 
+  onGetUsers(pageObj: PaginationObj): void {
+    this.userService.getUsers(pageObj)
+    .subscribe(
+      (response) => this.users = response,
+      
+      (error: any) => console.log(error),
+      () => console.log('Done getting users')
+      );
+  }
+
   onCreateComplaint(complaintCreateForm: NgForm): void{
     this.complaintService.createComplaint(complaintCreateForm.value as ComplaintCreateDto).subscribe(
       (response) => {
         //this.claims = response;
-        //console.log(response);
+        console.log(response);
+        this.onGetComplaints();
       },
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
       ), complaintCreateForm.resetForm();
-      this.onGetComplaints(this.pageObj);
+      
   }
 
   onUpdateComplaint(complaintUpdateForm: NgForm): void{
     console.log(complaintUpdateForm.value)
     this.complaintService.updateComplaint(complaintUpdateForm.value as ComplaintUpdateDto).subscribe(
       (response) => {
-        this.claims = response;
+        //this.claims = response;
         console.log(response);
+        this.onGetComplaints();
       } ,
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
@@ -124,11 +142,13 @@ export class ComplaintListComponent implements OnInit {
 
   onDeleteComplaint(id: number): void{
     this.complaintService.deleteComplaint(id).subscribe(
-      (response) => console.log(response), 
+      (response) => {
+        console.log(response);
+        this.onGetComplaints();
+      }, 
       (error: any) => console.log(error),
       () => console.log(this.claim)
-      ),
-      this.onGetComplaints(this.pageObj);
+      )
   }
 
   onCreateAnalysisReport(id: number): void{

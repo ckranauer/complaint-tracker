@@ -3,21 +3,28 @@ package com.compalinttracker.claimdb.complaint;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 
 public interface ComplaintService {
 
-    Collection<ComplaintAnalysisDto>  create(ComplaintDto complaintDto);
-    Collection<ComplaintAnalysisDto> list(int limit, int page);
+    void create(ComplaintDto complaintDto);
+
+    List<ComplaintAnalysisDto> list();
+
     ComplaintAnalysisDto get(Long id);
+
     ComplaintAnalysisDto search(String serialNumber);
-    Collection<ComplaintAnalysisDto> update(ComplaintUpdateDto complaintDto);
+
+    void update(ComplaintUpdateDto complaintDto);
+
     Boolean delete(Long id);
 
 
+    byte[] createAnalysisReport(Long analysisId) throws Exception;
 
-    Boolean createAnalysisReport(Long analysisId) throws Exception;
     Boolean printLabel(ComplaintDto complaintDto) throws IOException;
+
     Boolean printSavedLabel(Long id) throws IOException;
 
     long getCollectionSize();

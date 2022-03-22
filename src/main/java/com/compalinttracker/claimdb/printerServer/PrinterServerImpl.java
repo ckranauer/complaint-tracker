@@ -36,16 +36,16 @@ public class PrinterServerImpl implements PrinterServerService {
     }
 
     private void checkIfIpAndPortNumberIsTaken(PrinterServer printerServer) {
-        if(printerServerRepository.findByIpAndPortNumber(printerServer.getIp(), printerServer.getPortNumber()).isPresent()){
-            throw new IllegalStateException((String.format("Printer server with "+ printerServer.getIp() + " IP address and "
-                                                            + printerServer.getPortNumber() + " port number is already exist")));
+        if (printerServerRepository.findByIpAndPortNumber(printerServer.getIp(), printerServer.getPortNumber()).isPresent()) {
+            throw new IllegalStateException((String.format("Printer server with " + printerServer.getIp() + " IP address and "
+                    + printerServer.getPortNumber() + " port number is already exist")));
         }
     }
 
     private void checkIfPrintServerAlreadyExists(PrinterServer printerServer) {
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findByServerName(printerServer.getName());
-        if(printerServerOptional.isPresent()){
-            throw new IllegalStateException((String.format("Printer server with "+ printerServer.getName() + " name is already exist")));
+        if (printerServerOptional.isPresent()) {
+            throw new IllegalStateException((String.format("Printer server with " + printerServer.getName() + " name is already exist")));
         }
     }
 
@@ -63,7 +63,7 @@ public class PrinterServerImpl implements PrinterServerService {
     }
 
     @Override
-    public Collection<PrinterServer> update( ServerUpdateDto serverUpdateDto) {
+    public Collection<PrinterServer> update(ServerUpdateDto serverUpdateDto) {
         log.info("Update printer server: {}", serverUpdateDto.getId());
 
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findById(serverUpdateDto.getId());
@@ -86,11 +86,11 @@ public class PrinterServerImpl implements PrinterServerService {
         return printerServer;
     }
 
-    private void throwExceptionIfIpAndPortIsTaken(ServerUpdateDto serverUpdateDto){
+    private void throwExceptionIfIpAndPortIsTaken(ServerUpdateDto serverUpdateDto) {
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findByIpAndPortNumber(serverUpdateDto.getIp(), serverUpdateDto.getPortNumber());
-        if(printerServerOptional.isPresent()){
-            if(printerServerOptional.get().getId() != serverUpdateDto.getId()){
-                throw new IllegalStateException((String.format("Printer server with "+ serverUpdateDto.getIp() + " IP address and "
+        if (printerServerOptional.isPresent()) {
+            if (printerServerOptional.get().getId() != serverUpdateDto.getId()) {
+                throw new IllegalStateException((String.format("Printer server with " + serverUpdateDto.getIp() + " IP address and "
                         + serverUpdateDto.getPortNumber() + " port number is taken")));
             }
         }
@@ -98,16 +98,16 @@ public class PrinterServerImpl implements PrinterServerService {
 
     private void throwExceptionIfNameIsTaken(ServerUpdateDto serverUpdateDto) {
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findByServerName(serverUpdateDto.getName());
-        if(printerServerOptional.isPresent()){
-            if(serverUpdateDto.getId() != printerServerOptional.get().getId()){
-                throw new IllegalStateException(String.format("Printer server with name: "+ serverUpdateDto.getName() + " is taken."));
+        if (printerServerOptional.isPresent()) {
+            if (serverUpdateDto.getId() != printerServerOptional.get().getId()) {
+                throw new IllegalStateException(String.format("Printer server with name: " + serverUpdateDto.getName() + " is taken."));
             }
         }
     }
 
     private void isServerExists(ServerUpdateDto serverUpdateDto, Optional<PrinterServer> printerServerOptional) {
-        if(printerServerOptional.isEmpty()){
-            throw new IllegalStateException(String.format("Printer server with id: "+ serverUpdateDto.getId() + " is not exist."));
+        if (printerServerOptional.isEmpty()) {
+            throw new IllegalStateException(String.format("Printer server with id: " + serverUpdateDto.getId() + " is not exist."));
         }
     }
 
@@ -122,16 +122,16 @@ public class PrinterServerImpl implements PrinterServerService {
         Optional<PrinterServer> printerServerOptional = printerServerRepository.findById(id);
 
         PrinterServer server = printerServerOptional.get();
-        try{
+        try {
             zebraPrinter.startConnection(server.getIp(), server.getPortNumber());
-        }catch(IOException exception){
+        } catch (IOException exception) {
             System.out.println("Connection does not succeed!");
             return Boolean.FALSE;
         }
 
-        try{
+        try {
             zebraPrinter.stopConnection();
-        }catch(IOException exception){
+        } catch (IOException exception) {
             System.out.println("Close connection does not succeed!");
             return Boolean.FALSE;
         }

@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LabelPrinter implements  PrintService{
+public class LabelPrinter implements PrintService {
 
     private final ZebraPrinter zebraPrinter;
     private final PrinterServerRepository printerServerRepository;

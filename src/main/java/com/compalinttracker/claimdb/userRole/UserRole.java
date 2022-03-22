@@ -47,7 +47,7 @@ public class UserRole {
     private String description;
 
 
-    @JsonBackReference(value="role-user")
+    @JsonBackReference(value = "role-user")
     @OneToMany(
             cascade = {CascadeType.ALL},
             mappedBy = "userRole"  // in the enrolment class this is this property : private Student student;
@@ -60,13 +60,13 @@ public class UserRole {
         this.description = description;
     }
 
-    public void addUserRoleLink(UserRoleLink userRoleLink){
-        if(!userRoleLinks.contains(userRoleLink)){
+    public void addUserRoleLink(UserRoleLink userRoleLink) {
+        if (!userRoleLinks.contains(userRoleLink)) {
             userRoleLinks.add(userRoleLink);
         }
     }
 
-    public void removeUserRoleLink(UserRoleLink userRoleLink){
+    public void removeUserRoleLink(UserRoleLink userRoleLink) {
         userRoleLinks.remove(userRoleLink);
     }
 

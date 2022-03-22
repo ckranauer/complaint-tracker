@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(
         name = "printer_server",
-        uniqueConstraints={
+        uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"ip", "port_number"})
         }
 )

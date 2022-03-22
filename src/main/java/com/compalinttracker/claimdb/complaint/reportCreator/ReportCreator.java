@@ -2,7 +2,9 @@ package com.compalinttracker.claimdb.complaint.reportCreator;
 
 import com.compalinttracker.claimdb.analysis.Analysis;
 
+import java.io.File;
+
 public interface ReportCreator {
 
-    void create(Analysis analysis) throws Exception;
+    File create(Analysis analysis) throws Exception;
 }

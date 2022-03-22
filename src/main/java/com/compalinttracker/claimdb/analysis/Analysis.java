@@ -141,10 +141,10 @@ public class Analysis implements Serializable {
         this.analyzedBy = analyzedBy;
     }
 
-    public String isConfirmed(){
-        if(this.faultVerification){
+    public String isConfirmed() {
+        if (this.faultVerification) {
             return "The fault is confirmed.";
-        }else{
+        } else {
             return "The fault is not confirmed.";
         }
     }
