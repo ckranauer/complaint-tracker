@@ -17,10 +17,13 @@ import java.util.HashMap;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ReportCreatorImpl implements ReportCreator{
+public class ReportCreatorImpl implements ReportCreator {
+
+    // TODO: save the report to AWS E3 bitbucket
+    // TODO: give back the report and send to the frontend
 
     @Override
-    public void create(Analysis analysis) throws Exception {
+    public File create(Analysis analysis) throws Exception {
 
         InputStream templateInputStream = this.getClass().getClassLoader().getResourceAsStream("report template.docx");
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(templateInputStream);
@@ -31,23 +34,25 @@ public class ReportCreatorImpl implements ReportCreator{
         HashMap<String, String> variables = addVariables(analysis);
         documentPart.variableReplace(variables);
 
-        File exportFile = new File("Analysis Report - "+ analysis.getComplaint().getQmsNumber() + ".docx");
+        File exportFile = new File("Analysis Report - " + analysis.getComplaint().getQmsNumber() + ".docx");
+        // TODO: save it to Output Stream and set it as S3 Bucket
         wordMLPackage.save(exportFile);
-
+        //wordMLPackage.getContentType();
+        return exportFile;
     }
 
-    private HashMap<String, String> addVariables(Analysis analysis){
+    private HashMap<String, String> addVariables(Analysis analysis) {
         HashMap<String, String> variables = new HashMap<>();
 
         variables.put("qmsNumber", analysis.getComplaint().getQmsNumber());
         variables.put("customerRefNumber", analysis.getComplaint().getCustomerRefNumber());
         variables.put("partDescription", "Default");
         variables.put("failureDescription", analysis.getComplaint().getClaimedFault());
-        variables.put("arrivedAt", analysis.getComplaint().getArrivedAt().toString().substring(0,10).replace("-","."));
-        variables.put("analysisEndedAt", analysis.getAnalysisEndedAt().toString().substring(0,10).replace("-","."));
-        if(analysis.getAnalyzedBy() != null){
+        variables.put("arrivedAt", analysis.getComplaint().getArrivedAt().toString().substring(0, 10).replace("-", "."));
+        variables.put("analysisEndedAt", analysis.getAnalysisEndedAt().toString().substring(0, 10).replace("-", "."));
+        if (analysis.getAnalyzedBy() != null) {
             variables.put("analyzedBy", analysis.getAnalyzedBy().getFirstName() + " " + analysis.getAnalyzedBy().getLastName());
-        }else{
+        } else {
             variables.put("analyzedBy", "");
         }
         variables.put("productBarcodes", analysis.getBarcodes());

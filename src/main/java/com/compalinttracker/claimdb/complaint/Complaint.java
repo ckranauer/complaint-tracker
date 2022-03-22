@@ -18,12 +18,12 @@ import java.time.LocalDateTime;
 @Table(
         name = "complaint"
 )
-public class Complaint  {       //implements Serializable
+public class Complaint {       //implements Serializable
 
     @Id
     @SequenceGenerator(                                 // BIGSERIAL data type
             name = "complaint_sequence",
-            sequenceName =  "complaint_sequence",
+            sequenceName = "complaint_sequence",
             allocationSize = 1                          // how much a sequence increase from
     )
     @GeneratedValue(
@@ -95,8 +95,8 @@ public class Complaint  {       //implements Serializable
     )
     private boolean isPrio;
 
-   // @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JsonBackReference(value="complaint-analysis")
+    // @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference(value = "complaint-analysis")
     @OneToOne(
             mappedBy = "complaint",
             cascade = {CascadeType.ALL},

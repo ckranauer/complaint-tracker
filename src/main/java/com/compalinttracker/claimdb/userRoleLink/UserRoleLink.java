@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Table(name = "user_role_link")
-public class UserRoleLink  {
+public class UserRoleLink {
 
     @EmbeddedId
     private UserRoleLinkId id;
