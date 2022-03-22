@@ -121,10 +121,11 @@ public class ComplaintController {
 
     @GetMapping("/create-report/{id}")
     public ResponseEntity<Response> createAnalysisReport(@PathVariable("id") Long id) throws Exception {
+        complaintService.createAnalysisReport(id);
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("report", complaintService.createAnalysisReport(id)))
+                        //.data(Map.of("report", complaintService.createAnalysisReport(id)))
                         .message("Analysis report is created")
                         .status(OK)
                         .statusCode(OK.value())

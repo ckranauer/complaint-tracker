@@ -21,7 +21,7 @@ public interface ComplaintService {
     Boolean delete(Long id);
 
 
-    byte[] createAnalysisReport(Long analysisId) throws Exception;
+    void createAnalysisReport(Long analysisId) throws Exception;
 
     Boolean printLabel(ComplaintDto complaintDto) throws IOException;
 

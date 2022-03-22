@@ -3,14 +3,17 @@ package com.compalinttracker.claimdb.complaint;
 
 import com.compalinttracker.claimdb.analysis.Analysis;
 import com.compalinttracker.claimdb.analysis.AnalysisRepository;
+import com.compalinttracker.claimdb.bucket.BucketName;
 import com.compalinttracker.claimdb.complaint.labelPrinter.LabelPrinter;
 import com.compalinttracker.claimdb.complaint.reportCreator.ReportCreatorImpl;
+import com.compalinttracker.claimdb.filestore.FileStore;
 import com.compalinttracker.claimdb.userProfile.UserProfile;
 import com.compalinttracker.claimdb.userProfile.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.data.domain.PageRequest;
+//import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +37,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final UserProfileRepository userProfileRepository;
     private final ReportCreatorImpl reportCreator;
     private final LabelPrinter labelPrinter;
+    private final FileStore fileStore;
 
     @Override
     public void create(ComplaintDto complaintDto) {
@@ -287,7 +291,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public byte[] createAnalysisReport(Long complaintId) throws Exception {
+    public void createAnalysisReport(Long complaintId) throws Exception {
         Optional<Complaint> complaintOptional = complaintRepository.findComplaintById(complaintId);
         if (complaintOptional.isEmpty()) {
             throw new IllegalStateException(String.format("Complaint with " + complaintId + " does not exists."));
@@ -305,17 +309,67 @@ public class ComplaintServiceImpl implements ComplaintService {
         File report = reportCreator.create(analysis);
 
         FileInputStream input = new FileInputStream(report);
-        MultipartFile multipartFile = new MockMultipartFile(
+
+        MultipartFile analysisReport = new MockMultipartFile(
                 "file",
                 report.getName(),
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 IOUtils.toByteArray(input));
 
+        System.out.println("Content type: "+ analysisReport.getContentType() +" - Size :"+ analysisReport.getSize());
+
+
+        uploadAnalysisReport(complaintId, analysisReport);
+
+
+
+
+        // instead of the multipart give the s3 the file insput stream ??
+
         // TODO: save the report to the bucket
         // TODO: save it to Output Stream and set it as S3 Bucket
 
         // TODO: return the report from S3 bucket
-        return null;
+
+    }
+
+    public void uploadAnalysisReport(Long complaintId, MultipartFile file) {
+        // 1. Check if file is not empty
+        isFileEmpty(file);
+        // 2. If file is a docx
+        // isImage(file);
+        // 3. The user exists in the database
+        //UserProfile user = getUserOrThrow(userProfileId);
+
+        // 4. Grab some metadata from file if any
+        Map<String, String> metadata = extractMetadata(file);
+
+        // 5. Store the image in S3 and update database (userprofileImageLink) with S3 image link
+
+        // the image will be in the user's folder
+        String path = String.format("%s/%s", BucketName.ANALYSIS_REPORT.getBucketName(), complaintId);
+        System.out.println("Path: "+path);
+        String fileName = String.format("%s-%s", file.getOriginalFilename(), complaintId);
+        System.out.println("File name : "+fileName);
+        try {
+            fileStore.save(path, fileName, Optional.of(metadata), file.getInputStream() );
+            //user.setUserProfileImageLink(fileName);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private void isFileEmpty(MultipartFile file) {
+        if(file.isEmpty()){
+            throw new IllegalStateException("Cannot upload empty file [ " + file.getSize() + " ] ");
+        }
+    }
+
+    private Map<String, String> extractMetadata(MultipartFile file) {
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", file.getContentType());
+        metadata.put("Content-Length", String.valueOf(file.getSize()));         // TODO: this is needed for aws,but somehow it is null
+        return metadata;
     }
 
     // object is come from the frontend
