@@ -59,9 +59,15 @@ export class ComplaintService {
   // "/create-report/{id}"
   // this.complaintService.createReport(id).subscribe();
 
-  createReport(id: number): Observable<ComplaintResponse> {
-    return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/create-report/${id}`);
-  }
+  /*
+    createReport(id: number): Observable<ComplaintResponse> {
+      return this.http.get<ComplaintResponse>(`${this.apiUrl}/complaint/create-report/${id}`);
+    }
+    */
+
+ createReport(id: number): Observable<Blob> {
+     return this.http.get(`${this.apiUrl}/complaint/create-report/${id}`, { responseType: 'blob'});
+   }
 
 
 /*

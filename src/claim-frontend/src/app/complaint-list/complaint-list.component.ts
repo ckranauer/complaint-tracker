@@ -20,7 +20,7 @@ import { UserResponse } from '../response/user-response';
   styleUrls: ['./complaint-list.component.css']
 })
 export class ComplaintListComponent implements OnInit {
-  
+
   @Output() pageChange: EventEmitter<number> = new EventEmitter();
 
   appState$: Observable<AppState<ComplaintResponse>>;
@@ -30,7 +30,7 @@ export class ComplaintListComponent implements OnInit {
   isLoading$ = this.isLoading.asObservable();
   page = 0;
   limit = 10;
- 
+
 
   claims?: ComplaintResponse;
   claim?: ComplaintResponse;
@@ -43,8 +43,9 @@ export class ComplaintListComponent implements OnInit {
   pageObj: PaginationObj = {
     "page": 1,
     "limit": 10
-    
+
   }
+  blob: Blob;
 
 
   constructor(private complaintService: ComplaintService, private userService: UserService , private datePipe: DatePipe){}
@@ -53,7 +54,7 @@ export class ComplaintListComponent implements OnInit {
     this.onGetComplaints();
     this.onGetUsers(this.pageObj);
     //this.onGetComplaints(this.page, this.limit);
-    
+
   }
 /*
   onChangePage(){
@@ -61,23 +62,23 @@ export class ComplaintListComponent implements OnInit {
   }
   */
 
- 
+
 /*
  onPageChange = (pageNumber) => {
-  this.pageChange.emit(pageNumber)    
+  this.pageChange.emit(pageNumber)
   this.pageObj.page = pageNumber;
   this.onGetComplaints();
-  
-   
+
+
 }
 */
- 
+
 
 
 
   onGetComplaint(complaint: ComplaintDto): void{
     this.complaintService.getComplaint(complaint.id).subscribe(
-      (response) => this.claim = response, 
+      (response) => this.claim = response,
       (error: any) => console.log(error),
       () => console.log(this.claim)
       );
@@ -85,19 +86,19 @@ export class ComplaintListComponent implements OnInit {
 
   onSearchComplaint(complaintSearchForm: NgForm): void{
     this.complaintService.searchComplaint(complaintSearchForm.value as ComplaintDto).subscribe(
-      (response) => this.claim = response, 
+      (response) => this.claim = response,
       (error: any) => console.log(error),
       () => console.log(this.claim)
       ),complaintSearchForm.resetForm();
   }
 
- 
+
 
   onGetComplaints(): void {
     this.complaintService.getComplaints()
     .subscribe(
       (response) => this.claims = response,
-      
+
       (error: any) => console.log(error),
       () => console.log('Done getting complaints')
       ), console.log(this.claims?.data?.complaints),
@@ -108,7 +109,7 @@ export class ComplaintListComponent implements OnInit {
     this.userService.getUsers(pageObj)
     .subscribe(
       (response) => this.users = response,
-      
+
       (error: any) => console.log(error),
       () => console.log('Done getting users')
       );
@@ -124,7 +125,7 @@ export class ComplaintListComponent implements OnInit {
       (error: any) => console.log(error),
       () => console.log('Done getting complaint'),
       ), complaintCreateForm.resetForm();
-      
+
   }
 
   onUpdateComplaint(complaintUpdateForm: NgForm): void{
@@ -145,18 +146,37 @@ export class ComplaintListComponent implements OnInit {
       (response) => {
         console.log(response);
         this.onGetComplaints();
-      }, 
+      },
       (error: any) => console.log(error),
       () => console.log(this.claim)
       )
   }
 
+  /*
+    onCreateAnalysisReport(id: number): void{
+      console.log(id);
+      this.complaintService.createReport(id).subscribe(
+        (response) => console.log(response)
+      );
+    }
+    */
+
   onCreateAnalysisReport(id: number): void{
-    console.log(id);
-    this.complaintService.createReport(id).subscribe(
-      (response) => console.log(response)
-    );
-  }
+      console.log(id);
+      this.complaintService.createReport(id).subscribe(
+        (data) => {
+          this.blob = new Blob([data], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+          var downloadURL = window.URL.createObjectURL(data);
+          var link = document.createElement('a');
+          link.href = downloadURL;
+          link.download = "report.docx";
+          link.click();
+        }
+      );
+    }
+
+
+
 
   onPrintLabelFromDB(id: number): void{
     console.log(id);
@@ -165,9 +185,9 @@ export class ComplaintListComponent implements OnInit {
     );
   }
 
-  
 
- 
+
+
 
   /*
   public getClaims(): void{
