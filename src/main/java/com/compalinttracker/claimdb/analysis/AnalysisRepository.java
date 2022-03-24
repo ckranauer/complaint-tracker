@@ -17,4 +17,14 @@ public interface AnalysisRepository extends JpaRepository<Analysis, Long> {
     int deleteAnalysisByComplaintId(Long id);
 
     Optional<Analysis> findAnalysisByComplaintId(Long complaitId);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value = "UPDATE analysis " +
+                    " SET user_profile_id = null " +
+                    " WHERE complaint_id = ?1",
+            nativeQuery = true
+    )
+    void removeAnalyzedBy(Long id);
 }

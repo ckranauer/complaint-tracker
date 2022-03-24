@@ -100,4 +100,14 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
             nativeQuery = true
     )
     int deleteComplaintById(Long id);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value = "UPDATE complaint " +
+                    " SET user_profile_id = null " +
+                    " WHERE id = ?1",
+            nativeQuery = true
+    )
+    void removeResponsible(Long id);
 }

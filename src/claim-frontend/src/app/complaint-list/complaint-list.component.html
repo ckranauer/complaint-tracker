@@ -241,7 +241,7 @@
                 <select [ngModel]="claim?.data.complaint.responsibleId" id="responsible" class="form-select"
                         name="responsible">
                   <option [value]="null"> Select</option>
-                  <option *ngFor="let user of claims?.data?.users" [ngValue]="user?.id"> {{ user.firstName }} {{
+                  <option *ngFor="let user of users?.data?.users" [ngValue]="user?.id"> {{ user.firstName }} {{
                     user.lastName }}
                   </option>
                 </select>
@@ -259,7 +259,7 @@
                 <select [ngModel]="claim?.data.complaint.analyzedById" id="analyzedBy" class="form-select"
                         name="analyzedBy">
                   <option [value]="null"> Select</option>
-                  <option *ngFor="let user of claims?.data?.users" [ngValue]="user?.id"> {{ user.firstName }} {{
+                  <option *ngFor="let user of users?.data?.users" [ngValue]="user?.id"> {{ user.firstName }} {{
                     user.lastName }}
                   </option>
                 </select>

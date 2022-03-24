@@ -26,6 +26,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
+//TODO: if the resposnible on the frontend is select as "default" then the same user remains the responsible in the db, solve this
+
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -54,6 +57,8 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaintWithThisSerialNumberAlreadyExists(complaintDto);
 
         Complaint complaint = createComplaint(complaintDto);
+
+        System.out.println("Responsible: "+complaintDto.getResponsible());
 
         // There is no need the return value because the @Transactional
         addResponsibleToComplaint(complaintDto.getResponsible(), complaint);
@@ -166,8 +171,16 @@ public class ComplaintServiceImpl implements ComplaintService {
         // Check if QMS number is valid or taken
         isQMSValidAndNotTaken(complaintDto);
 
-        // Check if responsible exists in db then add to complaint or throws exception
-        addResponsibleToComplaint(complaintDto.getResponsible(), complaint);
+        // Check if responsible is not null
+        if(complaintDto.getResponsible().equals("null")){
+            // if it is null then remove the id from the complaint
+            removeResponsibleFromComplaint(complaintDto.getId());
+        }else{
+            // Check if responsible exists in db then add to complaint or throws exception
+            UUID responsible = UUID.fromString(complaintDto.getResponsible());
+            addResponsibleToComplaint(responsible, complaint);
+        }
+
 
         // Set analysis fields
         Analysis analysis = getAnalysis(complaintDto, complaint);
@@ -180,6 +193,13 @@ public class ComplaintServiceImpl implements ComplaintService {
 
         complaintRepository.save(complaint);
     }
+
+    private void removeResponsibleFromComplaint(Long id) {
+        complaintRepository.removeResponsible(id);
+    }
+
+
+
 
     private void setComplaintAnalysis(ComplaintUpdateDto complaintDto, Complaint complaint, Analysis analysis) {
         complaint.setSerialNumber(complaintDto.getSerialNumber());
@@ -212,17 +232,26 @@ public class ComplaintServiceImpl implements ComplaintService {
         return analysis;
     }
 
-    private void updateAnalyzedBy(UUID analyzedById, Analysis analysis) {
-        if (analyzedById != null) {
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(analyzedById);
+    private void updateAnalyzedBy(String analyzedById, Analysis analysis) {
+
+        if (!analyzedById.equals("null")) {
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(UUID.fromString(analyzedById));
             if (userProfileOptional.isEmpty()) {
                 throw new IllegalStateException("User with id: " + analyzedById + " is not exist");
             }
             UserProfile analyzedBy = userProfileOptional.get();
             analyzedBy.addAnalysis(analysis);
             analysis.setAnalyzedBy(analyzedBy);
+        }else{
+            removeAnalyzedByFromComplaint(analysis.getId());
         }
     }
+
+    private void removeAnalyzedByFromComplaint(Long analysisId) {
+        analysisRepository.removeAnalyzedBy(analysisId);
+    }
+
+
 
     private void addResponsibleToComplaint(UUID responsibleId, Complaint complaint) {
         if (responsibleId != null) {
@@ -317,42 +346,33 @@ public class ComplaintServiceImpl implements ComplaintService {
         // Save the report to the S3 bucket
         uploadAnalysisReport(complaintId, analysisReport);
 
-
-        // TODO: return the report from S3 bucket
+        // Return the report from S3 bucket
         String fileName = String.format("%s-%s", analysisReport.getOriginalFilename(), complaintId);
-        byte[] reportFromBucket = downloadUserProfileImage(fileName);
+        byte[] reportFromBucket = downloadAnalysisReport(fileName);
         return reportFromBucket;
     }
 
     public void uploadAnalysisReport(Long complaintId, MultipartFile file) {
         // 1. Check if file is not empty
         isFileEmpty(file);
-        // 2. If file is a docx
+        // TODO: 2. If file is a docx
         // isImage(file);
-        // 3. The user exists in the database
-        //UserProfile user = getUserOrThrow(userProfileId);
 
-        // 4. Grab some metadata from file if any
+        // 3. Grab some metadata from file if any
         Map<String, String> metadata = extractMetadata(file);
 
-        // 5. Store the image in S3 and update database (userprofileImageLink) with S3 image link
-
-        // the image will be in the user's folder
         String path = String.format("%s/%s", BucketName.ANALYSIS_REPORT.getBucketName(), complaintId);
         System.out.println("Path: "+path);
-        //String fileName = String.format("%s-%s", file.getOriginalFilename(), complaintId);
         String fileName = complaintId.toString();
         System.out.println("File name : "+fileName);
         try {
             fileStore.save(path, fileName, Optional.of(metadata), file.getInputStream() );
-            //user.setUserProfileImageLink(fileName);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public byte[] downloadUserProfileImage(String complaintId) {
-        //UserProfile user = getUserOrThrow(userProfileId);
+    public byte[] downloadAnalysisReport(String complaintId) {
         String path = String.format("%s/%s", BucketName.ANALYSIS_REPORT.getBucketName(), complaintId);
         return fileStore.download(path, complaintId.toString());
     }
@@ -397,8 +417,5 @@ public class ComplaintServiceImpl implements ComplaintService {
         return Boolean.TRUE;
     }
 
-    @Override
-    public long getCollectionSize() {
-        return complaintRepository.count();
-    }
+
 }

@@ -29,7 +29,7 @@ public class AmazonConfig {
 
         return AmazonS3ClientBuilder
                 .standard()
-                .withRegion("eu-west-2")        // without it it throws error   "us-east-1"
+                .withRegion("eu-west-2")
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
     }

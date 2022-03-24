@@ -40,7 +40,6 @@ public class ComplaintController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        //.data(Map.of("complaints", complaintService.create(complaintDto), "users", userProfileService.list(10,0)))
                         .message("Complaint created")
                         .status(CREATED)
                         .statusCode(CREATED.value())
@@ -63,12 +62,14 @@ public class ComplaintController {
         );
     }
 
+    // TODO: remove fetching the users from the data line, when new user is added then the frontend will create a request to refresh user list
+
     @GetMapping("/search/{serno}")
     public ResponseEntity<Response> getComplaint(@PathVariable("serno") String serialNumber) {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("complaint", complaintService.search(serialNumber), "users", userProfileService.list(10, 0)))
+                        .data(Map.of("complaint", complaintService.search(serialNumber)))
                         .message("Complaint found and retrieved")
                         .status(OK)
                         .statusCode(OK.value())
@@ -76,14 +77,14 @@ public class ComplaintController {
         );
     }
 
+    // TODO: remove fetching the users from the data line, when new user is added then the frontend will create a request to refresh user list
+
     @GetMapping("/list")
     public ResponseEntity<Response> getComplaints() {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("complaints", complaintService.list(),
-                                "users", userProfileService.list(10, 0))
-                        )
+                        .data(Map.of("complaints", complaintService.list()))
                         .message("Complaints retrieved")
                         .status(OK)
                         .statusCode(OK.value())
@@ -111,7 +112,6 @@ public class ComplaintController {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        //.data(Map.of("complaints", complaintService.update(complaintDto), "users", userProfileService.list(10, 0)))
                         .message("Complaint updated")
                         .status(OK)
                         .statusCode(OK.value())
@@ -119,22 +119,7 @@ public class ComplaintController {
         );
     }
 
-/*
-    @GetMapping("/create-report/{id}")
-    public ResponseEntity<Response> createAnalysisReport2(@PathVariable("id") Long id) throws Exception {
-        complaintService.createAnalysisReport(id);
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        //.data(Map.of("report", complaintService.createAnalysisReport(id)))
-                        .message("Analysis report is created")
-                        .status(OK)
-                        .statusCode(OK.value())
-                        .build()
-        );
-    }
 
- */
 
     @GetMapping("/create-report/{id}")
     public byte[] createAnalysisReport(@PathVariable("id") Long id) throws Exception {

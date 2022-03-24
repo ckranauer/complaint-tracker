@@ -23,7 +23,9 @@ public class ComplaintUpdateDto {
     private String productInfo;
 
     private LocalDate arrivedAt;   // String
-    private UUID responsible;
+
+    // UUID
+    private String responsible; // TODO: modify it to string, in this case when the frontend send null (default -> to deleteResponsibleFromComplaint),then it won't throw JSON parse error
     private Boolean isPrio;
 
     private String barcodes;
@@ -34,6 +36,6 @@ public class ComplaintUpdateDto {
     private String conclusion;
     private LocalDate analysisStartedAt;
     private LocalDate analysisEndedAt;
-    private UUID analyzedBy;
+    private String analyzedBy;
 
 }

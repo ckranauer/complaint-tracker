@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Table(
         name = "complaint"
 )
-public class Complaint {       //implements Serializable
+public class Complaint {
 
     @Id
     @SequenceGenerator(                                 // BIGSERIAL data type
