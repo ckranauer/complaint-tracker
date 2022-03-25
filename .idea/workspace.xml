@@ -6,26 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9cfe401-19d2-4324-adbe-46715c9d135d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q00001.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q00002.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q00006.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q0003.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q000430.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q0009.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q001.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q005.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q0077.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - Q02.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analysis Report - dadsad.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/claim-frontend/src/app/complaint-list/complaint-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/claim-frontend/src/app/complaint-list/complaint-list.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/analysis/AnalysisRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/analysis/AnalysisRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/Complaint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/Complaint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/config/AmazonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/config/AmazonConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

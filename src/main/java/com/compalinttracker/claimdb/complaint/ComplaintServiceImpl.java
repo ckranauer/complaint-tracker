@@ -27,7 +27,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-//TODO: if the resposnible on the frontend is select as "default" then the same user remains the responsible in the db, solve this
 
 @RequiredArgsConstructor
 @Service
@@ -171,6 +170,20 @@ public class ComplaintServiceImpl implements ComplaintService {
         // Check if QMS number is valid or taken
         isQMSValidAndNotTaken(complaintDto);
 
+        updateResponsible(complaintDto, complaint);
+
+        // Set analysis fields
+        Analysis analysis = getAnalysis(complaintDto, complaint);
+
+        updateAnalyzedBy(complaintDto.getAnalyzedBy(), analysis);
+
+        // Set complaint fields and add the analysis to complaint
+        setComplaintAnalysis(complaintDto, complaint, analysis);
+
+        complaintRepository.save(complaint);
+    }
+
+    private void updateResponsible(ComplaintUpdateDto complaintDto, Complaint complaint) {
         // Check if responsible is not null
         if(complaintDto.getResponsible().equals("null")){
             // if it is null then remove the id from the complaint
@@ -180,18 +193,6 @@ public class ComplaintServiceImpl implements ComplaintService {
             UUID responsible = UUID.fromString(complaintDto.getResponsible());
             addResponsibleToComplaint(responsible, complaint);
         }
-
-
-        // Set analysis fields
-        Analysis analysis = getAnalysis(complaintDto, complaint);
-
-        // Check if analyzedBy exists in db then add to Analysis or throws exception
-        updateAnalyzedBy(complaintDto.getAnalyzedBy(), analysis);
-
-        // Set complaint fields and add the analysis to complaint
-        setComplaintAnalysis(complaintDto, complaint, analysis);
-
-        complaintRepository.save(complaint);
     }
 
     private void removeResponsibleFromComplaint(Long id) {
@@ -233,7 +234,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     private void updateAnalyzedBy(String analyzedById, Analysis analysis) {
-
+        // Check if analyzedBy exists in db then add to Analysis or throws exception
         if (!analyzedById.equals("null")) {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findUserProfileById(UUID.fromString(analyzedById));
             if (userProfileOptional.isEmpty()) {
