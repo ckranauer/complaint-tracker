@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c9cfe401-19d2-4324-adbe-46715c9d135d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,11 +15,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JUnit5 Test Class" />
         <option value="Interface" />
         <option value="HTML File" />
         <option value="Class" />
         <option value="Enum" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -79,6 +78,7 @@
       <recent name="C:\Users\ckranauer\Desktop\p\04_Projects\complaint-tracker\claim-db\src\main\resources\templates" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.compalinttracker.claimdb.complaint" />
       <recent name="com.compalinttracker.claimdb.userProfile" />
     </key>
   </component>
