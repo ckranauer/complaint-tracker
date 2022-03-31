@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9cfe401-19d2-4324-adbe-46715c9d135d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compalinttracker/claimdb/complaint/ComplaintRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/compalinttracker/claimdb/complaint/ComplaintRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/compalinttracker/claimdb/complaint/ComplaintRepositoryTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -123,40 +124,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ComplaintRepositoryTest.itShouldFindComplaintAnalysisById" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="complaint-tracker" />
-      <shortenClasspath name="ARGS_FILE" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.compalinttracker.claimdb.complaint.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.compalinttracker.claimdb.complaint" />
-      <option name="MAIN_CLASS_NAME" value="com.compalinttracker.claimdb.complaint.ComplaintRepositoryTest" />
-      <option name="METHOD_NAME" value="itShouldFindComplaintAnalysisById" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ComplaintRepositoryTest.itShouldFindComplaintById" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="complaint-tracker" />
-      <shortenClasspath name="ARGS_FILE" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.compalinttracker.claimdb.complaint.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.compalinttracker.claimdb.complaint" />
-      <option name="MAIN_CLASS_NAME" value="com.compalinttracker.claimdb.complaint.ComplaintRepositoryTest" />
-      <option name="METHOD_NAME" value="itShouldFindComplaintById" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ComplaintRepositoryTest.itShouldFindComplaintByQmsNo" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="complaint-tracker" />
       <shortenClasspath name="ARGS_FILE" />
@@ -169,6 +136,40 @@
       <option name="PACKAGE_NAME" value="com.compalinttracker.claimdb.complaint" />
       <option name="MAIN_CLASS_NAME" value="com.compalinttracker.claimdb.complaint.ComplaintRepositoryTest" />
       <option name="METHOD_NAME" value="itShouldFindComplaintByQmsNo" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ComplaintRepositoryTest.itShouldFindUserProfileID" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="complaint-tracker" />
+      <shortenClasspath name="ARGS_FILE" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.compalinttracker.claimdb.complaint.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.compalinttracker.claimdb.complaint" />
+      <option name="MAIN_CLASS_NAME" value="com.compalinttracker.claimdb.complaint.ComplaintRepositoryTest" />
+      <option name="METHOD_NAME" value="itShouldFindUserProfileID" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ComplaintRepositoryTest.itShouldRemoveResponsible" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="complaint-tracker" />
+      <shortenClasspath name="ARGS_FILE" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.compalinttracker.claimdb.complaint.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.compalinttracker.claimdb.complaint" />
+      <option name="MAIN_CLASS_NAME" value="com.compalinttracker.claimdb.complaint.ComplaintRepositoryTest" />
+      <option name="METHOD_NAME" value="itShouldRemoveResponsible" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -198,19 +199,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindComplaintAnalysisById" />
       <item itemvalue="JUnit.ComplaintRepositoryTest" />
-      <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindComplaintById" />
       <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindComplaintByQmsNo" />
       <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldDeleteComplaintById" />
+      <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldRemoveResponsible" />
+      <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindUserProfileID" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.ComplaintRepositoryTest" />
         <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldDeleteComplaintById" />
+        <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindUserProfileID" />
+        <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldRemoveResponsible" />
         <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindComplaintByQmsNo" />
-        <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindComplaintById" />
-        <item itemvalue="JUnit.ComplaintRepositoryTest.itShouldFindComplaintAnalysisById" />
       </list>
     </recent_temporary>
   </component>
@@ -255,6 +256,9 @@
     </SUITE>
     <SUITE FILE_PATH="coverage/claim_db$UserProfileServiceImplTest__1_.ic" NAME="UserProfileServiceImplTest (1) Coverage Results" MODIFIED="1641308965394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.compalinttracker.claimdb.userProfile.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/complaint_tracker$ComplaintRepositoryTest.ic" NAME="ComplaintRepositoryTest Coverage Results" MODIFIED="1648717474377" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.compalinttracker.claimdb.complaint.*</FILTER>
     </SUITE>
   </component>
 </project>

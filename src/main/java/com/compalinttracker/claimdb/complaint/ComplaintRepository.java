@@ -10,13 +10,11 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
-
-    //  " qms_number, customer_ref_number, " +
-    //         "claimed_fault " +
 
     @Query(
             value = "SELECT complaint.id, " +
@@ -110,4 +108,12 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
             nativeQuery = true
     )
     void removeResponsible(Long id);
+
+    // It only needs for test purpose
+    @Query(
+            value = "SELECT user_profile_id " +
+                    " FROM complaint WHERE serial_number = ?1 ",
+            nativeQuery = true
+    )
+    Optional<UUID> findUserProfileID(String serialNumber);
 }
